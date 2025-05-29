@@ -1,0 +1,14 @@
+{
+    "name": "projeto-helpdesk/site",
+    "description": "Site PHP inspirado em https://helpdesk.ip.tv/open.php",
+    "require": {
+        "php": ">=8.0",
+        "vlucas/phpdotenv": "^5.5",
+        "phpmailer/phpmailer": "^6.8"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    }
+}
