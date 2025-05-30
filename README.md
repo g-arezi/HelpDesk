@@ -10,7 +10,8 @@ Oferecer uma base para sistemas de chamados, facilitando o controle de solicita�
 1. Instale o [Composer](https://getcomposer.org/) se ainda não tiver.
 2. Execute `composer install` na raiz do projeto para instalar as dependências.
 3. Configure um servidor local (ex: Apache, XAMPP, Laragon) apontando para a pasta do projeto.
-4. Acesse `http://localhost/open.php` ou `http://localhost:8000/open.php` no navegador (caso use o servidor embutido do PHP).
+4. Execute: php -S localhost:8000 -t public
+5. Acesse `http://localhost/open.php` ou `http://localhost:8000/open.php` no navegador (caso use o servidor embutido do PHP).
 
 ## Estrutura do Projeto
 - `public/` — arquivos acessíveis publicamente (index.php, open.php, tickets.php, login.php, logout.php, edit_ticket.php, delete_ticket.php, assets)
