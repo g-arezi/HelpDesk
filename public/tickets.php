@@ -39,7 +39,7 @@ $auth = isset($_SESSION['auth']) && $_SESSION['auth'] === true;
                     <th>Assunto</th>
                     <th>Mensagem</th>
                     <th>Imagem</th>
-                    <?php if ($auth): ?><th>Ações</th><?php endif; ?>
+                    <th>Status</th>
                 </tr>
             </thead>
             <tbody>
@@ -58,12 +58,28 @@ $auth = isset($_SESSION['auth']) && $_SESSION['auth'] === true;
                                 <span style="color:#aaa;">-</span>
                             <?php endif; ?>
                         </td>
-                        <?php if ($auth): ?>
                         <td>
-                            <a href="edit_ticket.php?id=<?= $i ?>" class="btn" style="background:#f0ad4e;">Editar</a>
-                            <a href="delete_ticket.php?id=<?= $i ?>" class="btn" style="background:#d9534f;" onclick="return confirm('Tem certeza que deseja excluir este ticket?');">Excluir</a>
+                            <?php 
+                            $status = isset($ticket['status']) ? $ticket['status'] : 'nao_aberto';
+                            $statusLabel = [
+                                'resolvido' => '<span style="color:green;font-weight:bold;">Resolvido</span>',
+                                'em_analise' => '<span style="color:orange;font-weight:bold;">Em análise</span>',
+                                'nao_aberto' => '<span style="color:red;font-weight:bold;">Não aberto</span>'
+                            ];
+                            echo $statusLabel[$status] ?? $statusLabel['nao_aberto'];
+                            ?>
+                            <?php if ($auth): ?>
+                            <form method="post" action="tickets.php" style="margin-top:5px;">
+                                <input type="hidden" name="id" value="<?= $i ?>">
+                                <select name="status" style="padding:2px 6px;">
+                                    <option value="nao_aberto" <?= $status==='nao_aberto'?'selected':''; ?>>Não aberto</option>
+                                    <option value="em_analise" <?= $status==='em_analise'?'selected':''; ?>>Em análise</option>
+                                    <option value="resolvido" <?= $status==='resolvido'?'selected':''; ?>>Resolvido</option>
+                                </select>
+                                <button type="submit" class="btn" style="padding:2px 10px;font-size:13px;margin-left:4px;background:#0078d7;">Alterar</button>
+                            </form>
+                            <?php endif; ?>
                         </td>
-                        <?php endif; ?>
                     </tr>
                 <?php endforeach; ?>
             </tbody>
@@ -109,3 +125,22 @@ $auth = isset($_SESSION['auth']) && $_SESSION['auth'] === true;
     </style>
 </body>
 </html>
+<?php
+// Processa alteração de status
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'], $_POST['status']) && $auth) {
+    $id = (int)$_POST['id'];
+    $newStatus = $_POST['status'];
+    if (isset($tickets[$id])) {
+        $tickets[$id]['status'] = $newStatus;
+        // Salva todos os tickets de volta no arquivo
+        $lines = [];
+        foreach ($tickets as $t) {
+            $lines[] = json_encode($t, JSON_UNESCAPED_UNICODE);
+        }
+        file_put_contents($file, implode("\n", $lines));
+        // Redireciona para evitar reenvio do formulário
+        header('Location: tickets.php');
+        exit;
+    }
+}
+?>

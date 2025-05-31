@@ -1,9 +1,9 @@
 <?php return array(
     'root' => array(
         'name' => 'projeto-helpdesk/site',
-        'pretty_version' => '1.0.0+no-version-set',
-        'version' => '1.0.0.0',
-        'reference' => null,
+        'pretty_version' => 'dev-main',
+        'version' => 'dev-main',
+        'reference' => '50ff54c56ffc47eb8f935ed1c780129f38bdf57a',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -38,9 +38,9 @@
             'dev_requirement' => false,
         ),
         'projeto-helpdesk/site' => array(
-            'pretty_version' => '1.0.0+no-version-set',
-            'version' => '1.0.0.0',
-            'reference' => null,
+            'pretty_version' => 'dev-main',
+            'version' => 'dev-main',
+            'reference' => '50ff54c56ffc47eb8f935ed1c780129f38bdf57a',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

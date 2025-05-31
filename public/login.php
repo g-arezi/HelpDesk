@@ -1,11 +1,22 @@
 <?php
 session_start();
 
+// Verifica se o usuário já está autenticado
+if (isset($_SESSION['auth']) && $_SESSION['auth'] === true) {
+    header('Location: tickets.php');
+    exit;
+}
+// Define o cabeçalho de resposta HTTP
+header('Content-Type: text/html; charset=utf-8');
+// Define o fuso horário padrão
+date_default_timezone_set('America/Sao_Paulo');
+// Define o título da página
+$title = 'Login - HelpDesk';
+// Define o caminho para o diretório raiz do projeto
+define('ROOT_DIR', dirname(__DIR__));
 // Array de usuários e senhas personalizáveis
 $USERS = [
-    'admin' => '1234',
-    'joao' => 'senha123',
-    'maria' => 'abc@2024'
+    'admin' => 'admin321',
 ];
 
 $error = '';
