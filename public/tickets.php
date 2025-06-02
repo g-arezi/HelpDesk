@@ -1,7 +1,7 @@
 <?php
 session_start();
-// Processa alteração de status ANTES de qualquer saída
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'], $_POST['status']) && isset($_SESSION['auth']) && $_SESSION['auth'] === true) {
+// Processa alteração de status e deleção ANTES de qualquer saída
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_SESSION['auth']) && $_SESSION['auth'] === true) {
     $file = __DIR__ . '/../tickets.txt';
     $tickets = [];
     if (file_exists($file)) {
@@ -10,19 +10,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'], $_POST['status'
             $tickets[] = json_decode($line, true);
         }
     }
-    $id = (int)$_POST['id'];
-    $newStatus = $_POST['status'];
-    if (isset($tickets[$id])) {
-        $tickets[$id]['status'] = $newStatus;
-        // Salva todos os tickets de volta no arquivo
-        $lines = [];
-        foreach ($tickets as $t) {
-            $lines[] = json_encode($t, JSON_UNESCAPED_UNICODE);
+    // Deletar ticket
+    if (isset($_POST['delete_id'])) {
+        $deleteId = (int)$_POST['delete_id'];
+        if (isset($tickets[$deleteId])) {
+            array_splice($tickets, $deleteId, 1);
+            $lines = [];
+            foreach ($tickets as $t) {
+                $lines[] = json_encode($t, JSON_UNESCAPED_UNICODE);
+            }
+            file_put_contents($file, implode("\n", $lines));
+            header('Location: tickets.php');
+            exit;
         }
-        file_put_contents($file, implode("\n", $lines));
-        // Redireciona para evitar reenvio do formulário
-        header('Location: tickets.php');
-        exit;
+    }
+    // Alterar status
+    if (isset($_POST['id'], $_POST['status'])) {
+        $id = (int)$_POST['id'];
+        $newStatus = $_POST['status'];
+        if (isset($tickets[$id])) {
+            $tickets[$id]['status'] = $newStatus;
+            $lines = [];
+            foreach ($tickets as $t) {
+                $lines[] = json_encode($t, JSON_UNESCAPED_UNICODE);
+            }
+            file_put_contents($file, implode("\n", $lines));
+            header('Location: tickets.php');
+            exit;
+        }
     }
 }
 
@@ -57,6 +72,7 @@ $auth = isset($_SESSION['auth']) && $_SESSION['auth'] === true;
         <table class="ticket-table">
             <thead>
                 <tr>
+                    <th>ID</th>
                     <th>Nome</th>
                     <th>E-mail</th>
                     <th>Assunto</th>
@@ -68,6 +84,7 @@ $auth = isset($_SESSION['auth']) && $_SESSION['auth'] === true;
             <tbody>
                 <?php foreach ($tickets as $i => $ticket): ?>
                     <tr>
+                        <td><?= $i + 1 ?></td>
                         <td><?= htmlspecialchars($ticket['name'] ?? '') ?></td>
                         <td><?= htmlspecialchars($ticket['email'] ?? '') ?></td>
                         <td><?= htmlspecialchars($ticket['subject'] ?? '') ?></td>
@@ -92,7 +109,7 @@ $auth = isset($_SESSION['auth']) && $_SESSION['auth'] === true;
                             echo $statusLabel[$status] ?? $statusLabel['nao_aberto'];
                             ?>
                             <?php if ($auth): ?>
-                            <form method="post" action="tickets.php" style="margin-top:5px;">
+                            <form method="post" action="tickets.php" style="margin-top:5px;display:inline-block;">
                                 <input type="hidden" name="id" value="<?= $i ?>">
                                 <select name="status" style="padding:2px 6px;">
                                     <option value="nao_aberto" <?= $status==='nao_aberto'?'selected':''; ?>>Não aberto</option>
@@ -100,6 +117,10 @@ $auth = isset($_SESSION['auth']) && $_SESSION['auth'] === true;
                                     <option value="resolvido" <?= $status==='resolvido'?'selected':''; ?>>Resolvido</option>
                                 </select>
                                 <button type="submit" class="btn" style="padding:2px 10px;font-size:13px;margin-left:4px;background:#0078d7;">Alterar</button>
+                            </form>
+                            <form method="post" action="tickets.php" style="margin-top:5px;display:inline-block;">
+                                <input type="hidden" name="delete_id" value="<?= $i ?>">
+                                <button type="submit" class="btn" style="padding:2px 10px;font-size:13px;margin-left:4px;background:#d70022;" onclick="return confirm('Tem certeza que deseja deletar este ticket?');">Deletar</button>
                             </form>
                             <?php endif; ?>
                         </td>
@@ -170,5 +191,14 @@ $auth = isset($_SESSION['auth']) && $_SESSION['auth'] === true;
         }
     }
     </style>
+
+/* 
+
+só está faltando acrescentar a funcionalidade de deletar o ticket. 
+deixarei comentado aqui para implementação.
+
+*/
+
+
 </body>
 </html>
