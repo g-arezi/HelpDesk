@@ -1,2 +1,3 @@
-{"name":"asd","email":"asdasd@gmail.com","subject":"erro_autenticacao","message":"asd","imagePath":"uploads\/img_683df46431c0a_computer-games.gif","status":"em_analise"}{"name":"Rafael Candido","email":"aasdad@gmail.com","subject":"travamento_canais","message":"canal est\u00e1 travando","imagePath":"uploads\/img_683df53c5a78c_image.png"}
-{"name":"ASDasd","email":"asdasd@gmail.com","subject":"travamento_canais","message":"asdasdasd","imagePath":null}
+null
+{"name":"ASDasd","email":"asdasd@gmail.com","subject":"travamento_canais","message":"asdasdasd","imagePath":null,"status":"em_analise"}
+{"name":"Gabriel da Silva Arezi","email":"asdasd@gmail.com","subject":"travamento_canais","message":"to tendo problema aqui burro","imagePath":"uploads\/img_683df865a7600_image.png","status":"resolvido"}

@@ -192,13 +192,6 @@ $auth = isset($_SESSION['auth']) && $_SESSION['auth'] === true;
     }
     </style>
 
-/* 
-
-só está faltando acrescentar a funcionalidade de deletar o ticket. 
-deixarei comentado aqui para implementação.
-
-*/
-
 
 </body>
 </html>
