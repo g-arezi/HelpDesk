@@ -1,3 +1,1 @@
-{"name":"Gabriel da Silva Arezi","email":"GsadosRole@protonmail.com","subject":"tela_preta","message":"preto não é macaco","imagePath":"uploads\/img_683a07ea69f22_computer-games.gif","status":"em_analise"}
-{"name":"asdadsasd","email":"arezigabriel@asdaksdk.com","subject":"tela_preta","message":"asdasd","imagePath":null,"status":"resolvido"}
-{"name":"Gabriel da Silva Arezi","email":"arezigabriel@gmail.com","subject":"tela_preta","message":"To com tela preta","imagePath":"uploads\/img_683a08bb88bc6_image.png","status":"nao_aberto"}
+{"name":"Gabriel da Silva Arezi","email":"arezigabriel@gmail.com","subject":"tela_preta","message":"estou com a tela preta, necessito de um suporte!","imagePath":null,"status":"resolvido"}{"name":"Gabriel","email":"asdasd@gmail.com","subject":"sem_sinal","message":"estou sem sinal.","imagePath":"uploads\/img_683de144ac408_image.png"}

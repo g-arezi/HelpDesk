@@ -1,9 +1,31 @@
 <?php
 session_start();
-if (!isset($_SESSION['auth']) || $_SESSION['auth'] !== true) {
-    header('Location: login.php');
-    exit;
+// Processa alteração de status ANTES de qualquer saída
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'], $_POST['status']) && isset($_SESSION['auth']) && $_SESSION['auth'] === true) {
+    $file = __DIR__ . '/../tickets.txt';
+    $tickets = [];
+    if (file_exists($file)) {
+        $lines = file($file, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+        foreach ($lines as $line) {
+            $tickets[] = json_decode($line, true);
+        }
+    }
+    $id = (int)$_POST['id'];
+    $newStatus = $_POST['status'];
+    if (isset($tickets[$id])) {
+        $tickets[$id]['status'] = $newStatus;
+        // Salva todos os tickets de volta no arquivo
+        $lines = [];
+        foreach ($tickets as $t) {
+            $lines[] = json_encode($t, JSON_UNESCAPED_UNICODE);
+        }
+        file_put_contents($file, implode("\n", $lines));
+        // Redireciona para evitar reenvio do formulário
+        header('Location: tickets.php');
+        exit;
+    }
 }
+
 // Página para listar todos os tickets registrados
 $tickets = [];
 $file = __DIR__ . '/../tickets.txt';
@@ -22,15 +44,16 @@ $auth = isset($_SESSION['auth']) && $_SESSION['auth'] === true;
     <title>Lista de Tickets - HelpDesk</title>
     <link rel="stylesheet" href="assets/style.css">
 </head>
-<body>
-    <div class="container">
-        <h2>Lista de Tickets</h2>
+<body style="margin:0;padding:0;background:#f4f6fa;">
+    <div class="container" style="max-width:none;width:100vw;padding:0 0 30px 0;">
+        <h2 style="margin-left:30px;">Lista de Tickets</h2>
         <?php if ($auth): ?>
-            <a href="logout.php" class="btn" style="float:right;margin-top:-40px;">Sair</a>
+            <a href="logout.php" class="btn" style="float:right;margin-top:-40px;margin-right:30px;">Sair</a>
+            <a href="open.php" class="btn" style="float:right;margin-top:-40px;margin-right:140px;">Abrir novo chamado</a>
         <?php else: ?>
-            <a href="login.php" class="btn" style="float:right;margin-top:-40px;">Login</a>
+            <a href="login.php" class="btn" style="float:right;margin-top:-40px;margin-right:30px;">Login</a>
         <?php endif; ?>
-        <div style="overflow-x:auto;">
+        <div style="overflow-x:auto; margin: 0 30px;">
         <table class="ticket-table">
             <thead>
                 <tr>
@@ -45,10 +68,10 @@ $auth = isset($_SESSION['auth']) && $_SESSION['auth'] === true;
             <tbody>
                 <?php foreach ($tickets as $i => $ticket): ?>
                     <tr>
-                        <td><?= htmlspecialchars($ticket['name']) ?></td>
-                        <td><?= htmlspecialchars($ticket['email']) ?></td>
-                        <td><?= htmlspecialchars($ticket['subject']) ?></td>
-                        <td style="max-width:250px;word-break:break-word;"><?= nl2br(htmlspecialchars($ticket['message'])) ?></td>
+                        <td><?= htmlspecialchars($ticket['name'] ?? '') ?></td>
+                        <td><?= htmlspecialchars($ticket['email'] ?? '') ?></td>
+                        <td><?= htmlspecialchars($ticket['subject'] ?? '') ?></td>
+                        <td style="max-width:250px;word-break:break-word;"><?= nl2br(htmlspecialchars($ticket['message'] ?? '')) ?></td>
                         <td>
                             <?php if (!empty($ticket['imagePath'])): ?>
                                 <a href="<?= htmlspecialchars($ticket['imagePath']) ?>" target="_blank">
@@ -86,14 +109,29 @@ $auth = isset($_SESSION['auth']) && $_SESSION['auth'] === true;
         </table>
         </div>
         <br>
-        <a href="open.php" class="btn">Abrir novo chamado</a>
+        <!--<a href="open.php" class="btn">Abrir novo chamado</a>-->
     </div>
     <style>
+    html, body {
+        height: 100%;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+    }
+    .container {
+        width: 100vw;
+        max-width: none;
+        margin: 0;
+        padding: 0 0 30px 0;
+        background: #f4f6fa;
+        min-height: 100vh;
+    }
     .ticket-table {
         width: 100%;
         border-collapse: collapse;
         background: #fff;
         margin-top: 20px;
+        font-size: 15px;
     }
     .ticket-table th, .ticket-table td {
         border: 1px solid #e0e0e0;
@@ -122,25 +160,15 @@ $auth = isset($_SESSION['auth']) && $_SESSION['auth'] === true;
     .btn:hover {
         background: #005fa3;
     }
+    @media (max-width: 900px) {
+        .ticket-table th, .ticket-table td {
+            font-size: 13px;
+            padding: 7px 4px;
+        }
+        h2 {
+            font-size: 20px;
+        }
+    }
     </style>
 </body>
 </html>
-<?php
-// Processa alteração de status
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'], $_POST['status']) && $auth) {
-    $id = (int)$_POST['id'];
-    $newStatus = $_POST['status'];
-    if (isset($tickets[$id])) {
-        $tickets[$id]['status'] = $newStatus;
-        // Salva todos os tickets de volta no arquivo
-        $lines = [];
-        foreach ($tickets as $t) {
-            $lines[] = json_encode($t, JSON_UNESCAPED_UNICODE);
-        }
-        file_put_contents($file, implode("\n", $lines));
-        // Redireciona para evitar reenvio do formulário
-        header('Location: tickets.php');
-        exit;
-    }
-}
-?>

@@ -6,6 +6,10 @@
     <link rel="stylesheet" href="assets/style.css">
 </head>
 <body>
+    <div style="position: fixed; top: 0; right: 0; z-index: 1000; display: flex; gap: 8px; padding: 12px;">
+        <a href="login.php" style="background: #007bff; color: #fff; padding: 8px 16px; border-radius: 4px; text-decoration: none; font-weight: bold;">Login</a>
+        <a href="tickets.php" style="background: #28a745; color: #fff; padding: 8px 16px; border-radius: 4px; text-decoration: none; font-weight: bold;">Lista de Chamados</a>
+    </div>
     <div class="container">
         <h2>Abrir Chamado</h2>
         <form method="post" action="open.php" enctype="multipart/form-data">
