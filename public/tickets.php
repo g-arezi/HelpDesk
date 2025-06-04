@@ -51,6 +51,17 @@ if (file_exists($file)) {
     }
 }
 $auth = isset($_SESSION['auth']) && $_SESSION['auth'] === true;
+
+// NOVO: Contagem de chamados por status para o técnico
+$em_aberto = 0;
+$em_andamento = 0;
+$encerrados = 0;
+foreach ($tickets as $ticket) {
+    $status = $ticket['status'] ?? 'nao_aberto';
+    if ($status === 'nao_aberto') $em_aberto++;
+    elseif ($status === 'em_analise') $em_andamento++;
+    elseif ($status === 'resolvido') $encerrados++;
+}
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -67,6 +78,13 @@ $auth = isset($_SESSION['auth']) && $_SESSION['auth'] === true;
             <a href="open.php" class="btn" style="float:right;margin-top:-40px;margin-right:140px;">Abrir novo chamado</a>
         <?php else: ?>
             <a href="login.php" class="btn" style="float:right;margin-top:-40px;margin-right:30px;">Login</a>
+        <?php endif; ?>
+        <?php if ($auth): ?>
+            <div style="margin: 20px 30px 0 30px; padding: 16px; background: #fff; border-radius: 8px; box-shadow: 0 1px 6px #e0e0e0; display: flex; gap: 32px; max-width: 600px;">
+                <div><strong>Chamados em aberto:</strong> <span style="color:#d70022; font-weight:bold;"><?= $em_aberto ?></span></div>
+                <div><strong>Em andamento:</strong> <span style="color:#ff9800; font-weight:bold;"><?= $em_andamento ?></span></div>
+                <div><strong>Encerrados:</strong> <span style="color:#388e3c; font-weight:bold;"><?= $encerrados ?></span></div>
+            </div>
         <?php endif; ?>
         <div style="overflow-x:auto; margin: 0 30px;">
         <table class="ticket-table">

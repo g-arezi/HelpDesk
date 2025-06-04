@@ -1,3 +1,0 @@
-null
-{"name":"ASDasd","email":"asdasd@gmail.com","subject":"travamento_canais","message":"asdasdasd","imagePath":null,"status":"em_analise"}
-{"name":"Gabriel da Silva Arezi","email":"asdasd@gmail.com","subject":"travamento_canais","message":"to tendo problema aqui burro","imagePath":"uploads\/img_683df865a7600_image.png","status":"resolvido"}
