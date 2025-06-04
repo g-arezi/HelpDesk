@@ -16,7 +16,7 @@ $title = 'Login - HelpDesk';
 define('ROOT_DIR', dirname(__DIR__));
 // Array de usuários e senhas personalizáveis
 $USERS = [
-    'admin' => 'admin321',
+    'admin' => 'admin321', //podendo ser utilizado API ou banco de dados para autenticação
 ];
 
 $error = '';

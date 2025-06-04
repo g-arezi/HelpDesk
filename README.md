@@ -2,6 +2,10 @@
 
 Este projeto é um sistema de HelpDesk simples, desenvolvido em PHP, inspirado no https://helpdesk.ip.tv/open.php. Ele permite o registro, acompanhamento e gerenciamento de chamados de suporte técnico, com upload de arquivos e controle de acesso básico.
 
+> **Atenção:** Este sistema está em fase de testes e está aberto a sugestões de melhorias! Sinta-se à vontade para contribuir ou enviar feedback. 
+# Link para testa-lo:
+[Clique aqui!](http://20.195.168.106:8000/open.php) 
+
 ## Objetivo
 Oferecer uma base para sistemas de chamados, facilitando o controle de solicitações de suporte em pequenas empresas ou equipes.
 
