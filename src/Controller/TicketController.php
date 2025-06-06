@@ -9,7 +9,8 @@ class TicketController
             $name = $_POST['name'] ?? '';
             $email = $_POST['email'] ?? '';
             $subject = $_POST['subject'] ?? '';
-            $message = $_POST['message'] ?? '';
+            $message = isset($_POST['message']) ? trim($_POST['message']) : '';
+            $telefone = $_POST['telefone'] ?? '';
 
             $imagePath = null;
             if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
@@ -25,10 +26,15 @@ class TicketController
                 }
             }
 
-            $ticket = new \App\Model\Ticket($name, $email, $subject, $message, $imagePath);
-            // Aqui você pode salvar o ticket em banco de dados ou enviar por e-mail
-            // Exemplo: salvar em arquivo temporário
-            file_put_contents(__DIR__ . '/../../tickets.txt', json_encode($ticket) . PHP_EOL, FILE_APPEND);
+            $ticket = new \App\Model\Ticket($name, $email, $subject, $message, $imagePath, $telefone);
+            $file = __DIR__ . '/../../tickets.txt';
+            $tickets = [];
+            if (file_exists($file)) {
+                $content = file_get_contents($file);
+                $tickets = json_decode($content, true) ?: [];
+            }
+            $tickets[] = $ticket;
+            file_put_contents($file, json_encode($tickets, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
 
             include __DIR__ . '/../View/success.php';
             return;

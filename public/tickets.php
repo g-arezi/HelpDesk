@@ -5,36 +5,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_SESSION['auth']) && $_SESSI
     $file = __DIR__ . '/../tickets.txt';
     $tickets = [];
     if (file_exists($file)) {
-        $lines = file($file, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-        foreach ($lines as $line) {
-            $tickets[] = json_decode($line, true);
-        }
+        $content = file_get_contents($file);
+        $tickets = json_decode($content, true) ?: [];
     }
-    // Deletar ticket
-    if (isset($_POST['delete_id'])) {
+    // Deletar ticket (apenas se não for tecnico)
+    if (isset($_POST['delete_id']) && (!isset($_SESSION['role']) || $_SESSION['role'] !== 'tecnico')) {
         $deleteId = (int)$_POST['delete_id'];
         if (isset($tickets[$deleteId])) {
             array_splice($tickets, $deleteId, 1);
-            $lines = [];
-            foreach ($tickets as $t) {
-                $lines[] = json_encode($t, JSON_UNESCAPED_UNICODE);
-            }
-            file_put_contents($file, implode("\n", $lines));
+            file_put_contents($file, json_encode($tickets, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
             header('Location: tickets.php');
             exit;
         }
     }
-    // Alterar status
+    // Alterar status (tecnico ou outros podem)
     if (isset($_POST['id'], $_POST['status'])) {
         $id = (int)$_POST['id'];
         $newStatus = $_POST['status'];
         if (isset($tickets[$id])) {
             $tickets[$id]['status'] = $newStatus;
-            $lines = [];
-            foreach ($tickets as $t) {
-                $lines[] = json_encode($t, JSON_UNESCAPED_UNICODE);
-            }
-            file_put_contents($file, implode("\n", $lines));
+            file_put_contents($file, json_encode($tickets, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
             header('Location: tickets.php');
             exit;
         }
@@ -45,12 +35,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_SESSION['auth']) && $_SESSI
 $tickets = [];
 $file = __DIR__ . '/../tickets.txt';
 if (file_exists($file)) {
-    $lines = file($file, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-    foreach ($lines as $line) {
-        $tickets[] = json_decode($line, true);
-    }
+    $content = file_get_contents($file);
+    $tickets = json_decode($content, true) ?: [];
 }
 $auth = isset($_SESSION['auth']) && $_SESSION['auth'] === true;
+$role = $_SESSION['role'] ?? null;
+
+// Permitir acesso apenas para admin e tecnico
+if (!$auth || ($role !== 'admin' && $role !== 'tecnico')) {
+    header('Location: login.php');
+    exit;
+}
 
 // NOVO: Contagem de chamados por status para o técnico
 $em_aberto = 0;
@@ -96,17 +91,22 @@ foreach ($tickets as $ticket) {
                     <th>Assunto</th>
                     <th>Mensagem</th>
                     <th>Imagem</th>
+                    <th>Telefone</th>
                     <th>Status</th>
+                    <th>Ações</th>
                 </tr>
             </thead>
             <tbody>
-                <?php foreach ($tickets as $i => $ticket): ?>
+                <?php foreach (
+                    $tickets as $i => $ticket): ?>
                     <tr>
                         <td><?= $i + 1 ?></td>
                         <td><?= htmlspecialchars($ticket['name'] ?? '') ?></td>
                         <td><?= htmlspecialchars($ticket['email'] ?? '') ?></td>
                         <td><?= htmlspecialchars($ticket['subject'] ?? '') ?></td>
-                        <td style="max-width:250px;word-break:break-word;"><?= nl2br(htmlspecialchars($ticket['message'] ?? '')) ?></td>
+                        <td style="max-width:250px;word-break:break-word;">
+                            <?= nl2br(htmlspecialchars($ticket['message'] ?? '')) ?>
+                        </td>
                         <td>
                             <?php if (!empty($ticket['imagePath'])): ?>
                                 <a href="<?= htmlspecialchars($ticket['imagePath']) ?>" target="_blank">
@@ -116,6 +116,7 @@ foreach ($tickets as $ticket) {
                                 <span style="color:#aaa;">-</span>
                             <?php endif; ?>
                         </td>
+                        <td><?= htmlspecialchars($ticket['telefone'] ?? '') ?></td>
                         <td>
                             <?php 
                             $status = isset($ticket['status']) ? $ticket['status'] : 'nao_aberto';
@@ -136,6 +137,10 @@ foreach ($tickets as $ticket) {
                                 </select>
                                 <button type="submit" class="btn" style="padding:2px 10px;font-size:13px;margin-left:4px;background:#0078d7;">Alterar</button>
                             </form>
+                            <?php endif; ?>
+                        </td>
+                        <td>
+                            <?php if ($auth && $role !== 'tecnico'): ?>
                             <form method="post" action="tickets.php" style="margin-top:5px;display:inline-block;">
                                 <input type="hidden" name="delete_id" value="<?= $i ?>">
                                 <button type="submit" class="btn" style="padding:2px 10px;font-size:13px;margin-left:4px;background:#d70022;" onclick="return confirm('Tem certeza que deseja deletar este ticket?');">Deletar</button>

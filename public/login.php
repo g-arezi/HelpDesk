@@ -17,6 +17,7 @@ define('ROOT_DIR', dirname(__DIR__));
 // Array de usuários e senhas personalizáveis
 $USERS = [
     'admin' => 'admin321', //podendo ser utilizado API ou banco de dados para autenticação
+    'tecnico' => 'tecnico321', // senha para o usuário tecnico
 ];
 
 $error = '';
@@ -26,6 +27,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($USERS[$login]) && $USERS[$login] === $senha) {
         $_SESSION['auth'] = true;
         $_SESSION['user'] = $login;
+        // Define o papel do usuário
+        if ($login === 'tecnico') {
+            $_SESSION['role'] = 'tecnico';
+        } else {
+            $_SESSION['role'] = 'admin';
+        }
         header('Location: tickets.php');
         exit;
     } else {
