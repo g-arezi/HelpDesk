@@ -29,7 +29,6 @@
         // Exibe o ID do chamado e os detalhes
         ?>
         <div style="margin: 18px 0; padding: 12px; background: #f7f7f7; border-radius: 6px;">
-            <strong>ID do seu chamado:</strong> <span style="color:#007bff;font-size:18px;">#<?= $id ?></span><br>
             <strong>E-mail informado:</strong> <span style="color:#007bff;"> <?= htmlspecialchars($ticket->email ?? '') ?> </span><br>
             <strong>Mensagem enviada:</strong><br>
             <span style="color:#333;"> <?= nl2br(htmlspecialchars($ticket->message ?? '')) ?> </span>
