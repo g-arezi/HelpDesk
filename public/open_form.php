@@ -51,5 +51,7 @@ async function buscarChamados() {
     document.getElementById('resultado-busca').innerHTML = html;
     return false;
 }
+
+
 // ...existing code...
 </script>
