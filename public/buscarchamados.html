@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Buscar Chamados</title>
+    <link rel="stylesheet" href="assets/style.css">
+    <style>
+        .ticket-list { max-width: 700px; margin: 30px auto; }
+        .ticket { border: 1px solid #ccc; border-radius: 8px; padding: 16px; margin-bottom: 16px; background: #fafafa; }
+        .chat-messages { height: 200px; overflow-y: auto; border: 1px solid #eee; padding: 10px; background: #fff; margin-bottom: 10px; }
+        .chat-message { margin-bottom: 8px; }
+        .chat-message .author { font-weight: bold; }
+        .chat-message .timestamp { color: #888; font-size: 0.85em; margin-left: 8px; }
+        .chat-form { display: flex; gap: 8px; }
+        .chat-form input, .chat-form button { padding: 8px; }
+        .chat-form input { flex: 1; }
+        .chat-area { margin-top: 10px; }
+    </style>
+</head>
+<body>
+<div class="ticket-list">
+    <h2>Buscar Chamados</h2>
+    <form id="searchForm" onsubmit="return buscarChamados(event)">
+        <input type="email" id="email" placeholder="Seu e-mail">
+        <input type="text" id="telefone" placeholder="Seu telefone">
+        <button type="submit">Buscar</button>
+    </form>
+    <div id="tickets"></div>
+</div>
+<script>
+let isTecnico = false;
+
+function getUrlParam(name) {
+    const url = new URL(window.location.href);
+    return url.searchParams.get(name);
+}
+
+fetch('tecnico_check.php')
+    .then(r => r.json())
+    .then(res => { isTecnico = res.tecnico; });
+
+window.onload = function() {
+    const email = getUrlParam('email');
+    if (email) {
+        document.getElementById('email').value = email;
+        buscarChamados({preventDefault:()=>{}});
+        setTimeout(() => {
+            const ticketDiv = document.querySelector('.ticket');
+            if (ticketDiv) {
+                const btn = ticketDiv.querySelector('button');
+                if (btn) btn.click();
+            }
+        }, 800);
+    }
+}
+
+function buscarChamados(e) {
+    if (e && e.preventDefault) e.preventDefault();
+    const email = document.getElementById('email').value.trim();
+    const telefone = document.getElementById('telefone').value.trim();
+    fetch(`buscarchamados.php?email=${encodeURIComponent(email)}&telefone=${encodeURIComponent(telefone)}`)
+        .then(r => r.json())
+        .then(renderTickets);
+    return false;
+}
+
+function renderTickets(tickets) {
+    const div = document.getElementById('tickets');
+    div.innerHTML = '';
+    if (!tickets.length) {
+        div.innerHTML = '<p>Nenhum chamado encontrado.</p>';
+        return;
+    }
+    tickets.forEach(ticket => {
+        const tDiv = document.createElement('div');
+        tDiv.className = 'ticket';
+        tDiv.innerHTML = `<b>ID:</b> ${ticket.id} <b>Status:</b> ${ticket.status}<br><b>Assunto:</b> ${ticket.subject}<br><b>Mensagem:</b> ${ticket.message}<br><b>Telefone:</b> ${ticket.telefone}<br><button onclick="abrirChat(${ticket.id}, this)">Abrir Chat</button><div class='chat-area' id='chat-area-${ticket.id}' style='display:none;'></div>`;
+        div.appendChild(tDiv);
+    });
+}
+
+function abrirChat(ticketId, btn) {
+    const area = document.getElementById('chat-area-' + ticketId);
+    area.style.display = area.style.display === 'none' ? 'block' : 'none';
+    if (area.style.display === 'block') {
+        carregarChat(ticketId, area);
+    }
+}
+
+function carregarChat(ticketId, area) {
+    fetch(`chat.php?id=${ticketId}`)
+        .then(r => r.json())
+        .then(messages => {
+            let html = `<div class='chat-messages' id='chatMessages-${ticketId}'></div>`;
+            html += `<form class='chat-form' id='chatForm-${ticketId}' onsubmit='return enviarMensagem(event,${ticketId})'>`;
+            html += `<input type='text' id='author-${ticketId}' placeholder='Seu nome' required>\n<input type='text' id='message-${ticketId}' placeholder='Digite sua mensagem' required>`;
+            html += `<button type='submit'>Enviar</button>`;
+            html += `</form>`;
+            area.innerHTML = html;
+            renderChatMessages(messages, ticketId);
+            setInterval(() => atualizarChat(ticketId), 5000);
+        });
+}
+
+function renderChatMessages(messages, ticketId) {
+    const chat = document.getElementById('chatMessages-' + ticketId);
+    if (!chat) return;
+    chat.innerHTML = '';
+    messages.forEach(msg => {
+        const div = document.createElement('div');
+        div.className = 'chat-message';
+        div.innerHTML = `<span class='author'>${msg.author}</span> <span class='timestamp'>[${msg.timestamp}]</span><br>${msg.message}`;
+        chat.appendChild(div);
+    });
+    chat.scrollTop = chat.scrollHeight;
+}
+
+function enviarMensagem(e, ticketId) {
+    e.preventDefault();
+    const author = document.getElementById('author-' + ticketId).value.trim();
+    const message = document.getElementById('message-' + ticketId).value.trim();
+    if (!author || !message) return false;
+    fetch(`chat.php?id=${ticketId}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ author, message })
+    })
+    .then(r => r.json())
+    .then(res => {
+        if (res.success) {
+            document.getElementById('message-' + ticketId).value = '';
+            atualizarChat(ticketId);
+        } else {
+            alert(res.error || 'Erro ao enviar mensagem.');
+        }
+    });
+    return false;
+}
+
+function atualizarChat(ticketId) {
+    fetch(`chat.php?id=${ticketId}`)
+        .then(r => r.json())
+        .then(messages => renderChatMessages(messages, ticketId));
+}
+</script>
+</body>
+</html>

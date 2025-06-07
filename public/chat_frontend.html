@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Chat do Chamado</title>
+    <link rel="stylesheet" href="assets/style.css">
+    <style>
+        .chat-container { max-width: 500px; margin: 30px auto; border: 1px solid #ccc; border-radius: 8px; padding: 16px; background: #fafafa; }
+        .chat-messages { height: 300px; overflow-y: auto; border: 1px solid #eee; padding: 10px; background: #fff; margin-bottom: 10px; }
+        .chat-message { margin-bottom: 8px; }
+        .chat-message .author { font-weight: bold; }
+        .chat-message .timestamp { color: #888; font-size: 0.85em; margin-left: 8px; }
+        .chat-form { display: flex; gap: 8px; }
+        .chat-form input, .chat-form button { padding: 8px; }
+        .chat-form input { flex: 1; }
+    </style>
+</head>
+<body>
+<div class="chat-container">
+    <h2>Chat do Chamado</h2>
+    <div style="margin-bottom:10px;">
+        <label for="ticketId">ID do Chamado:</label>
+        <input type="number" id="ticketId" min="1" value="1" style="width:80px;">
+        <button onclick="loadMessages()">Carregar</button>
+    </div>
+    <div class="chat-messages" id="chatMessages"></div>
+    <form class="chat-form" id="chatForm" onsubmit="return sendMessage(event)">
+        <input type="text" id="author" placeholder="Seu nome" required>
+        <input type="text" id="message" placeholder="Digite sua mensagem" required>
+        <button type="submit">Enviar</button>
+    </form>
+</div>
+<script>
+let currentTicketId = 1;
+
+function renderMessages(messages) {
+    const chat = document.getElementById('chatMessages');
+    chat.innerHTML = '';
+    messages.forEach(msg => {
+        const div = document.createElement('div');
+        div.className = 'chat-message';
+        div.innerHTML = `<span class="author">${msg.author}</span> <span class="timestamp">[${msg.timestamp}]</span><br>${msg.message}`;
+        chat.appendChild(div);
+    });
+    chat.scrollTop = chat.scrollHeight;
+}
+
+function loadMessages() {
+    currentTicketId = document.getElementById('ticketId').value;
+    fetch(`chat.php?id=${currentTicketId}`)
+        .then(r => r.json())
+        .then(renderMessages)
+        .catch(() => alert('Erro ao carregar mensagens.'));
+}
+
+function sendMessage(e) {
+    e.preventDefault();
+    const author = document.getElementById('author').value.trim();
+    const message = document.getElementById('message').value.trim();
+    if (!author || !message) return false;
+    fetch(`chat.php?id=${currentTicketId}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ author, message })
+    })
+    .then(r => r.json())
+    .then(res => {
+        if (res.success) {
+            document.getElementById('message').value = '';
+            loadMessages();
+        } else {
+            alert(res.error || 'Erro ao enviar mensagem.');
+        }
+    });
+    return false;
+}
+
+// Atualiza o chat a cada 5 segundos
+timer = setInterval(loadMessages, 5000);
+window.onload = loadMessages;
+</script>
+</body>
+</html>

@@ -140,6 +140,9 @@ foreach ($tickets as $ticket) {
                             <?php endif; ?>
                         </td>
                         <td>
+                            <?php if ($auth && ($role === 'tecnico' || $role === 'admin')): ?>
+                                <a href="buscarchamados.html?email=<?= urlencode($ticket['email'] ?? '') ?>" class="btn" style="padding:2px 10px;font-size:13px;margin-left:4px;background:#0078d7;" target="_blank">Chat</a>
+                            <?php endif; ?>
                             <?php if ($auth && $role !== 'tecnico'): ?>
                             <form method="post" action="tickets.php" style="margin-top:5px;display:inline-block;">
                                 <input type="hidden" name="delete_id" value="<?= $i ?>">

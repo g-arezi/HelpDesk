@@ -13,15 +13,14 @@
     </style>
 </head>
 <body>
-    <div style="position: fixed; top: 0; right: 0; z-index: 1000; display: flex; gap: 8px; padding: 12px;">
+    <div style="position: fixed; top: 0; left: 0; z-index: 1000; width: 100%; display: flex; justify-content: center; gap: 8px; padding: 12px;">
         <a href="login.php" style="background: #007bff; color: #fff; padding: 8px 16px; border-radius: 4px; text-decoration: none; font-weight: bold;">Login</a>
         <a href="tickets.php" style="background: #28a745; color: #fff; padding: 8px 16px; border-radius: 4px; text-decoration: none; font-weight: bold;">Lista de Chamados</a>
+        <a href="buscarchamados.html" style="background: #ff9800; color: #fff; padding: 8px 16px; border-radius: 4px; text-decoration: none; font-weight: bold;">Buscar Chamados</a>
+        <a href="open.php" style="background: #17a2b8; color: #fff; padding: 8px 16px; border-radius: 4px; text-decoration: none; font-weight: bold;">Abrir Chamado</a>
     </div>
     <div class="container">
-        <div class="tab-btns">
-            <button id="tab-abrir" class="active" onclick="showTab('abrir')">Abrir Chamado</button>
-            <button id="tab-buscar" onclick="showTab('buscar')">Buscar Chamados</button>
-        </div>
+  
         <div id="tab-content-abrir" class="tab-content active">
             <h2>Abrir Chamado</h2>
             <form method="post" action="open.php" enctype="multipart/form-data">
@@ -38,6 +37,11 @@
                 <select id="subject" name="subject" required>
                     <option value="">Selecione um erro</option>
                     <option value="sem_sinal">Sem sinal</option>
+                    <option value="conexao_internet">Problemas de conexão com a internet</option>
+                    <option value="erro_sistema">Erro no sistema</option>
+                    <option value="erro_reprodutor">Erro no reprodutor</option>
+                    <option value="erro_servidor">Erro no servidor</option>
+                    <option value="erro_configuracao">Erro de configuração</option>
                     <option value="tela_preta">Tela preta</option>
                     <option value="travamento_canais">Travamento de canais</option>
                     <option value="erro_autenticacao">Erro de autenticação</option>

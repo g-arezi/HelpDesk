@@ -3,7 +3,7 @@
         'name' => 'projeto-helpdesk/site',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '50ff54c56ffc47eb8f935ed1c780129f38bdf57a',
+        'reference' => '7a65d2f4ea579a6e29ba504d9e7b7129aee0b4a3',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -40,7 +40,7 @@
         'projeto-helpdesk/site' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '50ff54c56ffc47eb8f935ed1c780129f38bdf57a',
+            'reference' => '7a65d2f4ea579a6e29ba504d9e7b7129aee0b4a3',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
