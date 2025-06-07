@@ -18,28 +18,64 @@ Oferecer uma base para sistemas de chamados, facilitando o controle de solicita�
 5. Acesse `http://localhost/open.php` ou `http://localhost:8000/open.php` no navegador (caso use o servidor embutido do PHP).
 
 ## Estrutura do Projeto
-- `public/` — arquivos acessíveis publicamente (index.php, open.php, tickets.php, login.php, logout.php, edit_ticket.php, delete_ticket.php, assets)
+- `public/` — arquivos acessíveis publicamente (index.php, open.php, tickets.php, login.php, logout.php, edit_ticket.php, delete_ticket.php, buscarchamados.html, chat.php, assets)
 - `src/` — código-fonte PHP (controllers, models, views)
   - `Controller/` — lógica de controle (ex: TicketController.php)
   - `Model/` — classes de dados (ex: Ticket.php)
-  - `View/` — templates de interface (ex: open_form.php, success.php)
+  - `View/` — templates de interface (ex: open_form.php, success.php, buscarchamados.php)
 - `uploads/` — arquivos enviados pelos usuários (imagens anexadas aos chamados)
 - `vendor/` — dependências gerenciadas pelo Composer
+- `tickets.txt` — base de dados dos chamados (JSON)
+- `chat_{id}.txt` — histórico de mensagens do chat de cada chamado
 
 ## Funcionalidades
 - **Abertura de Chamados:** Formulário para registrar solicitações de suporte.
 - **Listagem de Chamados:** Visualização de todos os tickets cadastrados.
 - **Edição e Exclusão:** Permite editar ou remover chamados existentes.
-- **Login/Logout:** Controle de acesso para áreas restritas.
+- **Login/Logout:** Controle de acesso para áreas restritas (admin/técnico).
 - **Upload de Arquivos:** Anexação de imagens aos chamados.
+- **Chat Cliente-Técnico:** Chat em tempo real vinculado a cada chamado, permitindo comunicação entre cliente e técnico.
+- **Busca de Chamados:** Consulta de chamados por e-mail ou telefone.
 - **Envio de E-mail:** (Opcional, se configurado) Notificação por e-mail ao abrir chamado.
+
+## Novidades e Melhorias Recentes
+- **Chat integrado por chamado:** Usuários e técnicos podem conversar em tempo real em cada chamado.
+- **Página buscarchamados.html:** Permite ao usuário buscar seus chamados e acessar o chat diretamente.
+- **Botão de Chat em tickets.php:** Técnicos e admins podem acessar o chat do chamado diretamente pela lista de tickets.
+- **Controle de permissão no chat:** Apenas técnicos logados podem responder como técnico, mas qualquer usuário pode enviar mensagens.
 
 ## Fluxo de Uso
 1. O usuário acessa `open.php` e preenche o formulário para abrir um chamado.
-2. O chamado é salvo e pode ser visualizado em `tickets.php`.
+2. O chamado é salvo e pode ser visualizado em `tickets.php` (admin/técnico) ou buscado em `buscarchamados.html` (usuário).
 3. Usuários autenticados podem editar ou excluir chamados.
 4. É possível anexar imagens, que ficam salvas em `uploads/`.
 5. O login é feito via `login.php` e o logout via `logout.php`.
+6. O chat pode ser acessado pelo usuário em `buscarchamados.html` ou pelo técnico/admin em `tickets.php`.
+
+## Estrutura Lógica do Projeto
+
+### Cadastro e Gerenciamento de Chamados
+- Formulário em `open_form.php` (ou `open.php`) para abertura de chamados.
+- Dados são salvos em `tickets.txt`.
+- Listagem e gerenciamento em `tickets.php` (restrito a admin/técnico).
+
+### Busca de Chamados
+- Usuário busca chamados por e-mail ou telefone em `buscarchamados.html`.
+- Backend em `buscarchamados.php` retorna os chamados filtrados.
+
+### Chat Cliente-Técnico
+- Mensagens do chat são salvas em arquivos `chat_{id}.txt`.
+- Endpoint `chat.php` gerencia envio e leitura das mensagens.
+- Frontend do chat integrado em `buscarchamados.html` e acessível por técnicos/admins via botão em `tickets.php`.
+- Permissões: qualquer usuário pode enviar mensagem, mas apenas técnicos logados são identificados como tal.
+
+### Autenticação
+- Login e logout em `login.php` e `logout.php`.
+- Controle de sessão para restringir acesso a áreas administrativas.
+
+### Upload de Arquivos
+- Imagens anexadas são salvas em `uploads/`.
+- Suporte a colar/arrastar imagens no formulário de abertura de chamado.
 
 ## Principais Classes, Funções e Atributos
 ### Model: `Ticket.php`
@@ -50,39 +86,19 @@ Oferecer uma base para sistemas de chamados, facilitando o controle de solicita�
 
 ### Controller: `TicketController.php`
 - **Funções:**
-  - `abrirChamado()`, `editarChamado($id)`, `excluirChamado($id)`, `listarChamados()`
+  - `open()`, `edit()`, `delete()`, `list()`, `search()`
 
 ### View
-- **open_form.php:** Formulário de abertura de chamado
-- **success.php:** Tela de sucesso após operação
+- **open_form.php:** Formulário de abertura e busca de chamados.
+- **success.php:** Tela de sucesso após abrir chamado.
+- **buscarchamados.html:** Busca e chat de chamados para o usuário.
+- **tickets.php:** Listagem e gerenciamento de chamados para admin/técnico.
 
-## Exemplos de Uso
-- Para abrir um chamado, acesse `/open.php` e preencha os campos obrigatórios.
-- Para visualizar chamados, acesse `/tickets.php`.
-- Para editar/excluir, clique nos botões correspondentes ao lado do chamado (requer login).
-- Para anexar uma imagem, utilize o campo de upload no formulário de abertura/edição.
+### Chat
+- **chat.php:** Endpoint para envio e leitura de mensagens do chat.
+- **buscarchamados.html:** Interface do chat para usuário.
+- **Botão Chat em tickets.php:** Acesso rápido ao chat do chamado para técnico/admin.
 
-## Personalização e Expansão
-- Adicione novos campos ao modelo `Ticket.php` conforme sua necessidade.
-- Implemente novos tipos de autenticação ou níveis de acesso.
-- Integre com bancos de dados relacionais (MySQL, PostgreSQL) para maior robustez.
-- Expanda as views para um layout mais moderno usando frameworks CSS.
-
-## Dependências
-- PHP >= 8.0
-- Composer
-- PHPMailer (envio de e-mails)
-- vlucas/phpdotenv (variáveis de ambiente)
-- Outras dependências listadas no `composer.json`
-
-## Observações
-- Este projeto é apenas uma base. Personalize conforme sua necessidade.
-- Para rodar, siga os passos da seção "Como rodar o projeto".
-- Os arquivos enviados ficam em `uploads/`.
-
-## Créditos
-- Inspirado por https://helpdesk.ip.tv/open.php
-- Desenvolvido por Gabriel Arezi.
-
-## Licença
-Este projeto está sob a licença MIT. Sinta-se livre para usar, modificar e distribuir.
+---
+## Desenvolvido por Gabriel Arezi.
+Sinta-se à vontade para sugerir melhorias ou reportar problemas!
