@@ -75,8 +75,8 @@ function sendMessage(e) {
     return false;
 }
 
-// Atualiza o chat a cada 3 segundos
-timer = setInterval(loadMessages, 3000);
+// Atualiza o chat a cada 1 segundo (quase em tempo real)
+timer = setInterval(loadMessages, 1000);
 window.onload = loadMessages;
 </script>
 </body>

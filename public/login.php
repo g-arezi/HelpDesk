@@ -1,4 +1,6 @@
 <?php
+require_once __DIR__ . '/api_cors.php';
+
 session_start();
 
 // Verifica se o usuário já está autenticado
