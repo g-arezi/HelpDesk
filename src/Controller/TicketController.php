@@ -27,7 +27,7 @@ class TicketController
             }
 
             $ticket = new \App\Model\Ticket($name, $email, $subject, $message, $imagePath, $telefone);
-            $file = __DIR__ . '/../../tickets.txt';
+            $file = __DIR__ . '/../../logs/tickets.txt';
             $tickets = [];
             if (file_exists($file)) {
                 $content = file_get_contents($file);

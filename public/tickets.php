@@ -33,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_SESSION['auth']) && $_SESSI
 
 // Página para listar todos os tickets registrados
 $tickets = [];
-$file = __DIR__ . '/../tickets.txt';
+$file = __DIR__ . '/../logs/tickets.txt';
 if (file_exists($file)) {
     $content = file_get_contents($file);
     $tickets = json_decode($content, true) ?: [];

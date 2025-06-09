@@ -15,7 +15,7 @@
         <?php
         // Recuperar o ID do chamado recém-enviado
         // Verifica se o arquivo tickets.txt existe e lê o conteúdo
-        $file = __DIR__ . '/../../../tickets.txt';
+        $file = __DIR__ . '/../../../logs/tickets.txt';
         $id = 0;
         if (file_exists($file) && isset($ticket)) {
             $content = file_get_contents($file);

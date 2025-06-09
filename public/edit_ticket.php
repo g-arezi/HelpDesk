@@ -5,7 +5,7 @@ if (!isset($_SESSION['auth']) || $_SESSION['auth'] !== true) {
     exit;
 }
 
-$file = __DIR__ . '/../tickets.txt';
+$file = __DIR__ . '/../logs/tickets.txt';
 if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
     header('Location: tickets.php');
     exit;

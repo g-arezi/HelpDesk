@@ -2,7 +2,7 @@
 header('Content-Type: application/json; charset=utf-8');
 $email = isset($_GET['email']) ? trim($_GET['email']) : '';
 $telefone = isset($_GET['telefone']) ? trim($_GET['telefone']) : '';
-$file = __DIR__ . '/../tickets.txt';
+$file = __DIR__ . '/../logs/tickets.txt';
 $result = [];
 if ((($email && filter_var($email, FILTER_VALIDATE_EMAIL)) || $telefone) && file_exists($file)) {
     $content = file_get_contents($file);

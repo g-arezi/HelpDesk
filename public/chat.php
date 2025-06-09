@@ -2,7 +2,7 @@
 header('Content-Type: application/json; charset=utf-8');
 $method = $_SERVER['REQUEST_METHOD'];
 $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
-$chatFile = __DIR__ . "/../chat_$id.txt";
+$chatFile = __DIR__ . "/../logs/chat_$id.txt";
 
 if ($id <= 0) {
     echo json_encode(['error' => 'ID do chamado inválido']);
