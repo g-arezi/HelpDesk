@@ -70,15 +70,16 @@ foreach ($tickets as $ticket) {
         <h2 style="margin-left:30px;">Lista de Tickets</h2>
         <?php if ($auth): ?>
             <a href="logout.php" class="btn" style="float:right;margin-top:-40px;margin-right:30px;">Sair</a>
-            <a href="open.php" class="btn" style="float:right;margin-top:-40px;margin-right:140px;">Abrir novo chamado</a>
+            <a href="open.php" class="btn" style="float:right;margin-top:-40px;margin-right:140px;">Novo chamado</a>
+            <a href="dashboard.php" class="btn" style="float:right;margin-top:-40px;margin-right:350px;">Dashboard</a>
         <?php else: ?>
             <a href="login.php" class="btn" style="float:right;margin-top:-40px;margin-right:30px;">Login</a>
         <?php endif; ?>
         <?php if ($auth): ?>
             <div style="margin: 20px 30px 0 30px; padding: 16px; background: #fff; border-radius: 8px; box-shadow: 0 1px 6px #e0e0e0; display: flex; gap: 32px; max-width: 600px;">
-                <div><strong>Chamados em aberto:</strong> <span style="color:#d70022; font-weight:bold;"><?= $em_aberto ?></span></div>
-                <div><strong>Em andamento:</strong> <span style="color:#ff9800; font-weight:bold;"><?= $em_andamento ?></span></div>
-                <div><strong>Encerrados:</strong> <span style="color:#388e3c; font-weight:bold;"><?= $encerrados ?></span></div>
+                <div><strong>Chamados em aberto:</strong> <span style="color:#d70022; font-weight:bold;" id="span-aberto"><?= $em_aberto ?></span></div>
+                <div><strong>Em andamento:</strong> <span style="color:#ff9800; font-weight:bold;" id="span-andamento"><?= $em_andamento ?></span></div>
+                <div><strong>Encerrados:</strong> <span style="color:#388e3c; font-weight:bold;" id="span-encerrados"><?= $encerrados ?></span></div>
             </div>
         <?php endif; ?>
         <div style="overflow-x:auto; margin: 0 30px;">
@@ -96,7 +97,7 @@ foreach ($tickets as $ticket) {
                     <th>Ações</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody id="tickets-tbody">
                 <?php foreach (
                     $tickets as $i => $ticket): ?>
                     <tr>
@@ -127,7 +128,6 @@ foreach ($tickets as $ticket) {
                             ];
                             echo $statusLabel[$status] ?? $statusLabel['nao_aberto'];
                             ?>
-                            <?php if ($auth): ?>
                             <form method="post" action="tickets.php" style="margin-top:5px;display:inline-block;">
                                 <input type="hidden" name="id" value="<?= $i ?>">
                                 <select name="status" style="padding:2px 6px;">
@@ -137,7 +137,6 @@ foreach ($tickets as $ticket) {
                                 </select>
                                 <button type="submit" class="btn" style="padding:2px 10px;font-size:13px;margin-left:4px;background:#0078d7;">Alterar</button>
                             </form>
-                            <?php endif; ?>
                         </td>
                         <td>
                             <?php if ($auth && ($role === 'tecnico' || $role === 'admin')): ?>
@@ -155,9 +154,75 @@ foreach ($tickets as $ticket) {
             </tbody>
         </table>
         </div>
-        <br>
-        <!--<a href="open.php" class="btn">Abrir novo chamado</a>-->
     </div>
+    <script>
+    function renderTickets(data) {
+        // Atualiza contadores
+        document.getElementById('span-aberto').innerText = data.chamados.aberto;
+        document.getElementById('span-andamento').innerText = data.chamados.analise;
+        document.getElementById('span-encerrados').innerText = data.chamados.resolvido;
+        // Atualiza tabela
+        let tbody = document.getElementById('tickets-tbody');
+        tbody.innerHTML = '';
+        data.tickets.forEach(function(ticket, i) {
+            let row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${i+1}</td>
+                <td>${ticket.name ? escapeHtml(ticket.name) : ''}</td>
+                <td>${ticket.email ? escapeHtml(ticket.email) : ''}</td>
+                <td>${ticket.subject ? escapeHtml(ticket.subject) : ''}</td>
+                <td style='max-width:250px;word-break:break-word;'>${ticket.message ? escapeHtml(ticket.message).replace(/\n/g,'<br>') : ''}</td>
+                <td>${ticket.imagePath ? `<a href='${escapeHtml(ticket.imagePath)}' target='_blank'><img src='${escapeHtml(ticket.imagePath)}' alt='Imagem' style='max-width:80px;max-height:80px;border-radius:6px;box-shadow:0 1px 4px #ccc;'></a>` : '<span style=\"color:#aaa;\">-</span>'}</td>
+                <td>${ticket.telefone ? escapeHtml(ticket.telefone) : ''}</td>
+                <td>${renderStatus(ticket.status,i)}</td>
+                <td>
+                    <a href='buscarchamados.html?email=${encodeURIComponent(ticket.email ? ticket.email : '')}' class='btn' style='padding:2px 10px;font-size:13px;margin-left:4px;background:#0078d7;' target='_blank'>Chat</a>
+                    <button class='btn' style='padding:2px 10px;font-size:13px;margin-left:4px;background:#d70022;' onclick='deleteTicket(${i})'>Deletar</button>
+                </td>
+            `;
+            tbody.appendChild(row);
+        });
+    }
+    function escapeHtml(text) {
+        var map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
+        return text.replace(/[&<>"']/g, function(m) { return map[m]; });
+    }
+    function renderStatus(status, i) {
+        let label = '';
+        if(status==='resolvido') label = '<span style="color:green;font-weight:bold;">Resolvido</span>';
+        else if(status==='em_analise') label = '<span style="color:orange;font-weight:bold;">Em análise</span>';
+        else label = '<span style="color:red;font-weight:bold;">Não aberto</span>';
+        return label + `<select onchange='changeStatus(${i}, this.value)' style='padding:2px 6px;'><option value='nao_aberto' ${status==='nao_aberto'?'selected':''}>Não aberto</option><option value='em_analise' ${status==='em_analise'?'selected':''}>Em análise</option><option value='resolvido' ${status==='resolvido'?'selected':''}>Resolvido</option></select>`;
+    }
+    function changeStatus(id, status) {
+        fetch('update_ticket_status.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id, status })
+        }).then(r => r.json()).then(res => {
+            if(res.success) updateTickets();
+            else alert('Erro ao alterar status!');
+        });
+    }
+    function deleteTicket(id) {
+        if(!confirm('Tem certeza que deseja deletar este ticket?')) return;
+        fetch('delete_ticket.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id })
+        }).then(r => r.json()).then(res => {
+            if(res.success) updateTickets();
+            else alert('Erro ao deletar!');
+        });
+    }
+    function updateTickets() {
+        fetch('dashboard_data.php')
+            .then(r => r.json())
+            .then(renderTickets);
+    }
+    setInterval(updateTickets, 3000);
+    window.onload = updateTickets;
+    </script>
     <style>
     html, body {
         height: 100%;
