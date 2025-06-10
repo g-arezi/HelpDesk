@@ -43,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             $_SESSION['role'] = 'admin';
         }
-        header('Location: tickets.php');
+        header('Location: dashboard.php');
         exit;
     } else {
         $error = 'Login ou senha inválidos!';

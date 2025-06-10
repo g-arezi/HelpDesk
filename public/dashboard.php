@@ -1,13 +1,9 @@
 <?php
 session_start();
-// Para ambiente de desenvolvimento/teste, definir perfil admin se não estiver logado
-if (!isset($_SESSION['perfil'])) {
-    $_SESSION['perfil'] = 'admin';
-}
 
 // Simulação de autenticação (substitua pelo seu sistema real)
 // $_SESSION['perfil'] = 'admin'; // ou 'tecnico'
-if (!in_array($_SESSION['perfil'], ['admin', 'tecnico'])) {
+if (!isset($_SESSION['role']) || !in_array($_SESSION['role'], ['admin', 'tecnico'])) {
     header('Location: login.php');
     exit;
 }
@@ -89,18 +85,18 @@ function card($color, $icon, $label, $count) {
             <span style="color:#388e3c;font-weight:bold;margin-left:20px;">Encerrados: <span id="span-resolvido"><?=$chamados['resolvido']?></span></span>
         </div>
         <div class="cards">
-            <div id="card-aberto" style="flex:1;min-width:180px;margin:10px;padding:20px;background:#43a047;color:#fff;border-radius:10px;box-shadow:0 2px 8px #0001;text-align:center;">
-                <div style='font-size:2.5em;margin-bottom:10px;'>&#128994;</div>
+            <div id="card-aberto" style="flex:1;min-width:180px;margin:10px;padding:20px;background:#d32f2f;color:#fff;border-radius:10px;box-shadow:0 2px 8px #0001;text-align:center;">
+                <div style='font-size:2.5em;margin-bottom:10px;'>🔒</div>
                 <div style='font-size:1.2em;font-weight:bold;'>NÃO ABERTO</div>
                 <div id="card-aberto-value" style='font-size:2em;margin-top:5px;'><?=$chamados['aberto']?></div>
             </div>
             <div id="card-analise" style="flex:1;min-width:180px;margin:10px;padding:20px;background:#fbc02d;color:#fff;border-radius:10px;box-shadow:0 2px 8px #0001;text-align:center;">
-                <div style='font-size:2.5em;margin-bottom:10px;'>&#128308;</div>
+                <div style='font-size:2.5em;margin-bottom:10px;'>⏳</div>
                 <div style='font-size:1.2em;font-weight:bold;'>EM ANÁLISE</div>
                 <div id="card-analise-value" style='font-size:2em;margin-top:5px;'><?=$chamados['analise']?></div>
             </div>
-            <div id="card-resolvido" style="flex:1;min-width:180px;margin:10px;padding:20px;background:#d32f2f;color:#fff;border-radius:10px;box-shadow:0 2px 8px #0001;text-align:center;">
-                <div style='font-size:2.5em;margin-bottom:10px;'>&#128274;</div>
+            <div id="card-resolvido" style="flex:1;min-width:180px;margin:10px;padding:20px;background:#388e3c;color:#fff;border-radius:10px;box-shadow:0 2px 8px #0001;text-align:center;">
+                <div style='font-size:2.5em;margin-bottom:10px;'>✅</div>
                 <div style='font-size:1.2em;font-weight:bold;'>RESOLVIDO</div>
                 <div id="card-resolvido-value" style='font-size:2em;margin-top:5px;'><?=$chamados['resolvido']?></div>
             </div>
@@ -154,13 +150,13 @@ function card($color, $icon, $label, $count) {
                             <?php 
                             $status = isset($ticket['status']) ? $ticket['status'] : 'nao_aberto';
                             $statusLabel = [
-                                'resolvido' => '<span style="color:green;font-weight:bold;">Resolvido</span>',
-                                'em_analise' => '<span style="color:orange;font-weight:bold;">Em análise</span>',
-                                'nao_aberto' => '<span style="color:red;font-weight:bold;">Não aberto</span>'
+                                'resolvido' => '<span style="color:#388e3c;font-weight:bold;">✅ Resolvido</span>',
+                                'em_analise' => '<span style="color:#fbc02d;font-weight:bold;">⏳ Em análise</span>',
+                                'nao_aberto' => '<span style="color:#d32f2f;font-weight:bold;">🔒 Não aberto</span>'
                             ];
                             echo $statusLabel[$status] ?? $statusLabel['nao_aberto'];
                             ?>
-                            <form method="post" action="dashboard.php" style="margin-top:5px;display:inline-block;">
+                            <form method="post" action="dashboard.php" style="margin-top:5px;display:inline-block;" onsubmit="return alterarStatusDashboard(this, event)">
                                 <input type="hidden" name="id" value="<?= $i ?>">
                                 <select name="status" style="padding:2px 6px;">
                                     <option value="nao_aberto" <?= $status==='nao_aberto'?'selected':''; ?>>Não aberto</option>
@@ -221,9 +217,9 @@ function card($color, $icon, $label, $count) {
     }
     function renderStatus(status, i) {
         let label = '';
-        if(status==='resolvido') label = '<span style="color:green;font-weight:bold;">Resolvido</span>';
-        else if(status==='em_analise') label = '<span style="color:orange;font-weight:bold;">Em análise</span>';
-        else label = '<span style="color:red;font-weight:bold;">Não aberto</span>';
+        if(status==='resolvido') label = '<span style="color:#388e3c;font-weight:bold;">✅ Resolvido</span>';
+        else if(status==='em_analise') label = '<span style="color:#fbc02d;font-weight:bold;">🔓 Em análise</span>';
+        else label = '<span style="color:#d32f2f;font-weight:bold;">🔒 Não aberto</span>';
         return label + `<select onchange='changeStatus(${i}, this.value)' style='padding:2px 6px;'><option value='nao_aberto' ${status==='nao_aberto'?'selected':''}>Não aberto</option><option value='em_analise' ${status==='em_analise'?'selected':''}>Em análise</option><option value='resolvido' ${status==='resolvido'?'selected':''}>Resolvido</option></select>`;
     }
     function changeStatus(id, status) {
@@ -249,8 +245,22 @@ function card($color, $icon, $label, $count) {
     }
     function updateDashboard() {
         fetch('dashboard_data.php')
-            .then(r => r.json())
+            .then r => r.json())
             .then(renderDashboard);
+    }
+    function alterarStatusDashboard(form, event) {
+        event.preventDefault();
+        const id = form.id.value;
+        const status = form.status.value;
+        fetch('update_ticket_status.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id, status })
+        }).then(r => r.json()).then(res => {
+            if(res.success) updateDashboard();
+            else alert('Erro ao alterar status!');
+        });
+        return false;
     }
     setInterval(updateDashboard, 3000);
     window.onload = updateDashboard;
