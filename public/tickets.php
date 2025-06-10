@@ -65,26 +65,62 @@ foreach ($tickets as $ticket) {
     <meta charset="UTF-8">
     <title>Lista de Tickets - HelpDesk</title>
     <link rel="stylesheet" href="assets/style.css">
+    <style>
+    body { font-family: 'Segoe UI', Arial, sans-serif; background: #f4f6fa; margin:0; padding:0; transition: background 0.3s, color 0.3s; }
+    .container { max-width: 1200px; margin: 40px auto 30px auto; background: #fff; border-radius: 18px; box-shadow: 0 6px 32px #0002; padding: 36px 40px 30px 40px; min-height: 80vh; transition: background 0.3s, color 0.3s; }
+    h2 { color: #1976d2; text-align: left; font-size: 2.1rem; margin-bottom: 24px; letter-spacing: 1px; }
+    .summary-box { margin: 0 0 24px 0; padding: 18px 24px; background: #f8fafd; border-radius: 10px; box-shadow: 0 2px 8px #0001; display: flex; gap: 36px; max-width: 700px; }
+    .summary-box div { font-size: 1.1rem; }
+    .summary-box strong { font-weight: 600; }
+    .summary-box span { font-size: 1.2rem; }
+    .ticket-table { width: 100%; border-collapse: separate; border-spacing: 0; background: #fff; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 12px #0001; margin-top: 24px; font-size: 15px; }
+    .ticket-table th, .ticket-table td { padding: 13px 10px; text-align: left; border-bottom: 1px solid #e0e0e0; }
+    .ticket-table th { background: #f2f6fc; color: #1976d2; font-weight: 600; font-size: 1.05rem; letter-spacing: 0.5px; }
+    .ticket-table tr:last-child td { border-bottom: none; }
+    .ticket-table tr { transition: background 0.2s; }
+    .ticket-table tr:hover { background: #f0f4fa; }
+    .btn { padding: 7px 16px; background: #0078d7; color: #fff; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; box-shadow: 0 1px 4px #0001; transition: background 0.2s, color 0.2s; margin: 2px 0; }
+    .btn:hover { background: #0056a3; }
+    .btn[style*='background:#d70022'] { background: #d70022 !important; }
+    .btn[style*='background:#d70022']:hover { background: #b71c1c !important; }
+    .btn[style*='background:#0078d7'] { background: #0078d7 !important; }
+    .btn[style*='background:#0078d7']:hover { background: #0056a3 !important; }
+    .night-toggle { position:fixed; top:24px; left:24px; z-index:1000; background:linear-gradient(90deg,#ff6b6b,#b71c1c); color:#fff; border:1px solid #b71c1c; border-radius:20px; padding:10px 22px; cursor:pointer; font-weight:bold; box-shadow:0 2px 12px #0003; font-size: 1.1rem; transition: background 0.3s, color 0.3s; }
+    .night-toggle.night { background:linear-gradient(90deg,#b71c1c,#ff6b6b); color:#fff; border-color:#fff; }
+    /* Modo noturno */
+    body.night { background: #181c24 !important; color: #e0e0e0; }
+    .container.night { background: #232a36 !important; color: #e0e0e0; box-shadow: 0 6px 32px #0006; }
+    .ticket-table.night { background: #232a36 !important; color: #e0e0e0; box-shadow: 0 2px 12px #0006; }
+    .ticket-table.night th { background: #263238 !important; color: #90caf9; }
+    .ticket-table.night tr:hover { background-color: #222b38 !important; }
+    .btn.night { background: #b71c1c !important; color: #fff; }
+    .btn.night:hover { background: #ff6b6b !important; color: #fff; }
+    .summary-box.night { background: #232a36 !important; color: #e0e0e0; box-shadow: 0 2px 8px #0006; }
+    /* Responsivo */
+    @media (max-width: 1100px) {
+        .container { padding: 18px 4vw 18px 4vw; }
+        .summary-box { flex-direction: column; gap: 10px; }
+    }
+    @media (max-width: 700px) {
+        .container { padding: 10px 2vw 10px 2vw; }
+        .ticket-table th, .ticket-table td { font-size: 12px; padding: 7px 4px; }
+        h2 { font-size: 1.2rem; }
+    }
+    </style>
 </head>
 <body style="margin:0;padding:0;background:#f4f6fa;">
-    <div class="container" style="max-width:none;width:100vw;padding:0 0 30px 0;">
-        <h2 style="margin-left:30px;">Lista de Tickets</h2>
+    <button class="night-toggle" id="nightToggle">🌙 Modo Noturno</button>
+    <div class="container" id="container">
+        <h2>Lista de Tickets</h2>
         <?php if ($auth): ?>
-            <a href="logout.php" class="btn" style="float:right;margin-top:-40px;margin-right:30px;">Sair</a>
-            <a href="open.php" class="btn" style="float:right;margin-top:-40px;margin-right:140px;">Novo chamado</a>
-            <a href="dashboard.php" class="btn" style="float:right;margin-top:-40px;margin-right:350px;">Dashboard</a>
-        <?php else: ?>
-            <a href="login.php" class="btn" style="float:right;margin-top:-40px;margin-right:30px;">Login</a>
-        <?php endif; ?>
-        <?php if ($auth): ?>
-            <div style="margin: 20px 30px 0 30px; padding: 16px; background: #fff; border-radius: 8px; box-shadow: 0 1px 6px #e0e0e0; display: flex; gap: 32px; max-width: 600px;">
+            <div class="summary-box" id="summaryBox">
                 <div><strong>Chamados em aberto:</strong> <span style="color:#d70022; font-weight:bold;" id="span-aberto"><?= $em_aberto ?></span></div>
                 <div><strong>Em andamento:</strong> <span style="color:#ff9800; font-weight:bold;" id="span-andamento"><?= $em_andamento ?></span></div>
                 <div><strong>Encerrados:</strong> <span style="color:#388e3c; font-weight:bold;" id="span-encerrados"><?= $encerrados ?></span></div>
             </div>
         <?php endif; ?>
         <div style="overflow-x:auto; margin: 0 30px;">
-        <table class="ticket-table">
+        <table class="ticket-table" id="ticketTable">
             <thead>
                 <tr>
                     <th>ID</th>
@@ -223,67 +259,28 @@ foreach ($tickets as $ticket) {
     }
     setInterval(updateTickets, 3000);
     window.onload = updateTickets;
+    // Modo noturno igual às outras telas
+    function toggleNightMode(force) {
+        let night;
+        if (typeof force === 'boolean') {
+            night = force;
+            document.body.classList.toggle('night', night);
+        } else {
+            night = document.body.classList.toggle('night');
+        }
+        document.getElementById('container').classList.toggle('night', night);
+        document.getElementById('ticketTable').classList.toggle('night', night);
+        document.querySelectorAll('th').forEach(e=>e.classList.toggle('night', night));
+        document.querySelectorAll('tr').forEach(e=>e.classList.toggle('night', night));
+        document.querySelectorAll('.btn').forEach(e=>e.classList.toggle('night', night));
+        document.getElementById('nightToggle').classList.toggle('night', night);
+        let summary = document.getElementById('summaryBox');
+        if(summary) summary.classList.toggle('night', night);
+        if(night) localStorage.setItem('nightMode','1');
+        else localStorage.removeItem('nightMode');
+    }
+    document.getElementById('nightToggle').addEventListener('click', function() { toggleNightMode(); });
+    if(localStorage.getItem('nightMode')) toggleNightMode(true);
     </script>
-    <style>
-    html, body {
-        height: 100%;
-        width: 100%;
-        margin: 0;
-        padding: 0;
-    }
-    .container {
-        width: 100vw;
-        max-width: none;
-        margin: 0;
-        padding: 0 0 30px 0;
-        background: #f4f6fa;
-        min-height: 100vh;
-    }
-    .ticket-table {
-        width: 100%;
-        border-collapse: collapse;
-        background: #fff;
-        margin-top: 20px;
-        font-size: 15px;
-    }
-    .ticket-table th, .ticket-table td {
-        border: 1px solid #e0e0e0;
-        padding: 10px 8px;
-        text-align: left;
-    }
-    .ticket-table th {
-        background: #f7f7f7;
-        position: sticky;
-        top: 0;
-        z-index: 2;
-    }
-    .ticket-table tr:nth-child(even) {
-        background: #fafbfc;
-    }
-    .btn {
-        display: inline-block;
-        background: #0078d7;
-        color: #fff;
-        padding: 8px 18px;
-        border-radius: 4px;
-        text-decoration: none;
-        margin-top: 10px;
-        transition: background 0.2s;
-    }
-    .btn:hover {
-        background: #005fa3;
-    }
-    @media (max-width: 900px) {
-        .ticket-table th, .ticket-table td {
-            font-size: 13px;
-            padding: 7px 4px;
-        }
-        h2 {
-            font-size: 20px;
-        }
-    }
-    </style>
-
-
 </body>
 </html>

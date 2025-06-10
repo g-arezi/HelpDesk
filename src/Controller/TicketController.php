@@ -8,7 +8,6 @@ class TicketController
     public function open()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            header('Content-Type: application/json; charset=utf-8');
             $name = $_POST['name'] ?? '';
             $email = $_POST['email'] ?? '';
             $subject = $_POST['subject'] ?? '';
@@ -47,11 +46,10 @@ class TicketController
             $tickets[] = $ticket;
             file_put_contents($file, json_encode($tickets, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
 
-            echo json_encode([
-                'success' => true,
-                'message' => 'Chamado criado com sucesso!',
-                'ticket' => $ticket
-            ], JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+            // Exibe página de sucesso ao invés de JSON
+            // Passa o ticket recém-criado para a view de sucesso
+            $lastTicket = $ticket;
+            include __DIR__ . '/../View/success.php';
             return;
         }
         include __DIR__ . '/../View/open_form.php';

@@ -5,124 +5,199 @@
     <title>Abrir Chamado - HelpDesk</title>
     <link rel="stylesheet" href="assets/style.css">
     <style>
-        .tab-btns { display: flex; gap: 10px; margin-bottom: 20px; }
-        .tab-btns button { padding: 8px 18px; border: none; border-radius: 4px; background: #007bff; color: #fff; cursor: pointer; font-weight: bold; }
-        .tab-btns button.active { background: #0056b3; }
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
+        body { background: linear-gradient(120deg, #e3f2fd 0%, #f4f8fb 100%); font-family: 'Segoe UI', Arial, sans-serif; margin:0; transition: background 0.3s, color 0.3s; }
+        .container {
+            background: #fff;
+            max-width: 480px;
+            margin: 60px auto 30px auto;
+            padding: 38px 44px 34px 44px;
+            border-radius: 22px;
+            box-shadow: 0 8px 32px #0003, 0 1.5px 8px #1976d210;
+            transition: background 0.3s, color 0.3s;
+        }
+        h2 {
+            color: #1976d2;
+            margin-bottom: 22px;
+            text-align: center;
+            font-size: 2.2em;
+            letter-spacing: 1.2px;
+            font-weight: 700;
+        }
+        label {
+            display: block;
+            margin-top: 18px;
+            margin-bottom: 6px;
+            font-weight: 600;
+            color: #1976d2;
+            font-size: 1.08em;
+            letter-spacing: 0.2px;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 13px;
+            border: 1.5px solid #b0bec5;
+            border-radius: 10px;
+            font-size: 1.12em;
+            margin-bottom: 12px;
+            background: #f7fafd;
+            transition: border 0.2s, background 0.2s, color 0.2s;
+            color: #222;
+        }
+        input:focus, select:focus, textarea:focus {
+            border: 1.5px solid #1976d2;
+            background: #e3f2fd;
+            outline: none;
+            color: #1976d2;
+        }
+        input[type="file"] {
+            padding: 0;
+            background: none;
+        }
+        .btn {
+            background: linear-gradient(90deg, #1976d2 60%, #43a047 100%);
+            color: #fff;
+            border: none;
+            padding: 15px 0;
+            width: 100%;
+            border-radius: 10px;
+            font-size: 1.18em;
+            font-weight: bold;
+            margin-top: 26px;
+            box-shadow: 0 2px 12px #1976d220;
+            transition: background 0.2s, box-shadow 0.2s;
+        }
+        .btn:hover {
+            background: linear-gradient(90deg, #125ea7 60%, #388e3c 100%);
+            box-shadow: 0 4px 18px #1976d240;
+        }
+        #paste-area {
+            border: 2px dashed #90caf9;
+            background: #e3f2fd;
+            padding: 18px;
+            text-align: center;
+            margin-bottom: 10px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: background 0.2s, border 0.2s;
+        }
+        #paste-area:hover {
+            background: #bbdefb;
+            border-color: #1976d2;
+        }
+        #preview {
+            display: block;
+            margin: 12px auto 0 auto;
+            max-width: 220px;
+            max-height: 220px;
+            border-radius: 10px;
+            box-shadow: 0 1px 8px #1976d220;
+        }
+        .topnav {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            padding: 18px 0 0 0;
+        }
+        .topnav a {
+            background: #1976d2;
+            color: #fff;
+            padding: 10px 24px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.08em;
+            box-shadow: 0 2px 8px #1976d220;
+            transition: background 0.2s, box-shadow 0.2s;
+        }
+        .topnav a:hover {
+            background: #125ea7;
+            box-shadow: 0 4px 16px #1976d240;
+        }
+        .night-toggle { position:fixed; bottom:24px; left:24px; top:auto; right:auto; z-index:1000; background:linear-gradient(90deg,#ff6b6b,#b71c1c); color:#fff; border:1px solid #b71c1c; border-radius:20px; padding:10px 22px; cursor:pointer; font-weight:bold; box-shadow:0 2px 12px #0003; font-size: 1.1rem; transition: background 0.3s, color 0.3s; }
+        .night-toggle.night { background:linear-gradient(90deg,#b71c1c,#ff6b6b); color:#fff; border-color:#fff; }
+        @media (max-width: 600px) {
+            .container { padding: 18px 4vw; }
+            .topnav a { padding: 8px 10px; font-size: 0.98em; }
+        }
+        /* Night mode styles */
+        body.night { background: #181c24; color: #e0e0e0; }
+        .container.night { background: #232a36; color: #fff; box-shadow: 0 8px 32px #0006; }
+        .topnav.night a { background: #232a36; color: #90caf9; }
+        .topnav.night a:hover { background: #263238; }
+        input.night, select.night, textarea.night { background: #232a36; color: #fff; border: 1px solid #374151; }
+        input.night:focus, select.night:focus, textarea.night:focus { background: #181c24; border: 1.5px solid #90caf9; color: #90caf9; }
+        #paste-area.night { background: #232a36; border-color: #90caf9; color: #e0e0e0; }
+        #paste-area.night:hover { background: #263238; border-color: #1976d2; }
+        .btn.night { background: linear-gradient(90deg, #1976d2 60%, #232a36 100%); color: #fff; }
+        .btn.night:hover { background: linear-gradient(90deg, #125ea7 60%, #181c24 100%); }
+        body.night, .container.night, .container.night label, .container.night h2, .container.night input, .container.night textarea, .container.night select, .container.night option {
+            color: #fff !important;
+        }
+        .container.night input, .container.night textarea, .container.night select {
+            background: #232a36 !important;
+            border: 1px solid #444 !important;
+            color: #fff !important;
+        }
+        .container.night input::placeholder, .container.night textarea::placeholder {
+            color: #b0b0b0 !important;
+            opacity: 1;
+        }
     </style>
 </head>
 <body>
-    <div style="position: fixed; top: 0; left: 0; z-index: 1000; width: 100%; display: flex; justify-content: center; gap: 8px; padding: 12px;">
-        <a href="login.php" style="background: #007bff; color: #fff; padding: 8px 16px; border-radius: 4px; text-decoration: none; font-weight: bold;">Login</a>
-        <a href="tickets.php" style="background: #28a745; color: #fff; padding: 8px 16px; border-radius: 4px; text-decoration: none; font-weight: bold;">Lista de Chamados</a>
-        <a href="buscarchamados.html" style="background: #ff9800; color: #fff; padding: 8px 16px; border-radius: 4px; text-decoration: none; font-weight: bold;">Buscar Chamados</a>
-        <a href="open.php" style="background: #17a2b8; color: #fff; padding: 8px 16px; border-radius: 4px; text-decoration: none; font-weight: bold;">Abrir Chamado</a>
+    <button class="night-toggle" id="nightToggle" type="button" onclick="toggleNightMode()">🌙 Modo Noturno</button>
+    <div class="topnav">
+        <a href="login.php">Login</a>
+        <a href="tickets.php">Lista de Chamados</a>
+        <a href="buscarchamados.html">Buscar Chamados</a>
+        <a href="open.php" style="background:#43a047;">Abrir Chamado</a>
     </div>
     <div class="container">
-  
-        <div id="tab-content-abrir" class="tab-content active">
-            <h2>Abrir Chamado</h2>
-            <form method="post" action="open.php" enctype="multipart/form-data">
-                <label for="name">Nome:</label>
-                <input type="text" id="name" name="name" required>
+        <h2>Abrir Chamado</h2>
+        <form method="post" action="open.php" enctype="multipart/form-data">
+            <label for="name">Nome:</label>
+            <input type="text" id="name" name="name" required>
 
-                <label for="telefone">Telefone para contato:</label>
-                <input type="text" id="telefone" name="telefone" required>
+            <label for="telefone">Telefone para contato:</label>
+            <input type="text" id="telefone" name="telefone" required>
 
-                <label for="email">E-mail:</label>
-                <input type="email" id="email" name="email" required>
+            <label for="email">E-mail:</label>
+            <input type="email" id="email" name="email" required>
 
-                <label for="subject">Tópico de ajuda:</label>
-                <select id="subject" name="subject" required>
-                    <option value="">Selecione um erro</option>
-                    <option value="sem_sinal">Sem sinal</option>
-                    <option value="conexao_internet">Problemas de conexão com a internet</option>
-                    <option value="erro_sistema">Erro no sistema</option>
-                    <option value="erro_reprodutor">Erro no reprodutor</option>
-                    <option value="erro_servidor">Erro no servidor</option>
-                    <option value="erro_configuracao">Erro de configuração</option>
-                    <option value="tela_preta">Tela preta</option>
-                    <option value="travamento_canais">Travamento de canais</option>
-                    <option value="erro_autenticacao">Erro de autenticação</option>
-                    <option value="problemas_epg">Problemas com EPG</option>
-                    <option value="audio_fora_sincronia">Áudio fora de sincronia</option>
-                    <option value="outro">Outros</option>
-                </select>
+            <label for="subject">Tópico de ajuda:</label>
+            <select id="subject" name="subject" required>
+                <option value="">Selecione um erro</option>
+                <option value="sem_sinal">Sem sinal</option>
+                <option value="conexao_internet">Problemas de conexão com a internet</option>
+                <option value="erro_sistema">Erro no sistema</option>
+                <option value="erro_reprodutor">Erro no reprodutor</option>
+                <option value="erro_servidor">Erro no servidor</option>
+                <option value="erro_configuracao">Erro de configuração</option>
+                <option value="tela_preta">Tela preta</option>
+                <option value="travamento_canais">Travamento de canais</option>
+                <option value="erro_autenticacao">Erro de autenticação</option>
+                <option value="problemas_epg">Problemas com EPG</option>
+                <option value="audio_fora_sincronia">Áudio fora de sincronia</option>
+                <option value="outro">Outros</option>
+            </select>
 
-                <label for="message">Mensagem:</label>
-                <textarea id="message" name="message" rows="5" required></textarea>
+            <label for="message">Mensagem:</label>
+            <textarea id="message" name="message" rows="5" required></textarea>
 
-                <label for="image">Anexar imagem:</label>
-                <input type="file" id="image" name="image" accept="image/*">
-                <div id="paste-area" style="border:1px dashed #aaa;padding:10px;text-align:center;margin-bottom:10px;cursor:pointer;">
-                    <span id="paste-hint">Cole uma imagem aqui (Ctrl+V) ou arraste uma imagem</span>
-                    <img id="preview" src="" alt="Pré-visualização" style="display:none;max-width:200px;max-height:200px;margin-top:10px;"/>
-                </div>
-                <button type="submit" class="btn">Enviar Chamado</button>
-            </form>
-        </div>
-        <div id="tab-content-buscar" class="tab-content">
-            <h2 style="color:#007bff;">Buscar chamados por e-mail ou telefone</h2>
-            <form id="buscar-form" onsubmit="return buscarChamados();" style="background:#f7f7f7;padding:18px 24px;border-radius:8px;box-shadow:0 1px 6px #e0e0e0;max-width:420px;margin-bottom:18px;">
-                <div style="margin-bottom:12px;">
-                    <label for="buscar-email" style="font-weight:bold;">E-mail utilizado:</label>
-                    <input type="email" id="buscar-email" name="buscar-email" style="width:220px;padding:6px 10px;border-radius:4px;border:1px solid #ccc;">
-                </div>
-                <div style="margin-bottom:12px;">
-                    <span style="margin:0 10px;font-weight:bold;">ou</span>
-                </div>
-                <div style="margin-bottom:18px;">
-                    <label for="buscar-telefone" style="font-weight:bold;">Telefone utilizado:</label>
-                    <input type="text" id="buscar-telefone" name="buscar-telefone" style="width:180px;padding:6px 10px;border-radius:4px;border:1px solid #ccc;">
-                </div>
-                <button type="submit" class="btn" style="width:100%;font-size:16px;">Buscar meus chamados</button>
-                <div style="font-size:13px;color:#888;margin-top:10px;">Preencha <b>apenas um</b> dos campos acima para consultar todos os seus chamados.</div>
-            </form>
-            <div id="resultado-busca" style="margin-top:20px;"></div>
-        </div>
+            <label for="image">Anexar imagem:</label>
+            <input type="file" id="image" name="image" accept="image/*">
+            <div id="paste-area">
+                <span id="paste-hint">Cole uma imagem aqui (Ctrl+V) ou arraste uma imagem</span>
+                <img id="preview" src="" alt="Pré-visualização" style="display:none;"/>
+            </div>
+            <button type="submit" class="btn">Enviar Chamado</button>
+        </form>
     </div>
     <script>
-    function showTab(tab) {
-        document.getElementById('tab-content-abrir').classList.remove('active');
-        document.getElementById('tab-content-buscar').classList.remove('active');
-        document.getElementById('tab-abrir').classList.remove('active');
-        document.getElementById('tab-buscar').classList.remove('active');
-        document.getElementById('tab-content-' + tab).classList.add('active');
-        document.getElementById('tab-' + tab).classList.add('active');
-    }
-    function buscarChamados() {
-        const email = document.getElementById('buscar-email').value.trim();
-        const telefone = document.getElementById('buscar-telefone').value.trim();
-        if (!email && !telefone) {
-            document.getElementById('resultado-busca').innerHTML = '<div style="background:#ffeaea;color:#d70022;padding:12px 18px;border-radius:6px;font-weight:bold;">Por favor, informe o <b>e-mail</b> ou <b>telefone</b> utilizado para abrir o chamado.</div>';
-            return false;
-        }
-        const params = new URLSearchParams();
-        if (email) params.append('email', email);
-        if (telefone) params.append('telefone', telefone);
-        fetch('buscarchamados.php?' + params.toString())
-            .then(res => res.json())
-            .then(data => {
-                let html = '';
-                if (data && data.length > 0) {
-                    html = '<div style="background:#e8f5e9;color:#388e3c;padding:10px 18px;border-radius:6px;font-weight:bold;margin-bottom:18px;">Chamados encontrados:</div>';
-                    data.forEach(function(ticket, idx) {
-                        html += `<div style='margin-bottom:18px;padding:16px 18px;background:#f7f7f7;border-radius:8px;box-shadow:0 1px 4px #e0e0e0;'>` +
-                            `<div style='font-size:15px;'><b>Status:</b> <span style='font-weight:bold;'>${ticket.status}</span></div>` +
-                            `<div style='font-size:15px;'><b>Assunto:</b> ${ticket.subject}</div>` +
-                            `<div style='font-size:15px;'><b>Mensagem:</b> ${ticket.message}</div>` +
-                            `<div style='font-size:15px;'><b>Telefone:</b> ${ticket.telefone || '-'}</div>` +
-                            `</div>`;
-                    });
-                } else {
-                    html = '<div style="background:#ffeaea;color:#d70022;padding:12px 18px;border-radius:6px;font-weight:bold;">Nenhum chamado encontrado para o e-mail ou telefone informado.</div>';
-                }
-                document.getElementById('resultado-busca').innerHTML = html;
-            });
-        return false;
-    }
-    // Preview for file input
+    const pasteArea = document.getElementById('paste-area');
+    const imageInput = document.getElementById('image');
+    const preview = document.getElementById('preview');
+    const pasteHint = document.getElementById('paste-hint');
     imageInput.addEventListener('change', function(e) {
         if (this.files && this.files[0]) {
             const reader = new FileReader();
@@ -134,14 +209,11 @@
             reader.readAsDataURL(this.files[0]);
         }
     });
-
-    // Paste event
     pasteArea.addEventListener('paste', function(e) {
         const items = (e.clipboardData || e.originalEvent.clipboardData).items;
         for (let i = 0; i < items.length; i++) {
             if (items[i].type.indexOf('image') !== -1) {
                 const file = items[i].getAsFile();
-                imageInput.files = new DataTransfer().files;
                 const dt = new DataTransfer();
                 dt.items.add(file);
                 imageInput.files = dt.files;
@@ -156,8 +228,6 @@
             }
         }
     });
-
-    // Drag & drop support
     pasteArea.addEventListener('dragover', function(e) {
         e.preventDefault();
         pasteArea.style.background = '#f0f0f0';
@@ -185,7 +255,24 @@
             }
         }
     });
-    
+    function toggleNightMode(force) {
+        let night;
+        if (typeof force === 'boolean') {
+            night = force;
+            document.body.classList.toggle('night', night);
+        } else {
+            night = document.body.classList.toggle('night');
+        }
+        document.querySelector('.container').classList.toggle('night', night);
+        document.querySelector('.topnav').classList.toggle('night', night);
+        document.querySelectorAll('input, select, textarea').forEach(e=>e.classList.toggle('night', night));
+        document.getElementById('paste-area').classList.toggle('night', night);
+        document.querySelectorAll('.btn').forEach(e=>e.classList.toggle('night', night));
+        document.getElementById('nightToggle').classList.toggle('night', night);
+        if(night) localStorage.setItem('nightMode','1');
+        else localStorage.removeItem('nightMode');
+    }
+    if(localStorage.getItem('nightMode')) setTimeout(()=>toggleNightMode(true), 100);
     </script>
 </body>
 </html>

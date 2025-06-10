@@ -10,13 +10,40 @@ $telefone = isset($_GET['telefone']) ? trim($_GET['telefone']) : '';
 $file = __DIR__ . '/../logs/tickets.txt'; 
 $result = [];
 $error = '';
+
 if ((($email && filter_var($email, FILTER_VALIDATE_EMAIL)) || $telefone) && file_exists($file)) {
     $content = file_get_contents($file);
-    $tickets = json_decode($content, true) ?: [];
+    $tickets = [];
+    $tryArray = json_decode($content, true);
+    if (is_array($tryArray)) {
+        $tickets = $tryArray;
+    } else {
+        $lines = preg_split('/\r?\n/', $content);
+        foreach ($lines as $line) {
+            $line = trim($line);
+            if ($line) {
+                $ticket = json_decode($line, true);
+                if (is_array($ticket)) {
+                    $tickets[] = $ticket;
+                }
+            }
+        }
+    }
     foreach ($tickets as $idx => $ticket) {
-        $matchEmail = $email && isset($ticket['email']) && strtolower($ticket['email']) === strtolower($email);
-        $matchTelefone = $telefone && isset($ticket['telefone']) && $ticket['telefone'] === $telefone;
-        if ($matchEmail || $matchTelefone) {
+        $ticketEmail = isset($ticket['email']) ? strtolower(trim($ticket['email'])) : '';
+        $ticketTelefone = isset($ticket['telefone']) ? trim($ticket['telefone']) : '';
+
+        $match = false;
+        if ($email && $telefone) {
+            // Ambos preenchidos: busca por ambos
+            $match = ($ticketEmail === strtolower($email)) && ($ticketTelefone === $telefone);
+        } elseif ($email) {
+            $match = ($ticketEmail === strtolower($email));
+        } elseif ($telefone) {
+            $match = ($ticketTelefone === $telefone);
+        }
+
+        if ($match) {
             $statusMap = [
                 'nao_aberto' => 'Não aberto',
                 'em_analise' => 'Em análise',
@@ -41,3 +68,4 @@ echo json_encode([
     'error' => $error,
     'tickets' => $result
 ], JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+exit;
