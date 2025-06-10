@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/api_cors.php';
 session_start();
 // Processa alteração de status e deleção ANTES de qualquer saída
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_SESSION['auth']) && $_SESSION['auth'] === true) {

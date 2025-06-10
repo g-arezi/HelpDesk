@@ -98,7 +98,8 @@ function carregarChat(ticketId, area) {
             html += `</form>`;
             area.innerHTML = html;
             renderChatMessages(messages, ticketId);
-            setInterval(() => atualizarChat(ticketId), 5000);
+            // Atualiza o chat a cada 1 segundo (quase em tempo real)
+            setInterval(() => atualizarChat(ticketId), 1000);
         });
 }
 

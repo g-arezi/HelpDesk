@@ -1,11 +1,14 @@
 <?php
 namespace App\Controller;
 
+require_once __DIR__ . '/../../public/api_cors.php';
+
 class TicketController
 {
     public function open()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            header('Content-Type: application/json; charset=utf-8');
             $name = $_POST['name'] ?? '';
             $email = $_POST['email'] ?? '';
             $subject = $_POST['subject'] ?? '';
@@ -26,7 +29,15 @@ class TicketController
                 }
             }
 
-            $ticket = new \App\Model\Ticket($name, $email, $subject, $message, $imagePath, $telefone);
+            $ticket = [
+                'name' => $name,
+                'email' => $email,
+                'subject' => $subject,
+                'message' => $message,
+                'imagePath' => $imagePath,
+                'telefone' => $telefone,
+                'status' => 'nao_aberto'
+            ];
             $file = __DIR__ . '/../../logs/tickets.txt';
             $tickets = [];
             if (file_exists($file)) {
@@ -36,7 +47,11 @@ class TicketController
             $tickets[] = $ticket;
             file_put_contents($file, json_encode($tickets, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
 
-            include __DIR__ . '/../View/success.php';
+            echo json_encode([
+                'success' => true,
+                'message' => 'Chamado criado com sucesso!',
+                'ticket' => $ticket
+            ], JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
             return;
         }
         include __DIR__ . '/../View/open_form.php';

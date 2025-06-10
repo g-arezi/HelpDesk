@@ -1,3 +1,6 @@
 /vendor
 /public/uploads
 /logs
+/helpdesk-frontend/node_modules
+/helpdesk-frontend/readme.md
+

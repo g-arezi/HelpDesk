@@ -204,6 +204,186 @@ Oferecer uma base para sistemas de chamados, facilitando o controle de solicita�
 
 ---
 
+## HelpDesk - Guia de Publicação Completo
+
+Este guia detalha como publicar o sistema HelpDesk em diferentes ambientes, incluindo VPS Windows, VPS Linux, servidores Apache, hospedagem compartilhada e outros métodos. Siga o passo a passo conforme seu cenário.
+
+---
+
+## 1. Publicando em VPS Windows
+
+### 1.1. Pré-requisitos
+- PHP instalado (https://windows.php.net/download/)
+- Node.js e npm instalados (https://nodejs.org/)
+- (Opcional) IIS, XAMPP ou WAMP para servir arquivos PHP
+
+### 1.2. Backend (PHP)
+1. Extraia o projeto em uma pasta, ex: `E:\Helpdesk\HelpDesk`.
+2. Instale as dependências PHP:
+   ```powershell
+   cd E:\Helpdesk\HelpDesk
+   composer install
+   ```
+3. Inicie o backend com o servidor embutido do PHP:
+   ```powershell
+   cd E:\Helpdesk\HelpDesk\public
+   php -S 0.0.0.0:8000
+   ```
+4. Libere a porta 8000 no firewall:
+   ```powershell
+   New-NetFirewallRule -DisplayName "PHP Backend 8000" -Direction Inbound -LocalPort 8000 -Protocol TCP -Action Allow
+   ```
+
+### 1.3. Frontend (React)
+1. Configure o arquivo `.env` em `helpdesk-frontend`:
+   ```env
+   REACT_APP_API_URL=http://SEU_IP_PUBLICO:8000
+   ```
+2. Faça o build do frontend:
+   ```powershell
+   cd E:\Helpdesk\HelpDesk\helpdesk-frontend
+   npm install
+   npm run build
+   ```
+3. Instale o pacote serve (ou use IIS/Apache):
+   ```powershell
+   npm install -g serve
+   serve -s build -l 3000 --single
+   ```
+4. Libere a porta 3000 no firewall:
+   ```powershell
+   New-NetFirewallRule -DisplayName "React Frontend 3000" -Direction Inbound -LocalPort 3000 -Protocol TCP -Action Allow
+   ```
+5. Acesse pelo navegador: `http://SEU_IP_PUBLICO:3000`
+
+---
+
+## 2. Publicando em VPS Linux (Ubuntu/Debian)
+
+### 2.1. Pré-requisitos
+- PHP, Composer, Node.js, npm
+- (Opcional) Apache ou Nginx
+
+### 2.2. Backend (PHP)
+1. Instale dependências:
+   ```bash
+   sudo apt update
+   sudo apt install php php-cli php-mbstring unzip curl composer
+   ```
+2. Extraia o projeto, ex: `/home/usuario/HelpDesk`
+3. Instale dependências PHP:
+   ```bash
+   cd /home/usuario/HelpDesk
+   composer install
+   ```
+4. Inicie o backend (modo rápido):
+   ```bash
+   cd /home/usuario/HelpDesk/public
+   php -S 0.0.0.0:8000
+   ```
+5. Libere a porta 8000:
+   ```bash
+   sudo ufw allow 8000
+   ```
+
+### 2.3. Frontend (React)
+1. Configure `.env`:
+   ```env
+   REACT_APP_API_URL=http://SEU_IP_PUBLICO:8000
+   ```
+2. Faça o build:
+   ```bash
+   cd /home/usuario/HelpDesk/helpdesk-frontend
+   npm install
+   npm run build
+   ```
+3. Instale serve:
+   ```bash
+   sudo npm install -g serve
+   serve -s build -l 3000 --single
+   ```
+4. Libere a porta 3000:
+   ```bash
+   sudo ufw allow 3000
+   ```
+5. Acesse: `http://SEU_IP_PUBLICO:3000`
+
+---
+
+## 3. Publicando com Apache (Windows ou Linux)
+
+### 3.1. Backend (PHP)
+1. Copie o conteúdo da pasta `public` para o diretório do site no Apache (ex: `C:/xampp/htdocs/helpdesk` ou `/var/www/html/helpdesk`).
+2. Configure o Apache para servir o diretório.
+3. Certifique-se de que o Apache está rodando e a porta 80 está liberada.
+
+### 3.2. Frontend (React)
+1. Faça o build do frontend (`npm run build`).
+2. Copie o conteúdo da pasta `build` para uma subpasta do Apache (ex: `C:/xampp/htdocs/helpdesk-frontend` ou `/var/www/html/helpdesk-frontend`).
+3. Para React Router funcionar, crie um arquivo `.htaccess` dentro da pasta build com:
+   ```apache
+   RewriteEngine On
+   RewriteBase /
+   RewriteRule ^index\.html$ - [L]
+   RewriteCond %{REQUEST_FILENAME} !-f
+   RewriteCond %{REQUEST_FILENAME} !-d
+   RewriteRule . /index.html [L]
+   ```
+4. Acesse pelo navegador: `http://SEU_IP/helpdesk-frontend`
+
+---
+
+## 4. Publicando em Hospedagem Compartilhada (cPanel, HostGator, etc.)
+
+### 4.1. Backend (PHP)
+1. Faça upload dos arquivos da pasta `public` para a pasta `public_html` ou similar.
+2. Faça upload da pasta `logs` e garanta permissão de escrita.
+3. Se necessário, ajuste caminhos em arquivos PHP para refletir a estrutura da hospedagem.
+
+### 4.2. Frontend (React)
+1. Faça o build (`npm run build`).
+2. Faça upload do conteúdo da pasta `build` para uma subpasta em `public_html` (ex: `public_html/helpdesk-frontend`).
+3. Adicione o `.htaccess` conforme acima para React Router.
+
+---
+
+## 5. Publicando com Nginx (Linux)
+
+### 5.1. Backend (PHP)
+- Configure um bloco de servidor para servir a pasta `public` e encaminhar requisições PHP para o PHP-FPM.
+
+### 5.2. Frontend (React)
+- Sirva a pasta `build` como arquivos estáticos.
+- Para React Router, adicione:
+   ```nginx
+   location / {
+       try_files $uri /index.html;
+   }
+   ```
+- Para proxy de API, adicione:
+   ```nginx
+   location /api/ {
+       proxy_pass http://localhost:8000/;
+       proxy_set_header Host $host;
+   }
+   ```
+
+---
+
+## 6. Dicas Gerais
+- Sempre ajuste o `.env` do frontend para apontar para o backend correto.
+- Libere as portas necessárias no firewall.
+- Para produção, prefira servir o backend com Apache/Nginx e PHP-FPM.
+- Garanta permissão de escrita na pasta `logs`.
+- Para HTTPS, configure certificados SSL no servidor web.
+
+---
+
+## 7. Suporte
+Em caso de dúvidas, consulte a documentação oficial do PHP, React, Apache, Nginx ou entre em contato com o suporte da sua hospedagem.
+
+---
+
 ## Desenvolvido por Gabriel Arezi
 
 - Meu portfólio para contato: [Clique Aqui](https://portifolio-beta-five-52.vercel.app/)
