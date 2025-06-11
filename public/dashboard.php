@@ -104,9 +104,11 @@ function card($color, $icon, $label, $count) {
     <button class="night-toggle" id="nightToggle">🌙 Modo Noturno</button>
     <div class="sidebar" id="sidebar">
         <h2>Helpdesk System</h2>
-        <a href="dashboard.php">Home</a>
         <a href="tickets.php">Tickets</a>
         <a href="dashboard.php">Dashboard</a>
+        <a href="open.php">Novo Chamado</a>
+        <a href="buscarchamados.html">Buscar Chamados</a>
+        <a href="chat_frontend.html">Chat</a>
     </div>
     <div class="main" id="main">
         <div class="header">
