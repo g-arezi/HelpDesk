@@ -1,334 +1,232 @@
 # HelpDesk PHP
 
-Este projeto é um sistema de HelpDesk simples, desenvolvido em PHP, inspirado em [helpdesk.ip.tv/open.php](https://helpdesk.ip.tv/open.php). Permite o registro, acompanhamento e gerenciamento de chamados de suporte técnico, com upload de arquivos e controle de acesso básico.
+Sistema de HelpDesk simples e moderno, desenvolvido em PHP, para registro, acompanhamento e gerenciamento de chamados de suporte técnico. Permite upload de arquivos, chat em tempo real, controle de acesso e busca de chamados. Ideal para pequenas empresas, equipes ou uso pessoal.
 
-> **Atenção:** Este sistema está em fase de testes e aberto a sugestões de melhorias! Sinta-se à vontade para contribuir ou enviar feedback.
-
----
-
-## Objetivo
-
-Oferecer uma base para sistemas de chamados, facilitando o controle de solicitações de suporte em pequenas empresas ou equipes.
-
----
-
-## Como Rodar o Projeto
-
-1. Instale o [Composer](https://getcomposer.org/) se ainda não tiver.
-2. Execute `composer install` na raiz do projeto para instalar as dependências.
-3. Configure um servidor local (ex: Apache, XAMPP, Laragon) apontando para a pasta do projeto.
-4. Execute: `php -S localhost:8000 -t public`
-5. Acesse `http://localhost/open.php` ou `http://localhost:8000/open.php` no navegador (caso use o servidor embutido do PHP).
-
----
-
-## Estrutura do Projeto
-
-- `public/` — arquivos acessíveis publicamente (`index.php`, `open.php`, `tickets.php`, `login.php`, `logout.php`, `edit_ticket.php`, `delete_ticket.php`, `buscarchamados.html`, `chat.php`, `assets/`)
-- `src/` — código-fonte PHP
-  - `Controller/` — lógica de controle (ex: `TicketController.php`)
-  - `Model/` — classes de dados (ex: `Ticket.php`)
-  - `View/` — templates de interface (ex: `open_form.php`, `success.php`, `buscarchamados.php`)
-- `uploads/` — arquivos enviados pelos usuários (imagens anexadas aos chamados)
-- `vendor/` — dependências gerenciadas pelo Composer
-- `tickets.txt` — base de dados dos chamados (JSON)
-- `chat_{id}.txt` — histórico de mensagens do chat de cada chamado
-
----
-
-## Funcionalidades
-
-- **Abertura de Chamados:** Formulário para registrar solicitações de suporte.
-- **Listagem de Chamados:** Visualização de todos os tickets cadastrados.
-- **Edição e Exclusão:** Permite editar ou remover chamados existentes.
-- **Login/Logout:** Controle de acesso para áreas restritas (admin/técnico).
-- **Upload de Arquivos:** Anexação de imagens aos chamados.
-- **Chat Cliente-Técnico:** Chat em tempo real vinculado a cada chamado, permitindo comunicação entre cliente e técnico.
-- **Busca de Chamados:** Consulta de chamados por e-mail ou telefone.
-- **Envio de E-mail:** (Opcional, se configurado) Notificação por e-mail ao abrir chamado.
+> **Atenção:** Sistema em constante evolução! Sugestões e contribuições são bem-vindas.
 
 ---
 
 ## Novidades e Melhorias Recentes
 
-- **Chat integrado por chamado:** Usuários e técnicos podem conversar em tempo real em cada chamado.
-- **Página buscarchamados.html:** Permite ao usuário buscar seus chamados e acessar o chat diretamente.
-- **Botão de Chat em tickets.php:** Técnicos e admins podem acessar o chat do chamado diretamente pela lista de tickets.
-- **Controle de permissão no chat:** Apenas técnicos logados podem responder como técnico, mas qualquer usuário pode enviar mensagens.
+- **Chat em tempo real por chamado** (cliente e técnico/admin)
+- **Busca de chamados por e-mail ou telefone**
+- **Botão de chat direto na listagem de tickets**
+- **Permissões aprimoradas no chat** (técnico/admin identificado)
+- **Upload de imagens com suporte a arrastar/colar**
+- **Página de busca amigável para usuários**
+- **Controle de sessão e login seguro**
+- **Código organizado em MVC (Controller, Model, View)**
+- **Pronto para rodar em ambientes Windows e Linux**
+- **Compatível com XAMPP, Laragon, Apache, Nginx, hospedagem compartilhada e VPS**
 
 ---
 
-## Como Usar em um Servidor Apache ou Hospedagem
+## Estrutura do Projeto
 
-### 1. Subindo para um Servidor Apache Local (XAMPP, WAMP, Laragon, etc.)
-
-1. Clone ou envie os arquivos do projeto para a pasta `htdocs` (XAMPP) ou `www` (WAMP/Laragon) do seu servidor local.
-2. Instale as dependências:  
-   No terminal, na raiz do projeto, execute: `composer install`
-3. Ajuste as permissões das pastas `uploads/` e da raiz do projeto para garantir que o PHP possa gravar arquivos.
-4. Acesse pelo navegador:  
-   - `http://localhost/HelpDesk/public/open.php`  
-   - Ou, se estiver em uma subpasta: `http://localhost/sua-pasta/public/open.php`
-
-### 2. Subindo para um Site de Hospedagem Compartilhada
-
-1. Envie todos os arquivos do projeto (exceto a pasta `.git` e arquivos de desenvolvimento) para o diretório público do seu site, geralmente chamado `public_html`, `www` ou `htdocs`.
-2. Instale as dependências:  
-   - Se sua hospedagem permite SSH, acesse via terminal e rode:  
-     ```
-     composer install
-     ```
-   - Se não permite, rode `composer install` localmente e envie também a pasta `vendor/` para o servidor.
-3. Ajuste as permissões das pastas `uploads/` e da raiz do projeto para garantir que o PHP possa gravar arquivos.
-4. Configure o diretório público:  
-   - Se possível, aponte o domínio/subdomínio para a pasta `public/` do projeto.
-   - Se não for possível, mova o conteúdo da pasta `public/` para a raiz do diretório público e ajuste os caminhos dos includes no código, se necessário.
-5. Acesse pelo navegador:  
-   - `https://seudominio.com/open.php`  
-   - Ou `https://seudominio.com/public/open.php`
-
-### 3. Observações Importantes
-
-- **Banco de dados:** Este sistema usa arquivos `.txt` para armazenar chamados e mensagens de chat. Não é necessário configurar banco de dados.
-- **Permissões:** Certifique-se de que o PHP tem permissão de escrita nas pastas onde serão salvos os arquivos (`uploads/`, `tickets.txt`, `chat_{id}.txt`).
-- **Segurança:** Para ambientes de produção, recomenda-se proteger as pastas de dados e considerar migração para banco de dados.
-- **URL amigável:** Se quiser URLs mais limpas, configure um `.htaccess` para redirecionar requisições para a pasta `public/`.
+- `public/` — arquivos públicos (páginas, assets)
+- `src/` — código-fonte PHP (Controller, Model, View)
+- `uploads/` — anexos enviados pelos usuários
+- `logs/` — arquivos de log e base de dados dos chamados
+- `vendor/` — dependências do Composer
 
 ---
 
-## Fluxo de Uso
+## Funcionalidades
 
-1. O usuário acessa `open.php` e preenche o formulário para abrir um chamado.
-2. O chamado é salvo e pode ser visualizado em `tickets.php` (admin/técnico) ou buscado em `buscarchamados.html` (usuário).
-3. Usuários autenticados podem editar ou excluir chamados.
-4. É possível anexar imagens, que ficam salvas em `uploads/`.
-5. O login é feito via `login.php` e o logout via `logout.php`.
-6. O chat pode ser acessado pelo usuário em `buscarchamados.html` ou pelo técnico/admin em `tickets.php`.
-
----
-
-## Estrutura Lógica do Projeto
-
-### Cadastro e Gerenciamento de Chamados
-
-- Formulário em `open_form.php` (ou `open.php`) para abertura de chamados.
-- Dados são salvos em `tickets.txt`.
-- Listagem e gerenciamento em `tickets.php` (restrito a admin/técnico).
-
-### Busca de Chamados
-
-- Usuário busca chamados por e-mail ou telefone em `buscarchamados.html`.
-- Backend em `buscarchamados.php` retorna os chamados filtrados.
-
-### Chat Cliente-Técnico
-
-- Mensagens do chat são salvas em arquivos `chat_{id}.txt`.
-- Endpoint `chat.php` gerencia envio e leitura das mensagens.
-- Frontend do chat integrado em `buscarchamados.html` e acessível por técnicos/admins via botão em `tickets.php`.
-- Permissões: qualquer usuário pode enviar mensagem, mas apenas técnicos logados são identificados como tal.
-
-### Autenticação
-
-- Login e logout em `login.php` e `logout.php`.
-- Controle de sessão para restringir acesso a áreas administrativas.
-
-### Upload de Arquivos
-
-- Imagens anexadas são salvas em `uploads/`.
-- Suporte a colar/arrastar imagens no formulário de abertura de chamado.
+- **Abertura e acompanhamento de chamados**
+- **Chat em tempo real por chamado**
+- **Upload de imagens**
+- **Busca de chamados por e-mail/telefone**
+- **Login/logout para técnicos/admins**
+- **Edição e exclusão de chamados**
+- **Controle de permissões**
 
 ---
 
-## Principais Classes, Funções e Atributos
+## Como Rodar o Projeto
 
-### Model: `Ticket.php`
+### 1. Requisitos
+- PHP 7.4+
+- Composer
+- (Opcional) Apache, Nginx, XAMPP, Laragon ou hospedagem compatível
 
-- **Atributos:**  
-  `id`, `titulo`, `descricao`, `status`, `data_criacao`, `anexo`
-- **Funções:**  
-  `criar()`, `listar()`, `buscarPorId($id)`, `atualizar($id)`, `excluir($id)`
+### 2. Instalação Rápida (Ambiente Local)
 
-### Controller: `TicketController.php`
-
-- **Funções:**  
-  `open()`, `edit()`, `delete()`, `list()`, `search()`
-
-### View
-
-- **open_form.php:** Formulário de abertura e busca de chamados.
-- **success.php:** Tela de sucesso após abrir chamado.
-- **buscarchamados.html:** Busca e chat de chamados para o usuário.
-- **tickets.php:** Listagem e gerenciamento de chamados para admin/técnico.
-
-### Chat
-
-- **chat.php:** Endpoint para envio e leitura de mensagens do chat.
-- **buscarchamados.html:** Interface do chat para usuário.
-- **Botão Chat em tickets.php:** Acesso rápido ao chat do chamado para técnico/admin.
-
----
-
-## Exemplos de Uso
-
-### 1. Abrir um Chamado
-
-- Acesse `/open.php`
-- Preencha telefone, e-mail, selecione o tópico e descreva o problema.
-- Clique em "Abrir chamado".
-
-### 2. Buscar Chamados
-
-- Acesse `/buscarchamados.html`
-- Informe seu e-mail ou telefone.
-- Veja a lista de chamados e clique em "Abrir Chat" para conversar com o técnico.
-
-### 3. Chat do Chamado
-
-- Técnicos/admins: acesse `/tickets.php`, clique em "Chat" ao lado do chamado.
-- Usuários: acesse `/buscarchamados.html?email=seu@email.com` e clique em "Abrir Chat".
-- Envie mensagens e acompanhe as respostas em tempo real.
-
-### 4. Login Técnico/Admin
-
-- Acesse `/login.php`
-- Usuário técnico: `tecnico` | Senha: `tecnico321`
-- Usuário admin: `admin` | Senha: `admin321`
-
----
-
-## Observações
-
-- Os dados dos chamados e chats são salvos em arquivos `.txt` para facilitar testes e manutenção.
-- O sistema pode ser facilmente adaptado para uso com banco de dados.
-- O chat é simples, mas pode ser expandido para notificações, anexos e mais recursos.
-
----
-
-## HelpDesk - Guia de Publicação Completo
-
-Este guia detalha como publicar o sistema HelpDesk em diferentes ambientes, incluindo VPS Windows, VPS Linux, servidores Apache, hospedagem compartilhada e outros métodos. Siga o passo a passo conforme seu cenário.
-
----
-
-## 1. Publicando em VPS Windows
-
-### 1.1. Pré-requisitos
-- PHP instalado (https://windows.php.net/download/)
-- Node.js e npm instalados (https://nodejs.org/)
-- (Opcional) IIS, XAMPP ou WAMP para servir arquivos PHP
-
-### 1.2. Backend (PHP)
-1. Extraia o projeto em uma pasta, ex: `E:\Helpdesk\HelpDesk`.
-2. Instale as dependências PHP:
-   ```powershell
-   cd E:\Helpdesk\HelpDesk
+1. Clone ou extraia o projeto em uma pasta de sua preferência.
+2. No terminal, acesse a pasta do projeto e execute:
+   ```
    composer install
    ```
-3. Inicie o backend com o servidor embutido do PHP:
-   ```powershell
-   cd E:\Helpdesk\HelpDesk\public
-   php -S 0.0.0.0:8000
+3. Inicie o servidor embutido do PHP:
    ```
-4. Libere a porta 8000 no firewall:
-   ```powershell
-   New-NetFirewallRule -DisplayName "PHP Backend 8000" -Direction Inbound -LocalPort 8000 -Protocol TCP -Action Allow
+   php -S localhost:8000 -t public
    ```
+4. Acesse `http://localhost:8000/open.php` no navegador.
+
+### 3. Ajuste de Permissões (Linux)
+
+Garanta permissão de escrita nas pastas `uploads/` e `logs/`:
+```bash
+chmod -R 775 uploads logs
+chmod 664 logs/tickets.txt
+```
+
+No Windows, normalmente não é necessário ajustar permissões.
 
 ---
 
-## 2. Publicando em VPS Linux (Ubuntu/Debian)
+## Tutoriais de Instalação em Diferentes Plataformas
 
-### 2.1. Pré-requisitos
-- PHP, Composer, Node.js, npm
-- (Opcional) Apache ou Nginx
+### XAMPP (Windows)
+1. Instale o XAMPP e inicie o Apache.
+2. Copie o projeto para `C:/xampp/htdocs/HelpDesk`.
+3. No terminal, acesse a pasta do projeto e rode:
+   ```
+   composer install
+   ```
+4. Acesse `http://localhost/HelpDesk/public/open.php` no navegador.
 
-### 2.2. Backend (PHP)
-1. Instale dependências:
+### Laragon (Windows)
+1. Instale o Laragon e inicie o Apache.
+2. Copie o projeto para `C:/laragon/www/HelpDesk`.
+3. No terminal, acesse a pasta do projeto e rode:
+   ```
+   composer install
+   ```
+4. Acesse `http://localhost/HelpDesk/public/open.php`.
+
+### Hospedagem Compartilhada (cPanel, HostGator, etc.)
+1. Faça upload dos arquivos para a pasta `public_html`.
+2. Envie também as pastas `uploads/` e `logs/`.
+3. Se possível, rode `composer install` via SSH. Caso não tenha SSH, rode localmente e envie a pasta `vendor/`.
+4. Ajuste permissões das pastas para escrita (via painel ou FTP).
+5. Acesse `https://seudominio.com/public/open.php` ou mova o conteúdo de `public/` para a raiz se necessário.
+
+### VPS Linux (Ubuntu/Debian)
+1. Instale PHP, Composer e (opcional) Apache/Nginx:
    ```bash
    sudo apt update
-   sudo apt install php php-cli php-mbstring unzip curl composer
+   sudo apt install php php-cli composer unzip curl
    ```
 2. Extraia o projeto, ex: `/home/usuario/HelpDesk`
-3. Instale dependências PHP:
+3. Rode:
    ```bash
    cd /home/usuario/HelpDesk
    composer install
    ```
-4. Inicie o backend (modo rápido):
+4. Inicie o servidor embutido:
    ```bash
-   cd /home/usuario/HelpDesk/public
+   cd public
    php -S 0.0.0.0:8000
    ```
 5. Libere a porta 8000:
    ```bash
    sudo ufw allow 8000
    ```
+6. Acesse `http://SEU_IP:8000/open.php`
 
----
+### VPS Windows
+1. Instale PHP e Composer.
+2. Extraia o projeto, ex: `E:\Helpdesk\HelpDesk`.
+3. No PowerShell:
+   ```powershell
+   cd E:\Helpdesk\HelpDesk
+   composer install
+   cd public
+   php -S 0.0.0.0:8000
+   ```
+4. Libere a porta 8000 no firewall:
+   ```powershell
+   New-NetFirewallRule -DisplayName "PHP Backend 8000" -Direction Inbound -LocalPort 8000 -Protocol TCP -Action Allow
+   ```
+5. Acesse `http://SEU_IP:8000/open.php`
 
-## 3. Publicando com Apache (Windows ou Linux)
-
-### 3.1. Backend (PHP)
+### Apache (Windows ou Linux)
 1. Copie o conteúdo da pasta `public` para o diretório do site no Apache (ex: `C:/xampp/htdocs/helpdesk` ou `/var/www/html/helpdesk`).
-2. Configure o Apache para servir o diretório.
-3. Certifique-se de que o Apache está rodando e a porta 80 está liberada.
-4. Acesse pelo navegador: `http://localhost/helpdesk/open.php` ou `http://SEU_IP/helpdesk/open.php`
+2. Certifique-se de que o Apache está rodando.
+3. Ajuste permissões das pastas `uploads/` e `logs/`.
+4. Acesse `http://localhost/helpdesk/open.php`.
 
----
-
-## 4. Publicando em Hospedagem Compartilhada (cPanel, HostGator, etc.)
-
-### 4.1. Backend (PHP)
-1. Faça upload dos arquivos da pasta `public` para a pasta `public_html` ou similar.
-2. Faça upload da pasta `logs` e garanta permissão de escrita.
-3. Se necessário, ajuste caminhos em arquivos PHP para refletir a estrutura da hospedagem.
-
----
-
-## 5. Publicando com Nginx (Linux)
-
-### 5.1. Backend (PHP)
-- Configure um bloco de servidor para servir a pasta `public` e encaminhar requisições PHP para o PHP-FPM.
-- Sempre ajuste as permissões das pastas:
+### Nginx (Linux)
+1. Configure o bloco de servidor para servir a pasta `public` e encaminhar PHP para o PHP-FPM.
+2. Ajuste permissões:
    ```bash
    sudo chown -R www-data:www-data /caminho/para/seu/projeto
-   sudo chmod -R 755 /caminho/para/seu/projeto
+   sudo chmod -R 775 uploads logs
+   sudo chmod 664 logs/tickets.txt
    ```
-- Exemplo : `chmod -R 775 uploads logs` e `chmod 664 logs/tickets.txt`
-
-### 5.2. Frontend (React)
-- Sirva a pasta `build` como arquivos estáticos.
-- Para React Router, adicione:
-   ```nginx
-   location / {
-       try_files $uri /index.html;
-   }
-   ```
-- Para proxy de API, adicione:
-   ```nginx
-   location /api/ {
-       proxy_pass http://localhost:8000/;
-       proxy_set_header Host $host;
-   }
-   ```
+3. Reinicie o Nginx e acesse pelo navegador.
 
 ---
 
-## 6. Dicas Gerais
-- Sempre ajuste o `.env` do frontend para apontar para o backend correto.
-- Libere as portas necessárias no firewall.
-- Para produção, prefira servir o backend com Apache/Nginx e PHP-FPM.
-- Garanta permissão de escrita na pasta `logs`.
-- Para HTTPS, configure certificados SSL no servidor web.
+## Como Usar
+
+### Abrir um Chamado
+- Acesse `/open.php`, preencha o formulário e envie.
+
+### Buscar Chamados
+- Acesse `/buscarchamados.html`, informe e-mail ou telefone e veja seus chamados.
+
+### Chat do Chamado
+- Usuário: acesse `/buscarchamados.html` e clique em "Abrir Chat".
+- Técnico/Admin: acesse `/tickets.php` e clique em "Chat" ao lado do chamado.
+
+### Login Técnico/Admin
+- Acesse `/login.php`
+- Técnico: `seu-user` | Senha: `sua-senha` (pode ser alterada no arquivo `src/Model/Usuario.php`)
 
 ---
 
-## 7. Suporte
-Em caso de dúvidas, consulte a documentação oficial do PHP, React, Apache, Nginx ou entre em contato com o suporte da sua hospedagem.
+## Exemplos de Uso
+
+### 1. Abrir um Chamado
+1. Acesse `http://localhost:8000/open.php` (ou o endereço correspondente ao seu servidor).
+2. Preencha os campos obrigatórios: nome, telefone, e-mail, selecione o tópico e descreva o problema.
+3. (Opcional) Anexe uma imagem arrastando para o campo ou clicando em "Escolher arquivo".
+4. Clique em "Abrir chamado". Você verá uma mensagem de sucesso e receberá o número do seu chamado.
+
+### 2. Buscar Chamados e Acessar o Chat
+1. Acesse `http://localhost:8000/buscarchamados.html`.
+2. Informe seu e-mail ou telefone cadastrado e clique em "Buscar".
+3. Veja a lista de chamados abertos. Clique em "Abrir Chat" para conversar com o técnico responsável.
+4. Envie mensagens e acompanhe as respostas em tempo real.
+
+### 3. Gerenciamento para Técnico/Admin
+1. Faça login em `http://localhost:8000/login.php` com:
+   - Técnico: usuário `seu-user` | senha `sua-senha`
+   - Admin: usuário `seu-user` | senha `sua-senha`
+2. Acesse `http://localhost:8000/tickets.php` para ver todos os chamados.
+3. Edite, exclua ou altere o status dos chamados conforme necessário.
+4. Clique em "Chat" ao lado de um chamado para conversar com o usuário.
+
+### 4. Anexar Imagens a um Chamado
+- No formulário de abertura, arraste a imagem para o campo de upload ou clique para selecionar um arquivo.
+- O arquivo será salvo na pasta `uploads/` e ficará disponível para consulta no chamado.
+
+### 5. Alterar Senha de Técnico/Admin
+- As credenciais estão no arquivo `src/Model/Usuario.php`.
+- Edite o arquivo para alterar usuário ou senha conforme desejado.
+
+---
+
+## Observações e Dicas
+- Os dados são salvos em arquivos `.txt` para facilitar testes e manutenção.
+- Para produção, recomenda-se proteger as pastas de dados e considerar migração para banco de dados.
+- Sempre garanta permissão de escrita nas pastas `uploads/` e `logs/`.
+- Para HTTPS, configure SSL no servidor web.
+
+---
+
+## Suporte
+Dúvidas? Consulte a documentação oficial do PHP, Apache, Nginx ou entre em contato com a comunidade.
+- [Documentação PHP](https://www.php.net/manual/pt_BR/)
+- [Documentação Apache](https://httpd.apache.org/docs/)
+- [Documentação Nginx](https://nginx.org/en/docs/)
+- [Fórum PHP Brasil](https://forum.php.net/)
 
 ---
 
 ## Desenvolvido por Gabriel Arezi
 
-- Meu portfólio para contato: [Clique Aqui](https://portifolio-beta-five-52.vercel.app/)
-- Sinta-se à vontade para sugerir melhorias ou reportar problemas!
+- Portfólio: [Clique Aqui](https://portifolio-beta-five-52.vercel.app/)
+- Sugestões e melhorias são bem-vindas!
