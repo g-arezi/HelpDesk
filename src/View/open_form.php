@@ -122,7 +122,7 @@
         /* Night mode styles */
         body.night { background: #181c24; color: #e0e0e0; }
         .container.night { background: #232a36; color: #fff; box-shadow: 0 8px 32px #0006; }
-        .topnav.night a { background: #232a36; color: #90caf9; }
+        .topnav.night a { background: #232a36; color:rgb(255, 255, 255); }
         .topnav.night a:hover { background: #263238; }
         input.night, select.night, textarea.night { background: #232a36; color: #fff; border: 1px solid #374151; }
         input.night:focus, select.night:focus, textarea.night:focus { background: #181c24; border: 1.5px solid #90caf9; color: #90caf9; }

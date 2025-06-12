@@ -5,114 +5,296 @@
     <title>Chat do Chamado</title>
     <link rel="stylesheet" href="assets/style.css">
     <style>
-        .chat-container { max-width: 500px; margin: 30px auto; border: 1px solid #ccc; border-radius: 8px; padding: 16px; background: #fafafa; }
-        .chat-messages { height: 300px; overflow-y: auto; border: 1px solid #eee; padding: 10px; background: #fff; margin-bottom: 10px; }
-        .chat-message { margin-bottom: 8px; }
-        .chat-message .author { font-weight: bold; }
+        /* Modernização visual do chat */
+        body { background: #f4f6fb; }
+        .chat-container {
+            max-width: 500px;
+            margin: 40px auto;
+            border: none;
+            border-radius: 18px;
+            padding: 28px 24px 18px 24px;
+            background: linear-gradient(135deg, #fafdff 80%, #e3f0ff 100%);
+            box-shadow: 0 6px 32px #0002, 0 1.5px 8px #1976d220;
+            transition: background 0.3s, color 0.3s;
+        }
+        h2 {
+            color: #1976d2;
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-bottom: 18px;
+            text-shadow: 0 2px 8px #1976d210;
+            letter-spacing: 0.5px;
+        }
+        .chat-messages {
+            height: 260px;
+            overflow-y: auto;
+            border: 1.5px solid #e3eaf2;
+            padding: 12px;
+            background: #fff;
+            margin-bottom: 14px;
+            border-radius: 10px;
+            font-size: 1.04rem;
+            box-shadow: 0 1px 4px #1976d208;
+        }
+        .chat-message { margin-bottom: 10px; }
+        .chat-message .author { font-weight: bold; color: #1976d2; }
         .chat-message .timestamp { color: #888; font-size: 0.85em; margin-left: 8px; }
-        .chat-form { display: flex; gap: 8px; }
-        .chat-form input, .chat-form button { padding: 8px; }
-        .chat-form input { flex: 1; }
+        .chat-form { display: flex; gap: 10px; margin-top: 6px; }
+        .chat-form input, .chat-form button {
+            padding: 10px;
+            border-radius: 8px;
+            border: 1.5px solid #cfd8dc;
+            font-size: 1rem;
+            transition: background 0.3s, color 0.3s, border 0.2s;
+        }
+        .chat-form input { flex: 1; background: #fafdff; color: #222; }
+        .chat-form input:focus { border: 1.5px solid #1976d2; outline: none; background: #e3f0ff; }
+        .chat-form button {
+            background: linear-gradient(90deg, #1976d2 60%, #63a4ff 100%);
+            color: #fff;
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+            min-width: 90px;
+            box-shadow: 0 2px 8px #1976d210;
+        }
+        .chat-form button:hover { background: #125ea7; }
+        label {
+            color: #1976d2;
+            font-weight: 500;
+            margin-right: 4px;
+            font-size: 1rem;
+            vertical-align: middle;
+        }
+        input[type="number"], input[type="email"], input[type="text"] {
+            margin-right: 8px;
+            margin-bottom: 6px;
+            border-radius: 7px;
+            border: 1.5px solid #cfd8dc;
+            background: #fafdff;
+            color: #222;
+            font-size: 1rem;
+            padding-left: 32px;
+            box-sizing: border-box;
+            transition: border 0.2s, background 0.3s;
+        }
+        input[type="number"]:focus, input[type="email"]:focus, input[type="text"]:focus {
+            border: 1.5px solid #1976d2;
+            background: #e3f0ff;
+            outline: none;
+        }
+        /* Ícones embutidos nos inputs */
+        #ticketId { background-image: url('data:image/svg+xml;utf8,<svg fill="%231976d2" height="18" viewBox="0 0 24 24" width="18" xmlns="http://www.w3.org/2000/svg"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14z"/></svg>'); background-repeat: no-repeat; background-position: 8px 50%; }
+        #email { background-image: url('data:image/svg+xml;utf8,<svg fill="%231976d2" height="18" viewBox="0 0 24 24" width="18" xmlns="http://www.w3.org/2000/svg"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>'); background-repeat: no-repeat; background-position: 8px 50%; }
+        #telefone { background-image: url('data:image/svg+xml;utf8,<svg fill="%231976d2" height="18" viewBox="0 0 24 24" width="18" xmlns="http://www.w3.org/2000/svg"><path d="M6.62 10.79a15.05 15.05 0 006.59 6.59l2.2-2.2a1 1 0 011.11-.21c1.21.49 2.53.76 3.88.76a1 1 0 011 1V20a1 1 0 01-1 1C10.07 21 3 13.93 3 5a1 1 0 011-1h3.5a1 1 0 011 1c0 1.35.27 2.67.76 3.88a1 1 0 01-.21 1.11l-2.2 2.2z"/></svg>'); background-repeat: no-repeat; background-position: 8px 50%; }
+        input[type="number"], input[type="email"], input[type="text"] { padding-left: 32px; }
+        /* Botão carregar */
+        #btnCarregar {
+            background: linear-gradient(90deg, #1976d2 60%, #63a4ff 100%);
+            color: #fff;
+            border: none;
+            font-weight: bold;
+            border-radius: 8px;
+            min-width: 90px;
+            box-shadow: 0 2px 8px #1976d210;
+            transition: background 0.2s;
+        }
+        #btnCarregar:hover { background: #125ea7; }
+        /* Night mode aprimorado */
+        body.night { background: #181c24 !important; }
+        .chat-container.night {
+            background: linear-gradient(135deg, #232837 80%, #181c24 100%) !important;
+            border: none !important;
+            color: #e0e0e0 !important;
+            box-shadow: 0 6px 32px #0006, 0 1.5px 8px #1976d220;
+        }
+        .chat-messages.night {
+            background: #181c24 !important;
+            color: #e0e0e0 !important;
+            border-color: #232837 !important;
+            box-shadow: 0 1px 4px #0004;
+        }
+        .chat-message .author { color: #90caf9 !important; }
+        .chat-message .timestamp { color: #b0b0b0 !important; }
+        .chat-form input.night, .chat-form button.night {
+            background: #232837 !important;
+            color: #e0e0e0 !important;
+            border: 1.5px solid #333 !important;
+        }
+        .chat-form button.night {
+            background: linear-gradient(90deg, #b71c1c 60%, #ff6b6b 100%) !important;
+            color: #fff !important;
+            border: 1.5px solid #fff;
+        }
+        .chat-form button.night:hover { background: #ff6b6b !important; color: #fff !important; }
+        h2.night { color: #90caf9 !important; text-shadow: 0 2px 8px #0006; }
+        label.night { color: #b0b0b0 !important; }
+        .night input, .night select, .night textarea {
+            background: #232837 !important;
+            color: #e0e0e0 !important;
+            border: 1.5px solid #333 !important;
+        }
+        .night input::placeholder, .night textarea::placeholder {
+            color: #b0b0b0 !important;
+            opacity: 1;
+        }
+        .night button, .night .chat-form button {
+            background: #263043 !important;
+            color: #fff !important;
+            border: 1.5px solid #333 !important;
+        }
+        /* Responsividade */
+        @media (max-width: 600px) {
+            .chat-container { padding: 10px 2vw 10px 2vw; }
+            .chat-messages { height: 180px; font-size: 0.98rem; }
+            .chat-form input, .chat-form button { font-size: 0.98rem; }
+            h2 { font-size: 1.15rem; }
+        }
     </style>
 </head>
 <body>
-<div class="chat-container">
-    <h2>Chat do Chamado</h2>
-    <div style="margin-bottom:10px;">
-        <label for="ticketId">ID do Chamado:</label>
-        <input type="number" id="ticketId" min="1" value="1" style="width:80px;">
-        <label for="email">E-mail:</label>
-        <input type="email" id="email" placeholder="Seu e-mail" style="width:180px;">
-        <label for="telefone">Telefone:</label>
-        <input type="text" id="telefone" placeholder="Seu telefone" style="width:120px;">
-        <button onclick="loadMessages()">Carregar</button>
+    <button id="nightToggle" style="position:absolute;top:12px;right:16px;z-index:10;" onclick="toggleNightMode()">🌙</button>
+    <div class="chat-container" id="chatContainer">
+        <h2 id="chatTitle">💬Chat do Chamado</h2>
+        <div style="margin-bottom:10px;">
+            <label for="ticketId" id="labelTicketId">#️⃣ ID do Chamado:</label>
+            <input type="number" id="ticketId" min="1" value="1" style="width:80px;">
+            <label for="email" id="labelEmail">✉️ E-mail:</label>
+            <input type="email" id="email" placeholder="Seu e-mail" style="width:180px;">
+            <label for="telefone" id="labelTelefone">📱 Telefone:</label>
+            <input type="text" id="telefone" placeholder="Seu telefone" style="width:120px;">
+            <button onclick="loadMessages()" id="btnCarregar">Carregar</button>
+        </div>
+        <div class="chat-messages" id="chatMessages"></div>
+        <form class="chat-form" id="chatForm" onsubmit="return sendMessage(event)">
+            <input type="text" id="author" placeholder="Seu nome" required>
+            <input type="text" id="message" placeholder="Digite sua mensagem" required>
+            <button type="submit">Enviar</button>
+        </form>
     </div>
-    <div class="chat-messages" id="chatMessages"></div>
-    <form class="chat-form" id="chatForm" onsubmit="return sendMessage(event)">
-        <input type="text" id="author" placeholder="Seu nome" required>
-        <input type="text" id="message" placeholder="Digite sua mensagem" required>
-        <button type="submit">Enviar</button>
-    </form>
-</div>
-<script>
-let currentTicketId = 1;
+    <script>
+    let currentTicketId = 1;
 
-function getAuthParams() {
-    const email = document.getElementById('email').value.trim();
-    const telefone = document.getElementById('telefone').value.trim();
-    return { email, telefone };
-}
-
-function renderMessages(messages) {
-    const chat = document.getElementById('chatMessages');
-    chat.innerHTML = '';
-    if (Array.isArray(messages)) {
-        messages.forEach(msg => {
-            const div = document.createElement('div');
-            div.className = 'chat-message';
-            div.innerHTML = `<span class="author">${msg.author}</span> <span class="timestamp">[${msg.timestamp}]</span><br>${msg.message}`;
-            chat.appendChild(div);
-        });
-    } else if (messages && messages.error) {
-        chat.innerHTML = `<div style='color:#d32f2f;font-weight:bold;'>${messages.error}</div>`;
+    function getAuthParams() {
+        const email = document.getElementById('email').value.trim();
+        const telefone = document.getElementById('telefone').value.trim();
+        return { email, telefone };
     }
-    chat.scrollTop = chat.scrollHeight;
-}
 
-function loadMessages() {
-    currentTicketId = document.getElementById('ticketId').value;
-    const { email, telefone } = getAuthParams();
-    if (!email && !telefone) {
-        renderMessages({ error: 'Informe seu e-mail ou telefone para acessar o chat.' });
-        return;
+    function renderMessages(messages) {
+        const chat = document.getElementById('chatMessages');
+        chat.innerHTML = '';
+        if (Array.isArray(messages)) {
+            messages.forEach(msg => {
+                const div = document.createElement('div');
+                div.className = 'chat-message';
+                div.innerHTML = `<span class="author">${msg.author}</span> <span class="timestamp">[${msg.timestamp}]</span><br>${msg.message}`;
+                chat.appendChild(div);
+            });
+        } else if (messages && messages.error) {
+            chat.innerHTML = `<div style='color:#d32f2f;font-weight:bold;'>${messages.error}</div>`;
+        }
+        chat.scrollTop = chat.scrollHeight;
     }
-    const params = new URLSearchParams();
-    if (email) params.append('email', email);
-    if (telefone) params.append('telefone', telefone);
-    fetch(`chat.php?id=${currentTicketId}&${params.toString()}`)
+
+    function loadMessages() {
+        currentTicketId = document.getElementById('ticketId').value;
+        const { email, telefone } = getAuthParams();
+        if (!email && !telefone) {
+            renderMessages({ error: 'Informe seu e-mail ou telefone para acessar o chat.' });
+            return;
+        }
+        const params = new URLSearchParams();
+        if (email) params.append('email', email);
+        if (telefone) params.append('telefone', telefone);
+        fetch(`chat.php?id=${currentTicketId}&${params.toString()}`)
+            .then(r => r.json())
+            .then(renderMessages)
+            .catch(() => renderMessages({ error: 'Erro ao carregar mensagens.' }));
+    }
+
+    function sendMessage(e) {
+        e.preventDefault();
+        const author = document.getElementById('author').value.trim();
+        const message = document.getElementById('message').value.trim();
+        const { email, telefone } = getAuthParams();
+        if (!author || !message) return false;
+        if (!email && !telefone) {
+            renderMessages({ error: 'Informe seu e-mail ou telefone para enviar mensagens.' });
+            return false;
+        }
+        const body = { author, message, email, telefone };
+        fetch(`chat.php?id=${currentTicketId}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body)
+        })
         .then(r => r.json())
-        .then(renderMessages)
-        .catch(() => renderMessages({ error: 'Erro ao carregar mensagens.' }));
-}
-
-function sendMessage(e) {
-    e.preventDefault();
-    const author = document.getElementById('author').value.trim();
-    const message = document.getElementById('message').value.trim();
-    const { email, telefone } = getAuthParams();
-    if (!author || !message) return false;
-    if (!email && !telefone) {
-        renderMessages({ error: 'Informe seu e-mail ou telefone para enviar mensagens.' });
+        .then(res => {
+            if (res.success) {
+                document.getElementById('message').value = '';
+                loadMessages();
+            } else {
+                renderMessages({ error: res.error || 'Erro ao enviar mensagem.' });
+            }
+        });
         return false;
     }
-    const body = { author, message, email, telefone };
-    fetch(`chat.php?id=${currentTicketId}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body)
-    })
-    .then(r => r.json())
-    .then(res => {
-        if (res.success) {
-            document.getElementById('message').value = '';
-            loadMessages();
-        } else {
-            renderMessages({ error: res.error || 'Erro ao enviar mensagem.' });
-        }
-    });
-    return false;
-}
 
-// Atualiza o chat a cada 1 segundo (quase em tempo real)
-timer = setInterval(loadMessages, 1000);
-window.onload = function() {
-    // Preenche campos a partir da URL (para integração com buscarchamados.html)
-    const params = new URLSearchParams(window.location.search);
-    if (params.has('id')) document.getElementById('ticketId').value = params.get('id');
-    if (params.has('email')) document.getElementById('email').value = params.get('email');
-    if (params.has('telefone')) document.getElementById('telefone').value = params.get('telefone');
-    loadMessages();
-};
-</script>
+    // Atualiza o chat a cada 1 segundo (quase em tempo real)
+    timer = setInterval(loadMessages, 1000);
+    window.onload = function() {
+        // Preenche campos a partir da URL (para integração com buscarchamados.html e quick_users)
+        const params = new URLSearchParams(window.location.search);
+        if (params.has('id')) document.getElementById('ticketId').value = params.get('id');
+        if (params.has('email')) document.getElementById('email').value = params.get('email');
+        if (params.has('telefone')) document.getElementById('telefone').value = params.get('telefone');
+        if (params.has('author')) document.getElementById('author').value = params.get('author');
+        loadMessages();
+    };
+
+    // Night mode implementation
+    function applyNightMode(night) {
+        const body = document.body;
+        const chatContainer = document.getElementById('chatContainer');
+        const chatMessages = document.getElementById('chatMessages');
+        const chatFormInputs = document.querySelectorAll('.chat-form input');
+        const chatFormButton = document.querySelector('.chat-form button');
+        const h2 = document.getElementById('chatTitle');
+        const labels = [
+            document.getElementById('labelTicketId'),
+            document.getElementById('labelEmail'),
+            document.getElementById('labelTelefone')
+        ];
+        if (night) {
+            body.classList.add('night');
+            chatContainer.classList.add('night');
+            chatMessages.classList.add('night');
+            chatFormInputs.forEach(i => i.classList.add('night'));
+            chatFormButton.classList.add('night');
+            h2.classList.add('night');
+            labels.forEach(l => l.classList.add('night'));
+            document.getElementById('nightToggle').innerText = '☀️';
+        } else {
+            body.classList.remove('night');
+            chatContainer.classList.remove('night');
+            chatMessages.classList.remove('night');
+            chatFormInputs.forEach(i => i.classList.remove('night'));
+            chatFormButton.classList.remove('night');
+            h2.classList.remove('night');
+            labels.forEach(l => l.classList.remove('night'));
+            document.getElementById('nightToggle').innerText = '🌙';
+        }
+    }
+    function toggleNightMode() {
+        const night = !(localStorage.getItem('nightMode') === 'true');
+        localStorage.setItem('nightMode', night);
+        applyNightMode(night);
+    }
+    // Apply night mode on load
+    window.addEventListener('DOMContentLoaded', function() {
+        applyNightMode(localStorage.getItem('nightMode') === 'true');
+    });
+    </script>
 </body>
 </html>

@@ -117,6 +117,7 @@ foreach ($tickets as $ticket) {
                 <div><strong>Chamados em aberto:</strong> <span style="color:#d70022; font-weight:bold;" id="span-aberto"><?= $em_aberto ?></span></div>
                 <div><strong>Em andamento:</strong> <span style="color:#ff9800; font-weight:bold;" id="span-andamento"><?= $em_andamento ?></span></div>
                 <div><strong>Encerrados:</strong> <span style="color:#388e3c; font-weight:bold;" id="span-encerrados"><?= $encerrados ?></span></div>
+                <a href="dashboard.php" class="btn" id="dashboardBtn">Dashboard</a>
             </div>
         <?php endif; ?>
         <div style="overflow-x:auto; margin: 0 30px;">

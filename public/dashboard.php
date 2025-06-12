@@ -8,6 +8,37 @@ if (!isset($_SESSION['role']) || !in_array($_SESSION['role'], ['admin', 'tecnico
     exit;
 }
 
+// --- QUICK USERS: processamento de POST/GET antes do HTML ---
+$usersFile = __DIR__ . '/../logs/quick_users.txt';
+$users = file_exists($usersFile) ? json_decode(file_get_contents($usersFile), true) : [];
+if (!is_array($users)) $users = [];
+// Adiciona novo usuário rápido
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['nickname'], $_POST['email'], $_POST['telefone'])) {
+    $nickname = trim($_POST['nickname']);
+    $email = trim($_POST['email']);
+    $telefone = trim($_POST['telefone']);
+    if ($nickname && ($email || $telefone)) {
+        $users[] = [
+            'nickname' => $nickname,
+            'email' => $email,
+            'telefone' => $telefone
+        ];
+        file_put_contents($usersFile, json_encode($users, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
+        header('Location: dashboard.php?quickusers=1');
+        exit;
+    }
+}
+// Remove usuário rápido
+if (isset($_GET['del']) && is_numeric($_GET['del'])) {
+    $idx = (int)$_GET['del'];
+    if (isset($users[$idx])) {
+        array_splice($users, $idx, 1);
+        file_put_contents($usersFile, json_encode($users, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
+        header('Location: dashboard.php?quickusers=1');
+        exit;
+    }
+}
+
 // Leitura real dos chamados
 $ticketsFile = __DIR__ . '/../logs/tickets.txt';
 $chamados = [
@@ -44,9 +75,13 @@ function card($color, $icon, $label, $count) {
     <style>
         body { font-family: 'Segoe UI', Arial, sans-serif; background: #f4f8fb; margin:0; transition: background 0.3s, color 0.3s; }
         .sidebar { width:220px; background:#e3f2fd; height:100vh; position:fixed; left:0; top:0; padding:30px 0; transition: background 0.3s, color 0.3s; box-shadow: 2px 0 16px #0001; border-radius: 0 18px 18px 0; }
-        .sidebar h2 { color:#1976d2; text-align:center; margin-bottom:30px; font-size:1.6rem; letter-spacing:1px; }
+        .sidebar h2 { color:#1976d2; text-align:center; margin-bottom:30px; font-size:1.6rem; letter-spacing:1px; transition: color 0.3s; }
         .sidebar a { display:block; color:#1976d2; text-decoration:none; padding:12px 30px; margin:8px 0; border-radius:8px; font-weight:500; transition: background 0.2s, color 0.2s; }
         .sidebar a:hover { background:#bbdefb; }
+        /* Night mode styles */
+        .sidebar.night h2 { color: #fff !important; text-shadow: 0 1px 2px #0008; }
+        .sidebar.night a { color: #fff !important; text-shadow: 0 1px 2px #0008; }
+        .sidebar.night a:hover { background: #263238; }
         .main { margin-left:240px; padding:40px 40px 30px 40px; min-height:100vh; transition: background 0.3s, color 0.3s; background: #f4f8fb; }
         .header { display:flex; justify-content:space-between; align-items:center; margin-bottom: 18px; }
         .header h1 { color:#1976d2; font-size:2.2rem; letter-spacing:1px; }
@@ -61,7 +96,8 @@ function card($color, $icon, $label, $count) {
         .card .label { font-size:1.2em; font-weight:bold; letter-spacing:0.5px; }
         .card .value { font-size:2.1em; margin-top:5px; font-weight:600; }
         .section { background:#fff; border-radius:16px; box-shadow:0 2px 16px #0002; padding:28px 32px; margin-bottom:28px; transition: background 0.3s, color 0.3s; }
-        .section h3 { color:#1976d2; margin-top:0; font-size:1.3rem; }
+        .section h3 { color:#1976d2; margin-top:0; font-size:1.3rem; transition: color 0.3s; }
+        .section.night h3, .main.night h3, h3.night { color: #fff !important; text-shadow: 0 1px 2px #0008; }
         .chat-link { display:inline-block; margin:10px 0 0 0; background:#1976d2; color:#fff; padding:10px 20px; border-radius:8px; text-decoration:none; font-weight:bold; box-shadow:0 2px 8px #0002; transition: background 0.2s; }
         .chat-link:hover { background:#1565c0; }
         table { width: 100%; border-collapse: separate; border-spacing: 0; margin-top: 10px; background: #fff; border-radius: 10px; overflow: hidden; box-shadow:0 1px 8px #e0e0e0; font-size:15px; }
@@ -78,10 +114,18 @@ function card($color, $icon, $label, $count) {
         .btn[style*='background:#0078d7']:hover { background: #0056a3 !important; }
         .night-toggle { position:fixed; bottom:24px; left:24px; top:auto; right:auto; z-index:1000; background:linear-gradient(90deg,#ff6b6b,#b71c1c); color:#fff; border:1px solid #b71c1c; border-radius:20px; padding:10px 22px; cursor:pointer; font-weight:bold; box-shadow:0 2px 12px #0003; font-size: 1.1rem; transition: background 0.3s, color 0.3s; }
         .night-toggle.night { background:linear-gradient(90deg,#b71c1c,#ff6b6b); color:#fff; border-color:#fff; }
+        /* Títulos: azul no light, branco no night, com transição */
+        h1, h2, h3 { color: #1976d2; transition: color 0.3s; text-shadow: none; }
+        body.night h1, body.night h2, body.night h3 { color: #fff !important; text-shadow: 0 1px 2px #0008; }
+        /* Links do menu lateral: azul no light, branco no night, com transição */
+        .sidebar a { color: #1976d2; transition: color 0.3s; }
+        .sidebar.night a { color: #fff !important; text-shadow: 0 1px 2px #0008; }
+        .sidebar a:hover { background:#bbdefb; }
+        .sidebar.night a:hover { background: #263238; color: #fff !important; }
         /* Night mode styles */
         body.night { background: #181c24 !important; color: #e0e0e0; }
         .sidebar.night { background: #232a36 !important; color: #fff; box-shadow: 2px 0 16px #0006; }
-        .sidebar.night a { color: #90caf9; }
+        .sidebar.night a { color: #fff !important; text-shadow: 0 1px 2px #0008; }
         .sidebar.night a:hover { background: #263238; }
         .main.night { background: #181c24 !important; color: #e0e0e0; }
         .section.night { background: #232a36 !important; color: #e0e0e0; box-shadow: 0 2px 16px #0006; }
@@ -90,12 +134,12 @@ function card($color, $icon, $label, $count) {
         .card.analise.night { background:linear-gradient(120deg,#3a2e1a,#fbc02d 90%); color:#fff; }
         .card.resolvido.night { background:linear-gradient(120deg,#1a3a23,#388e3c 90%); color:#fff; }
         table.night { background: #232a36 !important; color: #e0e0e0; box-shadow:0 1px 8px #0006; }
-        th.night { background: #263238 !important; color: #90caf9; }
+        th.night { background: #263238 !important; color:rgb(255, 255, 255); }
         tr.night:hover { background-color: #222b38 !important; }
-        .btn.night { background: #b71c1c !important; color: #fff; }
-        .btn.night:hover { background: #ff6b6b !important; color: #fff; }
-        .chat-link.night { background: #b71c1c !important; color: #fff; }
-        .chat-link.night:hover { background: #ff6b6b !important; color: #fff; }
+        /* .btn.night { background: #b71c1c !important; color: #fff; } */
+        /* .btn.night:hover { background: #ff6b6b !important; color: #fff; } */
+        /* .chat-link.night { background: #b71c1c !important; color: #fff; } */
+        /* .chat-link.night:hover { background: #ff6b6b !important; color: #fff; } */
         @media (max-width:900px) { .main { margin-left:0; padding:20px 2vw; } .sidebar { position:static; width:100%; height:auto; border-radius:0; } .cards { flex-direction:column; gap:18px; } }
         @media (max-width:700px) { .main { padding:10px 1vw; } .section { padding:12px 6px; } .card { padding:16px 0 12px 0; } th, td { font-size:12px; padding:7px 4px; } .sidebar h2 { font-size:1.1rem; } .header h1 { font-size:1.1rem; } }
     </style>
@@ -104,9 +148,10 @@ function card($color, $icon, $label, $count) {
     <button class="night-toggle" id="nightToggle">🌙 Modo Noturno</button>
     <div class="sidebar" id="sidebar">
         <h2>Helpdesk System</h2>
-        <a href="dashboard.php">Home</a>
-        <a href="tickets.php">Tickets</a>
-        <a href="dashboard.php">Dashboard</a>
+        <a href="tickets.php">🎟️ Tickets</a>
+        <a href="dashboard.php">🏠 Dashboard</a>
+        <a href="open.php">📂 Novo Chamado</a>
+        <a href="buscarchamados.html">🔍 Buscar Chamados</a>
     </div>
     <div class="main" id="main">
         <div class="header">
@@ -140,21 +185,24 @@ function card($color, $icon, $label, $count) {
                 <button type="submit" class="chat-link">Abrir Chat</button>
             </form>
         </div>
+        <?php if (isset($_SESSION['role']) && in_array($_SESSION['role'], ['admin','tecnico'])): ?>
+            <?php include 'quick_users.php'; ?>
+        <?php endif; ?>
         <div class="section">
             <h3>Lista de Tickets</h3>
             <div style="overflow-x:auto; margin: 0 0 20px 0;">
             <table class="ticket-table" style="width:100%;background:#fff;border-radius:8px;box-shadow:0 1px 6px #e0e0e0;">
                 <thead>
                     <tr>
-                        <th>ID</th>
-                        <th>Nome</th>
-                        <th>E-mail</th>
-                        <th>Assunto</th>
-                        <th>Mensagem</th>
-                        <th>Imagem</th>
-                        <th>Telefone</th>
-                        <th>Status</th>
-                        <th>Ações</th>
+                        <th>🆔 ID</th>
+                        <th>👤 Nome</th>
+                        <th>📧 E-mail</th>
+                        <th>📝 Assunto</th>
+                        <th>💬 Mensagem</th>
+                        <th>🖼️ Imagem</th>
+                        <th>📱 Telefone</th>
+                        <th>📊 Status</th>
+                        <th>⚙️ Ações</th>
                     </tr>
                 </thead>
                 <tbody id="tickets-tbody">
@@ -198,6 +246,7 @@ function card($color, $icon, $label, $count) {
                             </form>
                         </td>
                         <td>
+                            <button type="button" class="btn chat-popup-btn" style="padding:2px 10px;font-size:13px;margin-left:4px;background:#43a047;color:#fff;" data-ticket-id="<?= $i+1 ?>" data-email="<?= htmlspecialchars($ticket['email'] ?? '') ?>" data-telefone="<?= htmlspecialchars($ticket['telefone'] ?? '') ?>">Chat Pop-up</button>
                             <a href="chat_frontend.html?id=<?= $i+1 ?>" class="btn" style="padding:2px 10px;font-size:13px;margin-left:4px;background:#0078d7;color:#fff;" target="_blank">Chat</a>
                             <form method="post" action="dashboard.php" style="margin-top:5px;display:inline-block;">
                                 <input type="hidden" name="delete_id" value="<?= $i ?>">
@@ -209,6 +258,13 @@ function card($color, $icon, $label, $count) {
                 </tbody>
             </table>
             </div>
+        </div>
+    </div>
+    <!-- Modal de Chat Pop-up -->
+    <div id="chatModal" style="display:none;position:fixed;z-index:9999;left:0;top:0;width:100vw;height:100vh;background:rgba(0,0,0,0.45);align-items:center;justify-content:center;">
+        <div id="chatModalContent" style="background:#fff;max-width:520px;width:95vw;max-height:90vh;border-radius:12px;box-shadow:0 8px 32px #0008;padding:0;position:relative;display:flex;flex-direction:column;">
+            <button id="closeChatModal" style="position:absolute;top:10px;right:16px;background:#d32f2f;color:#fff;border:none;border-radius:50%;width:32px;height:32px;font-size:1.3em;cursor:pointer;z-index:2;">&times;</button>
+            <iframe id="chatIframe" src="" style="border:none;width:100%;height:70vh;border-radius:12px;"></iframe>
         </div>
     </div>
     <script>
@@ -235,6 +291,73 @@ function card($color, $icon, $label, $count) {
     }
     document.getElementById('nightToggle').addEventListener('click', function() { toggleNightMode(); });
     if(localStorage.getItem('nightMode')) toggleNightMode(true);
+
+    // Chat Pop-up para todos os chamados
+    function openChatPopup(ticketId, email, telefone) {
+        const chatModal = document.getElementById('chatModal');
+        const chatIframe = document.getElementById('chatIframe');
+        // Monta a URL do chat com os dados do chamado
+        let url = `chat_frontend.html?id=${encodeURIComponent(ticketId)}`;
+        if(email) url += `&email=${encodeURIComponent(email)}`;
+        if(telefone) url += `&telefone=${encodeURIComponent(telefone)}`;
+        chatIframe.src = url;
+        chatModal.style.display = 'flex';
+        // Night mode no modal
+        if(document.body.classList.contains('night')) {
+            chatModal.style.background = 'rgba(24,28,36,0.85)';
+            chatModalContent.classList.add('night');
+        } else {
+            chatModal.style.background = 'rgba(0,0,0,0.45)';
+            chatModalContent.classList.remove('night');
+        }
+    }
+    // Chat Pop-up para usuários rápidos
+    function openQuickUserChatPopup(email, telefone, author) {
+        const chatModal = document.getElementById('chatModal');
+        const chatIframe = document.getElementById('chatIframe');
+        let url = `chat_frontend.html?email=${encodeURIComponent(email)}&telefone=${encodeURIComponent(telefone)}&author=${encodeURIComponent(author)}`;
+        chatIframe.src = url;
+        chatModal.style.display = 'flex';
+        // Night mode no modal
+        if(document.body.classList.contains('night')) {
+            chatModal.style.background = 'rgba(24,28,36,0.85)';
+            chatModalContent.classList.add('night');
+        } else {
+            chatModal.style.background = 'rgba(0,0,0,0.45)';
+            chatModalContent.classList.remove('night');
+        }
+    }
+    document.querySelectorAll('.chat-popup-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            openQuickUserChatPopup(this.dataset.email, this.dataset.telefone, this.dataset.author);
+        });
+    });
+    document.getElementById('closeChatModal').onclick = function() {
+        document.getElementById('chatModal').style.display = 'none';
+        document.getElementById('chatIframe').src = '';
+    };
+    // Fecha modal ao clicar fora do conteúdo
+    window.addEventListener('click', function(e) {
+        const modal = document.getElementById('chatModal');
+        const content = document.getElementById('chatModalContent');
+        if(e.target === modal) {
+            modal.style.display = 'none';
+            document.getElementById('chatIframe').src = '';
+        }
+    });
+    // Night mode dinâmico no modal
+    function updateChatModalNightMode() {
+        const chatModal = document.getElementById('chatModal');
+        const chatModalContent = document.getElementById('chatModalContent');
+        if(document.body.classList.contains('night')) {
+            chatModal.style.background = 'rgba(24,28,36,0.85)';
+            chatModalContent.style.background = '#232a36';
+        } else {
+            chatModal.style.background = 'rgba(0,0,0,0.45)';
+            chatModalContent.style.background = '#fff';
+        }
+    }
+    document.getElementById('nightToggle').addEventListener('click', updateChatModalNightMode);
     </script>
 </body>
 </html>
