@@ -186,8 +186,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div style="color:red;"> <?= htmlspecialchars($error) ?> </div>
         <?php endif; ?>
         <form method="post">
-            <label id="labelLogin">Usuário:<br><input type="text" name="login" id="loginInput" required></label><br><br>
-            <label id="labelSenha">Senha:<br><input type="password" name="senha" id="senhaInput" required></label><br><br>
+            <label id="labelLogin">👤 Usuário:<br><input type="text" name="login" id="loginInput" required></label><br><br>
+            <label id="labelSenha">🔒 Senha:<br><input type="password" name="senha" id="senhaInput" required></label><br><br>
             <button type="submit" class="btn" id="btnEntrar">Entrar</button>
         </form>
     </div>

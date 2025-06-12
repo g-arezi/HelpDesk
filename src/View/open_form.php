@@ -16,7 +16,7 @@
             transition: background 0.3s, color 0.3s;
         }
         h2 {
-            color: #1976d2;
+            color: #111 !important;
             margin-bottom: 22px;
             text-align: center;
             font-size: 2.2em;
@@ -28,7 +28,7 @@
             margin-top: 18px;
             margin-bottom: 6px;
             font-weight: 600;
-            color: #1976d2;
+            color: #111 !important;
             font-size: 1.08em;
             letter-spacing: 0.2px;
         }
@@ -206,24 +206,24 @@
     </div>
     <!-- ...existing code... -->
     <div class="topnav">
-        <a href="login.php">Login</a>
-        <a href="tickets.php">Lista de Chamados</a>
-        <a href="buscarchamados.html">Buscar Chamados</a>
-        <a href="open.php" style="background:#43a047;">Abrir Chamado</a>
+        <a href="login.php">🔑 Login</a>
+        <a href="tickets.php">📋 Lista de Chamados</a>
+        <a href="buscarchamados.html">🔎 Buscar Chamados</a>
+        <a href="open.php" style="background:#43a047;">🆕 Abrir Chamado</a>
     </div>
     <div class="container">
         <h2>Abrir Chamado</h2>
         <form method="post" action="open.php" enctype="multipart/form-data">
-            <label for="name">Nome:</label>
+            <label for="name">👤 Nome:</label>
             <input type="text" id="name" name="name" required>
 
-            <label for="telefone">Telefone para contato:</label>
+            <label for="telefone">📞 Telefone para contato:</label>
             <input type="text" id="telefone" name="telefone" required>
 
-            <label for="email">E-mail:</label>
+            <label for="email">✉️ E-mail:</label>
             <input type="email" id="email" name="email" required>
 
-            <label for="subject">Tópico de ajuda:</label>
+            <label for="subject">🆘 Tópico de ajuda:</label>
             <select id="subject" name="subject" required>
                 <option value="">Selecione um erro</option>
                 <option value="sem_sinal">Sem sinal</option>
@@ -240,10 +240,10 @@
                 <option value="outro">Outros</option>
             </select>
 
-            <label for="message">Mensagem:</label>
+            <label for="message">💬 Mensagem:</label>
             <textarea id="message" name="message" rows="5" required></textarea>
 
-            <label for="image">Anexar imagem:</label>
+            <label for="image">📷 Anexar imagem:</label>
             <input type="file" id="image" name="image" accept="image/*">
             <div id="paste-area">
                 <span id="paste-hint">Cole uma imagem aqui (Ctrl+V) ou arraste uma imagem</span>

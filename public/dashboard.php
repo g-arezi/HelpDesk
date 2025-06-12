@@ -114,11 +114,17 @@ function card($color, $icon, $label, $count) {
         .btn[style*='background:#0078d7']:hover { background: #0056a3 !important; }
         .night-toggle { position:fixed; bottom:24px; left:24px; top:auto; right:auto; z-index:1000; background:linear-gradient(90deg,#ff6b6b,#b71c1c); color:#fff; border:1px solid #b71c1c; border-radius:20px; padding:10px 22px; cursor:pointer; font-weight:bold; box-shadow:0 2px 12px #0003; font-size: 1.1rem; transition: background 0.3s, color 0.3s; }
         .night-toggle.night { background:linear-gradient(90deg,#b71c1c,#ff6b6b); color:#fff; border-color:#fff; }
-        /* Títulos: azul no light, branco no night, com transição */
-        h1, h2, h3 { color: #1976d2; transition: color 0.3s; text-shadow: none; }
+        /* Títulos: preto no light, branco no night, com transição */
+        h1, h2, h3 { color: #111 !important; transition: color 0.3s; text-shadow: none; }
         body.night h1, body.night h2, body.night h3 { color: #fff !important; text-shadow: 0 1px 2px #0008; }
-        /* Links do menu lateral: azul no light, branco no night, com transição */
-        .sidebar a { color: #1976d2; transition: color 0.3s; }
+        /* Cabeçalhos de tabela: preto no light, branco no night */
+        th { color: #111 !important; }
+        th.night, body.night th { color: #fff !important; }
+        /* Labels e títulos de seções abaixo de Usuários Rápidos: preto no light, branco no night */
+        .section h3, .section label { color: #111 !important; }
+        .section.night h3, .section.night label, body.night .section h3, body.night .section label { color: #fff !important; }
+        /* Links do menu lateral: preto no light, branco no night, com transição */
+        .sidebar a { color: #111; transition: color 0.3s; }
         .sidebar.night a { color: #fff !important; text-shadow: 0 1px 2px #0008; }
         .sidebar a:hover { background:#bbdefb; }
         .sidebar.night a:hover { background: #263238; color: #fff !important; }
