@@ -214,8 +214,8 @@ function card($color, $icon, $label, $count) {
     </div>
     <div class="sidebar" id="sidebar">
         <h2>Helpdesk System</h2>
-        <a href="tickets.php">🎟️ Tickets</a>
         <a href="dashboard.php">🏠 Dashboard</a>
+        <a href="tickets.php">🎟️ Tickets</a>
         <a href="open.php">📂 Novo Chamado</a>
         <a href="buscarchamados.html">🔍 Buscar Chamados</a>
     </div>
