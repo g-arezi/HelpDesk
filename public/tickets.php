@@ -25,6 +25,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_SESSION['auth']) && $_SESSI
         $newStatus = $_POST['status'];
         if (isset($tickets[$id])) {
             $tickets[$id]['status'] = $newStatus;
+            // Nova label
+            if (isset($_POST['label_extra'])) {
+                $tickets[$id]['label_extra'] = $_POST['label_extra'];
+            }
             file_put_contents($file, json_encode($tickets, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
             header('Location: tickets.php');
             exit;
@@ -198,6 +202,7 @@ foreach ($tickets as $ticket) {
                     <th>#️⃣ ID</th>
                     <th>👤 Nome</th>
                     <th>📧 E-mail</th>
+                    <th>📦 Produto</th>
                     <th>📝 Assunto</th>
                     <th>💬 Mensagem</th>
                     <th>🖼️ Imagem</th>
@@ -213,8 +218,23 @@ foreach ($tickets as $ticket) {
                         <td><?= $i + 1 ?></td>
                         <td><?= htmlspecialchars($ticket['name'] ?? '') ?></td>
                         <td><?= htmlspecialchars($ticket['email'] ?? '') ?></td>
+                        <td><?= htmlspecialchars($ticket['produto'] ?? '') ?></td>
                         <td><?= htmlspecialchars($ticket['subject'] ?? '') ?></td>
                         <td style="max-width:250px;word-break:break-word;">
+                            <?php
+                            // Exibe campos extras para filmes/séries
+                            if (($ticket['produto'] ?? '') === 'filmes') {
+                                echo '<b>🍿 Filme:</b> ' . htmlspecialchars($ticket['filme_nome'] ?? '-') . '<br>';
+                                echo '<b>🌟 TMDB:</b> ' . htmlspecialchars($ticket['filme_tmdb'] ?? '-') . '<br>';
+                                if (!empty($ticket['filme_obs'])) echo '<b>⚠ OBS:</b> ' . htmlspecialchars($ticket['filme_obs']) . '<br>';
+                                echo '<hr style="margin:4px 0;">';
+                            } elseif (($ticket['produto'] ?? '') === 'series') {
+                                echo '<b>📽 Série:</b> ' . htmlspecialchars($ticket['serie_nome'] ?? '-') . '<br>';
+                                echo '<b>🌟 TMDB:</b> ' . htmlspecialchars($ticket['serie_tmdb'] ?? '-') . '<br>';
+                                if (!empty($ticket['serie_obs'])) echo '<b>⚠ OBS:</b> ' . htmlspecialchars($ticket['serie_obs']) . '<br>';
+                                echo '<hr style="margin:4px 0;">';
+                            }
+                            ?>
                             <?= nl2br(htmlspecialchars($ticket['message'] ?? '')) ?>
                         </td>
                         <td>
@@ -279,6 +299,7 @@ foreach ($tickets as $ticket) {
                 <td>${i+1}</td>
                 <td>${ticket.name ? escapeHtml(ticket.name) : ''}</td>
                 <td>${ticket.email ? escapeHtml(ticket.email) : ''}</td>
+                <td>${ticket.produto ? escapeHtml(ticket.produto) : ''}</td>
                 <td>${ticket.subject ? escapeHtml(ticket.subject) : ''}</td>
                 <td style='max-width:250px;word-break:break-word;'>${ticket.message ? escapeHtml(ticket.message).replace(/\n/g,'<br>') : ''}</td>
                 <td>${ticket.imagePath ? `<a href='${escapeHtml(ticket.imagePath)}' target='_blank'><img src='${escapeHtml(ticket.imagePath)}' alt='Imagem' style='max-width:80px;max-height:80px;border-radius:6px;box-shadow:0 1px 4px #ccc;'></a>` : '<span style=\"color:#aaa;\">-</span>'}</td>

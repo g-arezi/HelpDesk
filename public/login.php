@@ -57,7 +57,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <title>Login - HelpDesk</title>
     <link rel="stylesheet" href="assets/style.css">
     <style>
-        body { background: #f4f6fb; min-height: 100vh; display: flex; align-items: center; justify-content: center; margin: 0; }
+        body {
+            background: #f4f6fb;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            position: relative;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            z-index: 0;
+            background: url('assets/bg-login.png') no-repeat center center fixed;
+            background-size: cover;
+            opacity: 1;
+            pointer-events: none;
+            transition: background 0.3s;
+        }
+        body.night::before {
+            /* Remove overlay escuro, imagem clara no modo noturno */
+            background: url('assets/bg-login.png') no-repeat center center fixed;
+            background-size: cover;
+        }
         .container {
             background: #fff;
             max-width: 350px;
@@ -68,9 +92,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             display: flex;
             flex-direction: column;
             align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+        body.night .container {
+            background: #232a36 !important;
+            color: #e0e0e0;
+            box-shadow: 0 8px 32px #0006;
         }
         h2 { color: #1976d2; margin-bottom: 18px; text-align: center; font-size: 2em; }
+        body.night h2 {
+            color: #90caf9 !important;
+        }
         label { color: #1976d2; font-weight: 500; margin-bottom: 8px; display: block; }
+        body.night label {
+            color: #b0b0b0 !important;
+        }
         input[type="text"], input[type="password"] {
             width: 100%;
             padding: 10px;
@@ -83,10 +120,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             box-sizing: border-box;
             transition: border 0.2s, background 0.3s;
         }
+        body.night input[type="text"],
+        body.night input[type="password"] {
+            background: #232837 !important;
+            color: #e0e0e0 !important;
+            border: 1.5px solid #333 !important;
+        }
         input[type="text"]:focus, input[type="password"]:focus {
             border: 1.5px solid #1976d2;
             background: #e3f0ff;
             outline: none;
+        }
+        body.night input[type="text"]:focus,
+        body.night input[type="password"]:focus {
+            border: 1.5px solid #90caf9 !important;
+            background: #232a36 !important;
         }
         .btn {
             width: 100%;
@@ -101,6 +149,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             box-shadow: 0 2px 8px #1976d210;
             margin-top: 8px;
             transition: background 0.2s;
+        }
+        body.night .btn {
+            background: #b71c1c !important;
+            color: #fff !important;
+        }
+        body.night .btn:hover {
+            background: #ff6b6b !important;
+            color: #fff !important;
         }
         .btn:hover { background: #125ea7; }
         /* Night/Light mode switcher - canto inferior esquerdo */
@@ -161,13 +217,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         .night-toggle { position:fixed; top:18px; right:18px; z-index:1000; background:linear-gradient(90deg,#ff6b6b,#b71c1c); color:#fff; border:1px solid #b71c1c; border-radius:20px; padding:8px 18px; cursor:pointer; font-weight:bold; box-shadow:0 2px 12px #0003; font-size: 1.1rem; transition: background 0.3s, color 0.3s; }
         .night-toggle.night { background:linear-gradient(90deg,#b71c1c,#ff6b6b); color:#fff; border-color:#fff; }
         body.night { background: #181c24 !important; color: #e0e0e0; }
-        .container.night { background: #232a36 !important; color: #e0e0e0; box-shadow: 0 8px 32px #0006; }
-        h2.night { color: #90caf9 !important; }
-        label.night { color: #b0b0b0 !important; }
-        input.night { background: #232837 !important; color: #e0e0e0 !important; border: 1.5px solid #333 !important; }
-        input.night:focus { border: 1.5px solid #90caf9 !important; background: #232a36 !important; }
-        .btn.night { background: #b71c1c !important; color: #fff !important; }
-        .btn.night:hover { background: #ff6b6b !important; color: #fff !important; }
         @media (max-width: 500px) {
             .container { max-width: 98vw; padding: 18px 4vw; }
         }

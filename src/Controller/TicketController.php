@@ -28,15 +28,35 @@ class TicketController
                 }
             }
 
+            $produto = $_POST['produto'] ?? '';
+            // Novos campos para filmes/séries
+            $filme_nome = $_POST['filme_nome'] ?? '';
+            $filme_tmdb = $_POST['filme_tmdb'] ?? '';
+            $filme_obs = $_POST['filme_obs'] ?? '';
+            $serie_nome = $_POST['serie_nome'] ?? '';
+            $serie_tmdb = $_POST['serie_tmdb'] ?? '';
+            $serie_obs = $_POST['serie_obs'] ?? '';
+
             $ticket = [
                 'name' => $name,
                 'email' => $email,
+                'produto' => $produto,
                 'subject' => $subject,
                 'message' => $message,
                 'imagePath' => $imagePath,
                 'telefone' => $telefone,
-                'status' => 'nao_aberto'
+                'status' => 'nao_aberto',
             ];
+            // Adiciona campos extras se for filmes ou séries
+            if ($produto === 'filmes') {
+                $ticket['filme_nome'] = $filme_nome;
+                $ticket['filme_tmdb'] = $filme_tmdb;
+                $ticket['filme_obs'] = $filme_obs;
+            } elseif ($produto === 'series') {
+                $ticket['serie_nome'] = $serie_nome;
+                $ticket['serie_tmdb'] = $serie_tmdb;
+                $ticket['serie_obs'] = $serie_obs;
+            }
             $file = __DIR__ . '/../../logs/tickets.txt';
             $tickets = [];
             if (file_exists($file)) {

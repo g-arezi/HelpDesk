@@ -237,15 +237,52 @@
 
             <label for="email">✉️ E-mail:</label>
             <input type="email" id="email" name="email" required>
+            
             <label for="produto">📦 Produto/Serviço:</label>
-            <select id="subject" name="subject" required>
+            <select id="produto" name="produto" required>
                 <option value="">Selecione um produto/serviço</option>
-                <option value="iptv">Canais</option>
-                <option value="internet">Filmes</option>
-                <option value="telefonia">Séries</option>
-                <option value="outro">Outros</option>
-             </select>
-             
+                <option value="canais">Canais</option>
+                <option value="filmes">Filmes</option>
+                <option value="series">Séries</option>
+                <option value="outros">Outros</option>
+            </select>
+            <div id="produto-observacao" style="display:none; margin-top:8px; color:#1976d2; font-size:0.98em;"></div>
+            <div id="filmes-campos" style="display:none; margin-bottom:10px;">
+                <label for="filme_nome">🍿 FILME:<span style="color:red">*</span></label>
+                <input type="text" id="filme_nome" name="filme_nome" autocomplete="off">
+                <label for="filme_tmdb">🌟 TMDB:<span style="color:red">*</span></label>
+                <input type="text" id="filme_tmdb" name="filme_tmdb" autocomplete="off">
+                <label for="filme_obs">⚠️OBSERVAÇÃO:</label>
+                <input type="text" id="filme_obs" name="filme_obs" autocomplete="off">
+            </div>
+            <div id="series-campos" style="display:none; margin-bottom:10px;">
+                <label for="serie_nome">📽️ SÉRIE:<span style="color:red">*</span></label>
+                <input type="text" id="serie_nome" name="serie_nome" autocomplete="off">
+                <label for="serie_tmdb">🌟 TMDB:<span style="color:red">*</span></label>
+                <input type="text" id="serie_tmdb" name="serie_tmdb" autocomplete="off">
+                <label for="serie_obs">⚠️OBSERVAÇÃO:</label>
+                <input type="text" id="serie_obs" name="serie_obs" autocomplete="off">
+            </div>
+            <div style="margin-bottom:10px;color:#1976d2;font-size:0.98em;">
+                <b>Observação:</b> Para encontrar o código TMDB, acesse 
+                <a href="https://www.themoviedb.org/?language=pt-BR" 
+                   target="_blank" 
+                   style="color:#1976d2;text-decoration:underline;cursor:pointer;" 
+                   id="tmdb-link"
+                   data-link="https://www.themoviedb.org/?language=pt-BR"
+                >https://www.themoviedb.org/?language=pt-BR</a> 
+                e o link será copiado automaticamente ao clicar.
+            </div>
+            <script>
+            document.getElementById('tmdb-link').addEventListener('click', function(e) {
+                e.preventDefault();
+                const url = this.getAttribute('data-link');
+                navigator.clipboard.writeText(url).then(() => {
+                    window.open(url, '_blank');
+                });
+            });
+            </script>
+
             <label for="subject">🆘 Tópico de ajuda:</label>
             <select id="subject" name="subject" required>
                 <option value="">Selecione um erro</option>
@@ -386,6 +423,39 @@
     // Remove botão antigo
     var oldBtn = document.getElementById('nightToggle');
     if(oldBtn) oldBtn.remove();
+
+    // Observação dinâmica e campos extras para filmes/séries
+const produtoSelect = document.getElementById('produto');
+const obsDiv = document.getElementById('produto-observacao');
+const filmesCampos = document.getElementById('filmes-campos');
+const seriesCampos = document.getElementById('series-campos');
+const filmeNome = document.getElementById('filme_nome');
+const filmeTmdb = document.getElementById('filme_tmdb');
+const serieNome = document.getElementById('serie_nome');
+const serieTmdb = document.getElementById('serie_tmdb');
+
+produtoSelect.addEventListener('change', function() {
+    obsDiv.style.display = 'none';
+    filmesCampos.style.display = 'none';
+    seriesCampos.style.display = 'none';
+    filmeNome.required = false;
+    filmeTmdb.required = false;
+    serieNome.required = false;
+    serieTmdb.required = false;
+    if (this.value === 'filmes') {
+        obsDiv.textContent = 'Ao selecionar FILMES, informe o nome do filme e o código TMDB (obrigatórios), além de uma observação se desejar.';
+        obsDiv.style.display = 'block';
+        filmesCampos.style.display = 'block';
+        filmeNome.required = true;
+        filmeTmdb.required = true;
+    } else if (this.value === 'series') {
+        obsDiv.textContent = 'Ao selecionar SÉRIES, informe o nome da série e o código TMDB (obrigatórios), além de uma observação se desejar.';
+        obsDiv.style.display = 'block';
+        seriesCampos.style.display = 'block';
+        serieNome.required = true;
+        serieTmdb.required = true;
+    }
+});
     </script>
 </body>
 </html>
