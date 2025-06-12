@@ -113,8 +113,61 @@
             background: #125ea7;
             box-shadow: 0 4px 16px #1976d240;
         }
-        .night-toggle { position:fixed; bottom:24px; left:24px; top:auto; right:auto; z-index:1000; background:linear-gradient(90deg,#ff6b6b,#b71c1c); color:#fff; border:1px solid #b71c1c; border-radius:20px; padding:10px 22px; cursor:pointer; font-weight:bold; box-shadow:0 2px 12px #0003; font-size: 1.1rem; transition: background 0.3s, color 0.3s; }
-        .night-toggle.night { background:linear-gradient(90deg,#b71c1c,#ff6b6b); color:#fff; border-color:#fff; }
+        /* Night/Light mode switcher - canto inferior esquerdo (ajuste visual igual dashboard) */
+    .mode-switch {
+            position: fixed;
+            left: 18px;
+            bottom: 18px;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: #232a36;
+            border-radius: 18px;
+            padding: 6px 14px 6px 10px;
+            box-shadow: 0 2px 12px #0003;
+            color: #fff;
+            font-size: 1.05rem;
+            font-weight: 500;
+            border: 1px solid #232a36;
+            transition: background 0.3s, color 0.3s;
+        }
+        .mode-switch.light {
+            background: #e3f2fd;
+            color: #1976d2;
+            border: 1px solid #b3c6e0;
+        }
+        .mode-switch input[type="checkbox"] {
+            width: 36px;
+            height: 20px;
+            appearance: none;
+            background: #bdbdbd;
+            outline: none;
+            border-radius: 12px;
+            position: relative;
+            transition: background 0.3s;
+            cursor: pointer;
+        }
+        .mode-switch input[type="checkbox"]:checked {
+            background: #1976d2;
+        }
+        .mode-switch input[type="checkbox"]::before {
+            content: '';
+            position: absolute;
+            left: 3px;
+            top: 3px;
+            width: 14px;
+            height: 14px;
+            background: #fff;
+            border-radius: 50%;
+            transition: left 0.3s;
+        }
+        .mode-switch input[type="checkbox"]:checked::before {
+            left: 19px;
+        }
+        .mode-switch .icon {
+            font-size: 1.1em;
+        }
         @media (max-width: 600px) {
             .container { padding: 18px 4vw; }
             .topnav a { padding: 8px 10px; font-size: 0.98em; }
@@ -145,7 +198,13 @@
     </style>
 </head>
 <body>
-    <button class="night-toggle" id="nightToggle" type="button" onclick="toggleNightMode()">🌙 Modo Noturno</button>
+    <!-- Switch de modo claro/noturno -->
+    <div class="mode-switch light" id="modeSwitch">
+        <span class="icon" id="modeIcon">🌞</span>
+        <input type="checkbox" id="modeToggle" aria-label="Alternar modo claro/noturno">
+        <span id="modeLabel">Claro</span>
+    </div>
+    <!-- ...existing code... -->
     <div class="topnav">
         <a href="login.php">Login</a>
         <a href="tickets.php">Lista de Chamados</a>
@@ -255,24 +314,40 @@
             }
         }
     });
-    function toggleNightMode(force) {
-        let night;
-        if (typeof force === 'boolean') {
-            night = force;
-            document.body.classList.toggle('night', night);
-        } else {
-            night = document.body.classList.toggle('night');
-        }
+    // Novo switch de modo
+    const modeSwitch = document.getElementById('modeSwitch');
+    const modeToggle = document.getElementById('modeToggle');
+    const modeIcon = document.getElementById('modeIcon');
+    const modeLabel = document.getElementById('modeLabel');
+    function setMode(night) {
+        document.body.classList.toggle('night', night);
         document.querySelector('.container').classList.toggle('night', night);
         document.querySelector('.topnav').classList.toggle('night', night);
         document.querySelectorAll('input, select, textarea').forEach(e=>e.classList.toggle('night', night));
         document.getElementById('paste-area').classList.toggle('night', night);
         document.querySelectorAll('.btn').forEach(e=>e.classList.toggle('night', night));
-        document.getElementById('nightToggle').classList.toggle('night', night);
-        if(night) localStorage.setItem('nightMode','1');
-        else localStorage.removeItem('nightMode');
+        modeSwitch.classList.toggle('light', !night);
+        modeSwitch.classList.toggle('night', night);
+        modeToggle.checked = night;
+        if(night) {
+            modeIcon.textContent = '🌙';
+            modeLabel.textContent = 'Noturno';
+            localStorage.setItem('nightMode','1');
+        } else {
+            modeIcon.textContent = '🌞';
+            modeLabel.textContent = 'Claro';
+            localStorage.removeItem('nightMode');
+        }
     }
-    if(localStorage.getItem('nightMode')) setTimeout(()=>toggleNightMode(true), 100);
+    modeToggle.addEventListener('change', function() {
+        setMode(this.checked);
+    });
+    // Inicialização
+    if(localStorage.getItem('nightMode')) setMode(true);
+    else setMode(false);
+    // Remove botão antigo
+    var oldBtn = document.getElementById('nightToggle');
+    if(oldBtn) oldBtn.remove();
     </script>
 </body>
 </html>
