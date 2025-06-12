@@ -51,8 +51,8 @@
 </head>
 <body>
     <div class="container">
-        <h2>Chamado enviado com sucesso!</h2>
-        <p>Seu chamado foi registrado. Em breve nossa equipe entrará em contato.</p>
+        <h2>✅ Chamado enviado com sucesso!</h2>
+        <p>🎉 Seu chamado foi registrado. Em breve nossa equipe entrará em contato.</p>
         
         <?php
         // Recuperar o ID do chamado recém-enviado
@@ -76,8 +76,8 @@
             <strong>Mensagem enviada:</strong><br>
             <span style="color:#333;"> <?= nl2br(htmlspecialchars($lastTicket['message'] ?? '')) ?> </span>
         </div>
-        <a href="open.php" class="btn">Abrir novo chamado</a>
-        <a href="buscarchamados.html" class="btn green">Buscar chamados</a>
+        <a href="open.php" class="btn">📝 Abrir novo chamado</a>
+        <a href="buscarchamados.html" class="btn green">🔎 Buscar chamados</a>
 
         <?php if (!empty($ticket->imagePath)): ?>
             <div>

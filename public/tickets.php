@@ -68,14 +68,25 @@ foreach ($tickets as $ticket) {
     <style>
     body { font-family: 'Segoe UI', Arial, sans-serif; background: #f4f6fa; margin:0; padding:0; transition: background 0.3s, color 0.3s; }
     .container { max-width: 1200px; margin: 40px auto 30px auto; background: #fff; border-radius: 18px; box-shadow: 0 6px 32px #0002; padding: 36px 40px 30px 40px; min-height: 80vh; transition: background 0.3s, color 0.3s; }
-    h2 { color: #1976d2; text-align: left; font-size: 2.1rem; margin-bottom: 24px; letter-spacing: 1px; }
+    h2 { color:rgb(2, 2, 2); text-align: left; font-size: 2.1rem; margin-bottom: 24px; letter-spacing: 1px; }
+    body.night h2 { color: #fff; }
     .summary-box { margin: 0 0 24px 0; padding: 18px 24px; background: #f8fafd; border-radius: 10px; box-shadow: 0 2px 8px #0001; display: flex; gap: 36px; max-width: 700px; }
     .summary-box div { font-size: 1.1rem; }
     .summary-box strong { font-weight: 600; }
     .summary-box span { font-size: 1.2rem; }
     .ticket-table { width: 100%; border-collapse: separate; border-spacing: 0; background: #fff; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 12px #0001; margin-top: 24px; font-size: 15px; }
     .ticket-table th, .ticket-table td { padding: 13px 10px; text-align: left; border-bottom: 1px solid #e0e0e0; }
-    .ticket-table th { background: #f2f6fc; color: #1976d2; font-weight: 600; font-size: 1.05rem; letter-spacing: 0.5px; }
+    .ticket-table th { 
+        background: #f2f6fc; 
+        color: #111; /* Light mode: preto */
+        font-weight: 600; 
+        font-size: 1.05rem; 
+        letter-spacing: 0.5px; 
+    }
+    .ticket-table.night th {
+        background: #263238 !important;
+        color: #fff !important; /* Night mode: branco */
+    }
     .ticket-table tr:last-child td { border-bottom: none; }
     .ticket-table tr { transition: background 0.2s; }
     .ticket-table tr:hover { background: #f0f4fa; }
@@ -174,9 +185,9 @@ foreach ($tickets as $ticket) {
         <h2>Lista de Tickets</h2>
         <?php if ($auth): ?>
             <div class="summary-box" id="summaryBox">
-                <div><strong>Chamados em aberto:</strong> <span style="color:#d70022; font-weight:bold;" id="span-aberto"><?= $em_aberto ?></span></div>
-                <div><strong>Em andamento:</strong> <span style="color:#ff9800; font-weight:bold;" id="span-andamento"><?= $em_andamento ?></span></div>
-                <div><strong>Encerrados:</strong> <span style="color:#388e3c; font-weight:bold;" id="span-encerrados"><?= $encerrados ?></span></div>
+                <div><strong>⚠️ Em aberto:</strong> <span style="color:#d70022; font-weight:bold;" id="span-aberto"><?= $em_aberto ?></span></div>
+                <div><strong>⏳ Em andamento:</strong> <span style="color:#ff9800; font-weight:bold;" id="span-andamento"><?= $em_andamento ?></span></div>
+                <div><strong>✅ Encerrados:</strong> <span style="color:#388e3c; font-weight:bold;" id="span-encerrados"><?= $encerrados ?></span></div>
                 <a href="dashboard.php" class="btn" id="dashboardBtn">Dashboard</a>
             </div>
         <?php endif; ?>
@@ -184,15 +195,15 @@ foreach ($tickets as $ticket) {
         <table class="ticket-table" id="ticketTable">
             <thead>
                 <tr>
-                    <th>ID</th>
-                    <th>Nome</th>
-                    <th>E-mail</th>
-                    <th>Assunto</th>
-                    <th>Mensagem</th>
-                    <th>Imagem</th>
-                    <th>Telefone</th>
-                    <th>Status</th>
-                    <th>Ações</th>
+                    <th>#️⃣ ID</th>
+                    <th>👤 Nome</th>
+                    <th>📧 E-mail</th>
+                    <th>📝 Assunto</th>
+                    <th>💬 Mensagem</th>
+                    <th>🖼️ Imagem</th>
+                    <th>📱 Telefone</th>
+                    <th>🔖 Status</th>
+                    <th>⚙️ Ações</th>
                 </tr>
             </thead>
             <tbody id="tickets-tbody">

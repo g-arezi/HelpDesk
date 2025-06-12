@@ -74,8 +74,8 @@ function card($color, $icon, $label, $count) {
     <title>Dashboard - Helpdesk</title>
     <style>
         body { font-family: 'Segoe UI', Arial, sans-serif; background: #f4f8fb; margin:0; transition: background 0.3s, color 0.3s; }
-        .sidebar { width:220px; background:#e3f2fd; height:100vh; position:fixed; left:0; top:0; padding:30px 0; transition: background 0.3s, color 0.3s; box-shadow: 2px 0 16px #0001; border-radius: 0 18px 18px 0; }
-        .sidebar h2 { color:#1976d2; text-align:center; margin-bottom:30px; font-size:1.6rem; letter-spacing:1px; transition: color 0.3s; }
+        .sidebar { width:220px; background: #232a36; height:100vh; position:fixed; left:0; top:0; padding:30px 0; transition: background 0.3s, color 0.3s; box-shadow: 2px 0 16px #0001; border-radius: 0 18px 18px 0; }
+        .sidebar h2 { color: #1976d2; text-align:center; margin-bottom:30px; font-size:1.6rem; letter-spacing:1px; transition: color 0.3s; }
         .sidebar a { display:block; color:#1976d2; text-decoration:none; padding:12px 30px; margin:8px 0; border-radius:8px; font-weight:500; transition: background 0.2s, color 0.2s; }
         .sidebar a:hover { background:#bbdefb; }
         /* Night mode styles */
@@ -84,7 +84,7 @@ function card($color, $icon, $label, $count) {
         .sidebar.night a:hover { background: #263238; }
         .main { margin-left:240px; padding:40px 40px 30px 40px; min-height:100vh; transition: background 0.3s, color 0.3s; background: #f4f8fb; }
         .header { display:flex; justify-content:space-between; align-items:center; margin-bottom: 18px; }
-        .header h1 { color:#1976d2; font-size:2.2rem; letter-spacing:1px; }
+        .header h1 { color: #232a36; font-size:2.2rem; letter-spacing:1px; }
         .logout { background:#d32f2f; color:#fff; border:none; padding:10px 22px; border-radius:8px; cursor:pointer; box-shadow:0 2px 8px #0002; font-size:1.1rem; font-weight:bold; transition: background 0.2s; }
         .logout:hover { background:#b71c1c; }
         .cards { display:flex; gap:24px; margin:30px 0 24px 0; flex-wrap:wrap; }
@@ -105,7 +105,7 @@ function card($color, $icon, $label, $count) {
         th { background-color: #f2f6fc; color: #1976d2; font-weight: 600; font-size: 1.05rem; letter-spacing: 0.5px; }
         tr:last-child td { border-bottom: none; }
         tr { transition: background 0.2s; }
-        tr:hover { background: #f0f4fa; }
+        tr:hover { background:rgb(201, 201, 201); }
         .btn { padding: 7px 16px; background: #0078d7; color: #fff; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; box-shadow: 0 1px 4px #0001; transition: background 0.2s, color 0.2s; margin: 2px 0; }
         .btn:hover { background: #0056a3; }
         .btn[style*='background:#d70022'] { background: #d70022 !important; }
@@ -115,7 +115,7 @@ function card($color, $icon, $label, $count) {
         .night-toggle { position:fixed; bottom:24px; left:24px; top:auto; right:auto; z-index:1000; background:linear-gradient(90deg,#ff6b6b,#b71c1c); color:#fff; border:1px solid #b71c1c; border-radius:20px; padding:10px 22px; cursor:pointer; font-weight:bold; box-shadow:0 2px 12px #0003; font-size: 1.1rem; transition: background 0.3s, color 0.3s; }
         .night-toggle.night { background:linear-gradient(90deg,#b71c1c,#ff6b6b); color:#fff; border-color:#fff; }
         /* Títulos: preto no light, branco no night, com transição */
-        h1, h2, h3 { color: #111 !important; transition: color 0.3s; text-shadow: none; }
+        h2, h3 { color: #f4f8fb !important; transition: color 0.3s; text-shadow: none; }
         body.night h1, body.night h2, body.night h3 { color: #fff !important; text-shadow: 0 1px 2px #0008; }
         /* Cabeçalhos de tabela: preto no light, branco no night */
         th { color: #111 !important; }
@@ -124,7 +124,7 @@ function card($color, $icon, $label, $count) {
         .section h3, .section label { color: #111 !important; }
         .section.night h3, .section.night label, body.night .section h3, body.night .section label { color: #fff !important; }
         /* Links do menu lateral: preto no light, branco no night, com transição */
-        .sidebar a { color: #111; transition: color 0.3s; }
+        .sidebar a { color: #f4f8fb; transition: color 0.3s; }
         .sidebar.night a { color: #fff !important; text-shadow: 0 1px 2px #0008; }
         .sidebar a:hover { background:#bbdefb; }
         .sidebar.night a:hover { background: #263238; color: #fff !important; }

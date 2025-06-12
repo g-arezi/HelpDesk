@@ -116,57 +116,72 @@
         /* Night/Light mode switcher - canto inferior esquerdo (ajuste visual igual dashboard) */
     .mode-switch {
             position: fixed;
-            left: 18px;
-            bottom: 18px;
+            left: 14px;
+            bottom: 14px;
             z-index: 1000;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 7px;
             background: #232a36;
-            border-radius: 18px;
-            padding: 6px 14px 6px 10px;
-            box-shadow: 0 2px 12px #0003;
+            border-radius: 14px;
+            padding: 4px 14px 4px 10px;
+            box-shadow: 0 2px 12px #0002, 0 1px 4px #0001;
             color: #fff;
-            font-size: 1.05rem;
+            font-size: 1rem;
             font-weight: 500;
-            border: 1px solid #232a36;
-            transition: background 0.3s, color 0.3s;
+            border: 1.5px solid #232a36;
+            transition: background 0.3s, color 0.3s, box-shadow 0.3s, border 0.3s;
+            min-width: 110px;
         }
         .mode-switch.light {
             background: #e3f2fd;
             color: #1976d2;
-            border: 1px solid #b3c6e0;
+            border: 1.5px solid #b3c6e0;
+            box-shadow: 0 2px 12px #b3c6e033, 0 1px 4px #b3c6e022;
         }
         .mode-switch input[type="checkbox"] {
-            width: 36px;
-            height: 20px;
+            width: 32px;
+            height: 18px;
             appearance: none;
             background: #bdbdbd;
             outline: none;
-            border-radius: 12px;
+            border-radius: 10px;
             position: relative;
-            transition: background 0.3s;
+            transition: background 0.3s, border 0.3s, box-shadow 0.3s;
             cursor: pointer;
+            border: 1.5px solid #b0bec5;
+            box-shadow: 0 1px 4px #0001;
+            margin: 0 2px;
         }
         .mode-switch input[type="checkbox"]:checked {
             background: #1976d2;
+            border: 1.5px solid #1976d2;
         }
         .mode-switch input[type="checkbox"]::before {
             content: '';
             position: absolute;
-            left: 3px;
-            top: 3px;
+            left: 2px;
+            top: 50%;
+            transform: translateY(-50%);
             width: 14px;
             height: 14px;
             background: #fff;
             border-radius: 50%;
-            transition: left 0.3s;
+            box-shadow: 0 2px 6px #0002, 0 1px 2px #1976d233;
+            transition: left 0.3s, box-shadow 0.3s;
         }
         .mode-switch input[type="checkbox"]:checked::before {
-            left: 19px;
+            left: 16px;
         }
         .mode-switch .icon {
-            font-size: 1.1em;
+            font-size: 1.15em;
+            margin-right: 2px;
+        }
+        .mode-switch #modeLabel {
+            font-weight: 600;
+            letter-spacing: 0.2px;
+            font-size: 1em;
+            margin-left: 2px;
         }
         @media (max-width: 600px) {
             .container { padding: 18px 4vw; }
@@ -222,7 +237,15 @@
 
             <label for="email">✉️ E-mail:</label>
             <input type="email" id="email" name="email" required>
-
+            <label for="produto">📦 Produto/Serviço:</label>
+            <select id="subject" name="subject" required>
+                <option value="">Selecione um produto/serviço</option>
+                <option value="iptv">Canais</option>
+                <option value="internet">Filmes</option>
+                <option value="telefonia">Séries</option>
+                <option value="outro">Outros</option>
+             </select>
+             
             <label for="subject">🆘 Tópico de ajuda:</label>
             <select id="subject" name="subject" required>
                 <option value="">Selecione um erro</option>
@@ -243,11 +266,12 @@
             <label for="message">💬 Mensagem:</label>
             <textarea id="message" name="message" rows="5" required></textarea>
 
-            <label for="image">📷 Anexar imagem:</label>
-            <input type="file" id="image" name="image" accept="image/*">
+            <label for="image">📷 Anexar imagem ou vídeo:</label>
+            <input type="file" id="image" name="image" accept="image/*,video/*">
             <div id="paste-area">
-                <span id="paste-hint">Cole uma imagem aqui (Ctrl+V) ou arraste uma imagem</span>
+                <span id="paste-hint">Cole uma imagem aqui (Ctrl+V) ou arraste uma imagem/vídeo</span>
                 <img id="preview" src="" alt="Pré-visualização" style="display:none;"/>
+                <video id="video-preview" controls style="display:none;max-width:220px;max-height:220px;border-radius:10px;box-shadow:0 1px 8px #1976d220;"></video>
             </div>
             <button type="submit" class="btn">Enviar Chamado</button>
         </form>
@@ -256,16 +280,27 @@
     const pasteArea = document.getElementById('paste-area');
     const imageInput = document.getElementById('image');
     const preview = document.getElementById('preview');
+    const videoPreview = document.getElementById('video-preview');
     const pasteHint = document.getElementById('paste-hint');
     imageInput.addEventListener('change', function(e) {
         if (this.files && this.files[0]) {
-            const reader = new FileReader();
-            reader.onload = function(ev) {
-                preview.src = ev.target.result;
-                preview.style.display = 'block';
+            const file = this.files[0];
+            if (file.type.startsWith('image/')) {
+                const reader = new FileReader();
+                reader.onload = function(ev) {
+                    preview.src = ev.target.result;
+                    preview.style.display = 'block';
+                    pasteHint.style.display = 'none';
+                    document.getElementById('video-preview').style.display = 'none';
+                };
+                reader.readAsDataURL(file);
+            } else if (file.type.startsWith('video/')) {
+                const videoPreview = document.getElementById('video-preview');
+                videoPreview.src = URL.createObjectURL(file);
+                videoPreview.style.display = 'block';
+                preview.style.display = 'none';
                 pasteHint.style.display = 'none';
-            };
-            reader.readAsDataURL(this.files[0]);
+            }
         }
     });
     pasteArea.addEventListener('paste', function(e) {
@@ -281,26 +316,19 @@
                     preview.src = ev.target.result;
                     preview.style.display = 'block';
                     pasteHint.style.display = 'none';
+                    document.getElementById('video-preview').style.display = 'none';
                 };
                 reader.readAsDataURL(file);
                 break;
             }
         }
     });
-    pasteArea.addEventListener('dragover', function(e) {
-        e.preventDefault();
-        pasteArea.style.background = '#f0f0f0';
-    });
-    pasteArea.addEventListener('dragleave', function(e) {
-        e.preventDefault();
-        pasteArea.style.background = '';
-    });
     pasteArea.addEventListener('drop', function(e) {
         e.preventDefault();
         pasteArea.style.background = '';
         if (e.dataTransfer.files && e.dataTransfer.files[0]) {
             const file = e.dataTransfer.files[0];
-            if (file.type.indexOf('image') !== -1) {
+            if (file.type.startsWith('image/')) {
                 const dt = new DataTransfer();
                 dt.items.add(file);
                 imageInput.files = dt.files;
@@ -309,8 +337,18 @@
                     preview.src = ev.target.result;
                     preview.style.display = 'block';
                     pasteHint.style.display = 'none';
+                    document.getElementById('video-preview').style.display = 'none';
                 };
                 reader.readAsDataURL(file);
+            } else if (file.type.startsWith('video/')) {
+                const dt = new DataTransfer();
+                dt.items.add(file);
+                imageInput.files = dt.files;
+                const videoPreview = document.getElementById('video-preview');
+                videoPreview.src = URL.createObjectURL(file);
+                videoPreview.style.display = 'block';
+                preview.style.display = 'none';
+                pasteHint.style.display = 'none';
             }
         }
     });
