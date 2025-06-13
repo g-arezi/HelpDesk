@@ -12,7 +12,7 @@
         body.night h1 { color: #fff !important; }
         table { width: 100%; border-collapse: collapse; margin-top: 20px; background: #fff; border-radius: 8px; overflow: hidden; box-shadow:0 1px 8px #e0e0e0; }
         th, td { padding: 12px; text-align: left; border-bottom: 1px solid #e0e0e0; }
-        th { background-color: #f2f2f2; color: #1976d2; font-weight: bold; }
+        th { background-color: #f2f2f2; color: #000000; font-weight: bold; }
         tr:hover { background-color: #f5f5f5; }
         .btn { padding: 8px 16px; background-color: #0078d7; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; box-shadow:0 1px 4px #0001; transition: background 0.2s; }
         .btn:hover { background-color: #0056a3; }
@@ -76,7 +76,7 @@
         body.night { background: #181c24; color: #e0e0e0; }
         .container.night { background: #232a36; color: #e0e0e0; }
         table.night { background: #232a36; color: #e0e0e0; }
-        th.night { background: #263238; color: #90caf9; }
+        th.night { background: #263238; color: #ffffff; }
         tr.night:hover { background-color: #222b38; }
         .btn.night { background: #1976d2; color: #fff; }
         .btn.night:hover { background: #1565c0; }
@@ -90,6 +90,15 @@
         .chat-form input, .chat-form button { padding: 8px; }
         .chat-form input { flex: 1; }
         .chat-area { margin-top: 10px; }
+        .btn-chat {
+            background: linear-gradient(90deg, #43a047 60%, #66bb6a 100%) !important;
+            color: #fff !important;
+            border: none !important;
+        }
+        .btn-chat:hover {
+            background: #388e3c !important;
+            color: #fff !important;
+        }
     </style>
 </head>
 <body>
@@ -151,10 +160,10 @@
             .then(data=>{
                 let html = '';
                 if(data && Array.isArray(data.tickets) && data.tickets.length) {
-                    html += '<table><thead><tr><th>ID</th><th>Status</th><th>Assunto</th><th>Mensagem</th><th>Telefone</th><th></th></tr></thead><tbody>';
+                    html += '<table><thead><tr><th>🆔 ID</th><th>📋 Status</th><th>📝 Assunto</th><th>💬 Mensagem</th><th>📞 Telefone</th><th></th></tr></thead><tbody>';
                     data.tickets.forEach(row=>{
                         // Passa email e telefone na URL para o chat
-                        html += `<tr><td>${row.id}</td><td>${row.status}</td><td>${row.subject}</td><td>${row.message}</td><td>${row.telefone}</td><td><a href="chat_frontend.html?id=${row.id}&email=${encodeURIComponent(email)}&telefone=${encodeURIComponent(telefone)}" class="btn" target="_blank">Abrir Chat</a></td></tr>`;
+                        html += `<tr><td>${row.id}</td><td>${row.status}</td><td>${row.subject}</td><td>${row.message}</td><td>${row.telefone}</td><td><a href="chat_frontend.html?id=${row.id}&email=${encodeURIComponent(email)}&telefone=${encodeURIComponent(telefone)}" class="btn btn-chat" target="_blank">Chat</a></td></tr>`;
                     });
                     html += '</tbody></table>';
                 } else {

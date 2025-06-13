@@ -18,7 +18,7 @@
             transition: background 0.3s, color 0.3s;
         }
         h2 {
-            color: #1976d2;
+            color: #111; /* preto no light */
             font-size: 1.6rem;
             font-weight: 700;
             margin-bottom: 18px;
@@ -34,10 +34,11 @@
             margin-bottom: 14px;
             border-radius: 10px;
             font-size: 1.04rem;
+            color: #111; /* preto no light */
             box-shadow: 0 1px 4px #1976d208;
         }
-        .chat-message { margin-bottom: 10px; }
-        .chat-message .author { font-weight: bold; color: #1976d2; }
+        .chat-message { margin-bottom: 10px; color: #111; }
+        .chat-message .author { font-weight: bold; color: #111; /* preto no light */ }
         .chat-message .timestamp { color: #888; font-size: 0.85em; margin-left: 8px; }
         .chat-form { display: flex; gap: 10px; margin-top: 6px; }
         .chat-form input, .chat-form button {
@@ -108,40 +109,21 @@
             color: #e0e0e0 !important;
             box-shadow: 0 6px 32px #0006, 0 1.5px 8px #1976d220;
         }
-        .chat-messages.night {
-            background: #181c24 !important;
-            color: #e0e0e0 !important;
-            border-color: #232837 !important;
-            box-shadow: 0 1px 4px #0004;
+        .chat-messages {
+            color: #111; background: #fff;
         }
-        .chat-message .author { color: #90caf9 !important; }
-        .chat-message .timestamp { color: #b0b0b0 !important; }
-        .chat-form input.night, .chat-form button.night {
-            background: #232837 !important;
-            color: #e0e0e0 !important;
-            border: 1.5px solid #333 !important;
-        }
-        .chat-form button.night {
-            background: linear-gradient(90deg, #b71c1c 60%, #ff6b6b 100%) !important;
+        .chat-message { color: #111; }
+        .chat-message .author { color: #111; }
+        .chat-message .timestamp { color: #888; }
+        /* Night mode: tudo branco */
+        body.night, .chat-container.night, .chat-messages.night, .chat-message.night, .chat-message .author.night, .chat-message .timestamp.night, label.night, input.night, button.night, h2.night {
             color: #fff !important;
-            border: 1.5px solid #fff;
         }
-        .chat-form button.night:hover { background: #ff6b6b !important; color: #fff !important; }
-        h2.night { color: #90caf9 !important; text-shadow: 0 2px 8px #0006; }
-        label.night { color: #b0b0b0 !important; }
-        .night input, .night select, .night textarea {
-            background: #232837 !important;
-            color: #e0e0e0 !important;
-            border: 1.5px solid #333 !important;
+        label, label[for="ticketId"], label[for="email"], label[for="telefone"] {
+            color: #111 !important;
         }
-        .night input::placeholder, .night textarea::placeholder {
-            color: #b0b0b0 !important;
-            opacity: 1;
-        }
-        .night button, .night .chat-form button {
-            background: #263043 !important;
+        label.night, label[for="ticketId"].night, label[for="email"].night, label[for="telefone"].night {
             color: #fff !important;
-            border: 1.5px solid #333 !important;
         }
         /* Responsividade */
         @media (max-width: 600px) {
@@ -150,15 +132,84 @@
             .chat-form input, .chat-form button { font-size: 0.98rem; }
             h2 { font-size: 1.15rem; }
         }
+        /* Novo estilo para o botão Enviar */
+        .chat-form button, .chat-form button.night {
+            background: linear-gradient(90deg, #43a047 60%, #66bb6a 100%) !important;
+            color: #fff !important;
+            border: none !important;
+        }
+        .chat-form button:hover, .chat-form button.night:hover {
+            background: #388e3c !important;
+            color: #fff !important;
+        }
+        /* Seletor de modo noturno */
+        .mode-switch {
+            position: fixed;
+            left: 18px;
+            bottom: 18px;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: #232a36;
+            border-radius: 18px;
+            padding: 6px 14px 6px 10px;
+            box-shadow: 0 2px 12px #0003;
+            color: #fff;
+            font-size: 1.05rem;
+            font-weight: 500;
+            border: 1px solid #232a36;
+            transition: background 0.3s, color 0.3s;
+        }
+        .mode-switch.light {
+            background: #e3f2fd;
+            color: #1976d2;
+            border: 1px solid #b3c6e0;
+        }
+        .mode-switch input[type="checkbox"] {
+            width: 36px;
+            height: 20px;
+            appearance: none;
+            background: #bdbdbd;
+            outline: none;
+            border-radius: 12px;
+            position: relative;
+            transition: background 0.3s;
+            cursor: pointer;
+        }
+        .mode-switch input[type="checkbox"]:checked {
+            background: #1976d2;
+        }
+        .mode-switch input[type="checkbox"]::before {
+            content: '';
+            position: absolute;
+            left: 3px;
+            top: 3px;
+            width: 14px;
+            height: 14px;
+            background: #fff;
+            border-radius: 50%;
+            transition: left 0.3s;
+        }
+        .mode-switch input[type="checkbox"]:checked::before {
+            left: 19px;
+        }
+        .mode-switch .icon {
+            font-size: 1.1em;
+        }
     </style>
 </head>
 <body>
-    <button id="nightToggle" style="position:absolute;top:12px;right:16px;z-index:10;" onclick="toggleNightMode()">🌙</button>
+    <div class="mode-switch light" id="modeSwitch">
+        <span class="icon" id="modeIcon">🌞</span>
+        <input type="checkbox" id="modeToggle" aria-label="Alternar modo claro/noturno">
+        <span id="modeLabel">Claro</span>
+    </div>
     <div class="chat-container" id="chatContainer">
         <h2 id="chatTitle">💬Chat do Chamado</h2>
         <div style="margin-bottom:10px;">
-            <label for="ticketId" id="labelTicketId">#️⃣ ID do Chamado:</label>
-            <input type="number" id="ticketId" min="1" value="1" style="width:80px;">
+            <label for="ticketId" id="labelTicketId">🆔 ID do Chamado:</label>
+            <input type="text" id="ticketId" placeholder="ID do Chamado" style="width:100px;">
             <label for="email" id="labelEmail">✉️ E-mail:</label>
             <input type="email" id="email" placeholder="Seu e-mail" style="width:180px;">
             <label for="telefone" id="labelTelefone">📱 Telefone:</label>
@@ -295,6 +346,39 @@
     window.addEventListener('DOMContentLoaded', function() {
         applyNightMode(localStorage.getItem('nightMode') === 'true');
     });
+
+    // Novo switch de modo igual ao buscarchamados.html
+    const modeSwitch = document.getElementById('modeSwitch');
+    const modeToggle = document.getElementById('modeToggle');
+    const modeIcon = document.getElementById('modeIcon');
+    const modeLabel = document.getElementById('modeLabel');
+    function setMode(night) {
+        document.body.classList.toggle('night', night);
+        document.getElementById('chatContainer').classList.toggle('night', night);
+        document.getElementById('chatMessages').classList.toggle('night', night);
+        document.querySelectorAll('.chat-form input').forEach(i => i.classList.toggle('night', night));
+        document.querySelector('.chat-form button').classList.toggle('night', night);
+        document.getElementById('chatTitle').classList.toggle('night', night);
+        [document.getElementById('labelTicketId'), document.getElementById('labelEmail'), document.getElementById('labelTelefone')].forEach(l => l.classList.toggle('night', night));
+        modeSwitch.classList.toggle('light', !night);
+        modeSwitch.classList.toggle('night', night);
+        modeToggle.checked = night;
+        if(night) {
+            modeIcon.textContent = '🌙';
+            modeLabel.textContent = 'Noturno';
+            localStorage.setItem('nightMode','1');
+        } else {
+            modeIcon.textContent = '🌞';
+            modeLabel.textContent = 'Claro';
+            localStorage.removeItem('nightMode');
+        }
+    }
+    modeToggle.addEventListener('change', function() {
+        setMode(this.checked);
+    });
+    // Inicialização
+    if(localStorage.getItem('nightMode')) setMode(true);
+    else setMode(false);
     </script>
 </body>
 </html>
