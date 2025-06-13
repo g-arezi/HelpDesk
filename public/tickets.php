@@ -224,11 +224,15 @@ foreach ($tickets as $ticket) {
                             <?php
                             // Exibe campos extras para filmes/séries
                             if (($ticket['produto'] ?? '') === 'filmes') {
+                                if (!empty($ticket['filmes_obse_label'])) echo '<b>Opção:</b> ' . htmlspecialchars($ticket['filmes_obse_label']) . '<br>';
+                                elseif (!empty($ticket['filmes_obse'])) echo '<b>Opção:</b> ' . htmlspecialchars($ticket['filmes_obse']) . '<br>';
                                 echo '<b>🍿 Filme:</b> ' . htmlspecialchars($ticket['filme_nome'] ?? '-') . '<br>';
                                 echo '<b>🌟 TMDB:</b> ' . htmlspecialchars($ticket['filme_tmdb'] ?? '-') . '<br>';
                                 if (!empty($ticket['filme_obs'])) echo '<b>⚠ OBS:</b> ' . htmlspecialchars($ticket['filme_obs']) . '<br>';
                                 echo '<hr style="margin:4px 0;">';
                             } elseif (($ticket['produto'] ?? '') === 'series') {
+                                if (!empty($ticket['series_obse_label'])) echo '<b>Opção:</b> ' . htmlspecialchars($ticket['series_obse_label']) . '<br>';
+                                elseif (!empty($ticket['series_obse'])) echo '<b>Opção:</b> ' . htmlspecialchars($ticket['series_obse']) . '<br>';
                                 echo '<b>📽 Série:</b> ' . htmlspecialchars($ticket['serie_nome'] ?? '-') . '<br>';
                                 echo '<b>🌟 TMDB:</b> ' . htmlspecialchars($ticket['serie_tmdb'] ?? '-') . '<br>';
                                 if (!empty($ticket['serie_obs'])) echo '<b>⚠ OBS:</b> ' . htmlspecialchars($ticket['serie_obs']) . '<br>';
@@ -347,7 +351,7 @@ foreach ($tickets as $ticket) {
     }
     function updateTickets() {
         fetch('dashboard_data.php')
-            .then(r => r.json())
+            .then r => r.json())
             .then(renderTickets);
     }
     setInterval(updateTickets, 3000);

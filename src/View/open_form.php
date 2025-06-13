@@ -210,6 +210,62 @@
             color: #b0b0b0 !important;
             opacity: 1;
         }
+        /* Padronização dos botões de opção (radio) */
+        .custom-radio-group {
+            display: flex;
+            justify-content: center;
+            gap: 28px;
+            margin-bottom: 10px;
+            align-items: center;
+        }
+        .custom-radio-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1em;
+            margin: 0;
+            background: #e3f2fd;
+            border: 1.5px solid #90caf9;
+            border-radius: 8px;
+            padding: 8px 18px;
+            cursor: pointer;
+            transition: background 0.2s, border 0.2s;
+        }
+        .custom-radio-label:hover, .custom-radio-label input:focus + span {
+            background: #bbdefb;
+            border-color: #1976d2;
+        }
+        .custom-radio-label input[type="radio"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #1976d2;
+            margin: 0;
+        }
+        .custom-radio-label span {
+            font-weight: 500;
+            color: #1976d2;
+        }
+        /* Night mode para botões de opção (radio) */
+        .container.night .custom-radio-label {
+            background: #232a36;
+            border: 1.5px solid #374151;
+            color: #fff;
+        }
+        .container.night .custom-radio-label:hover, .container.night .custom-radio-label input:focus + span {
+            background: #263238;
+            border-color: #90caf9;
+        }
+        .container.night .custom-radio-label span {
+            color: #90caf9;
+        }
+        .container.night .custom-radio-label input[type="radio"] {
+            accent-color: #90caf9;
+        }
+
+        /* Ajuste para manter contraste e visual agradável */
+        body.night .custom-radio-group label {
+            color: #fff;
+        }
     </style>
 </head>
 <body>
@@ -221,8 +277,6 @@
     </div>
     <!-- ...existing code... -->
     <div class="topnav">
-        <a href="login.php">🔑 Login</a>
-        <a href="tickets.php">📋 Lista de Chamados</a>
         <a href="buscarchamados.html">🔎 Buscar Chamados</a>
         <a href="open.php" style="background:#43a047;">🆕 Abrir Chamado</a>
     </div>
@@ -230,13 +284,13 @@
         <h2>Abrir Chamado</h2>
         <form method="post" action="open.php" enctype="multipart/form-data">
             <label for="name">👤 Nome:</label>
-            <input type="text" id="name" name="name" required>
+            <input type="text" id="name" name="name" required placeholder="Digite seu nome completo">
 
             <label for="telefone">📞 Telefone para contato:</label>
-            <input type="text" id="telefone" name="telefone" required>
+            <input type="text" id="telefone" name="telefone" required placeholder="(DDD) 99999-9999">
 
             <label for="email">✉️ E-mail:</label>
-            <input type="email" id="email" name="email" required>
+            <input type="email" id="email" name="email" required placeholder="seu@email.com">
             
             <label for="produto">📦 Produto/Serviço:</label>
             <select id="produto" name="produto" required>
@@ -247,32 +301,64 @@
                 <option value="outros">Outros</option>
             </select>
             <div id="produto-observacao" style="display:none; margin-top:8px; color:#1976d2; font-size:0.98em;"></div>
-            <div id="filmes-campos" style="display:none; margin-bottom:10px;">
-                <label for="filme_nome">🍿 FILME:<span style="color:red">*</span></label>
-                <input type="text" id="filme_nome" name="filme_nome" autocomplete="off">
-                <label for="filme_tmdb">🌟 TMDB:<span style="color:red">*</span></label>
-                <input type="text" id="filme_tmdb" name="filme_tmdb" autocomplete="off">
-                <label for="filme_obs">⚠️OBSERVAÇÃO:</label>
-                <input type="text" id="filme_obs" name="filme_obs" autocomplete="off">
-            </div>
-            <div id="series-campos" style="display:none; margin-bottom:10px;">
-                <label for="serie_nome">📽️ SÉRIE:<span style="color:red">*</span></label>
-                <input type="text" id="serie_nome" name="serie_nome" autocomplete="off">
-                <label for="serie_tmdb">🌟 TMDB:<span style="color:red">*</span></label>
-                <input type="text" id="serie_tmdb" name="serie_tmdb" autocomplete="off">
-                <label for="serie_obs">⚠️OBSERVAÇÃO:</label>
-                <input type="text" id="serie_obs" name="serie_obs" autocomplete="off">
-            </div>
             <div style="margin-bottom:10px;color:#1976d2;font-size:0.98em;">
                 <b>Observação:</b> Para encontrar o código TMDB, acesse 
-                <a href="https://www.themoviedb.org/?language=pt-BR" 
-                   target="_blank" 
+                <a href="#" 
                    style="color:#1976d2;text-decoration:underline;cursor:pointer;" 
                    id="tmdb-link"
                    data-link="https://www.themoviedb.org/?language=pt-BR"
+                   tabindex="0"
                 >https://www.themoviedb.org/?language=pt-BR</a> 
-                e o link será copiado automaticamente ao clicar.
+                (o link será copiado ao clicar, mas não abrirá a página).
             </div>
+            <script>
+            document.getElementById('tmdb-link').addEventListener('click', function(e) {
+                e.preventDefault();
+                const url = this.getAttribute('data-link');
+                navigator.clipboard.writeText(url);
+            });
+            </script>
+            <!-- Padronização dos botões de opção para filmes -->
+            <div id="filmes-campos" style="display:none; margin-bottom:10px;">
+                <label style="display:block; text-align:center; margin-bottom:8px;">🤔 Qual opção desejada?</label>
+                <div class="custom-radio-group">
+                    <label for="filmes_adicao" class="custom-radio-label">
+                        <input type="radio" id="filmes_adicao" name="filmes_obse" value="Solicitar conteúdo">
+                        <span>🆕- Solicitar conteúdo</span>
+                    </label>
+                    <label for="filmes_correcao" class="custom-radio-label">
+                        <input type="radio" id="filmes_correcao" name="filmes_obse" value="Corrigir conteúdo">
+                        <span>🛠️-Corrigir conteúdo</span>
+                    </label>
+                </div>
+                <label for="filme_nome">🍿 FILME:<span style="color:red">*</span></label>
+                <input type="text" id="filme_nome" name="filme_nome" autocomplete="off" placeholder="Digite o nome do filme Ex: Mufasa: O Rei Leão (2024)">
+                <label for="filme_tmdb">🌟 TMDB:<span style="color:red">*</span></label>
+                <input type="text" id="filme_tmdb" name="filme_tmdb" autocomplete="off" placeholder="Ex: https://www.themoviedb.org/movie/123456-mufasa">
+                <label for="filme_obs">⚠️OBSERVAÇÃO:</label>
+                <input type="text" id="filme_obs" name="filme_obs" autocomplete="off" placeholder="Ex: idioma, qualidade, etc.">
+            </div>
+            <!-- Padronização dos botões de opção para séries -->
+            <div id="series-campos" style="display:none; margin-bottom:10px;">
+                <label style="display:block; text-align:left; margin-bottom:8px;">🤔 Qual opção desejada?</label>
+                <div class="custom-radio-group">
+                    <label for="series_adicao" class="custom-radio-label">
+                        <input type="radio" id="series_adicao" name="series_obse" value="Solicitar conteúdo">
+                        <span>🆕- Solicitar conteúdo</span>
+                    </label>
+                    <label for="series_correcao" class="custom-radio-label">
+                        <input type="radio" id="series_correcao" name="series_obse" value="Corrigir conteúdo">
+                        <span>🛠️-Corrigir conteúdo</span>
+                    </label>
+                </div>
+                <label for="serie_nome">📽️ SÉRIE:<span style="color:red">*</span></label>
+                <input type="text" id="serie_nome" name="serie_nome" autocomplete="off" placeholder="Digite o nome da série ex: Game of Thrones">
+                <label for="serie_tmdb">🌟 TMDB:<span style="color:red">*</span></label>
+                <input type="text" id="serie_tmdb" name="serie_tmdb" autocomplete="off" placeholder="Ex: https://www.themoviedb.org/tv/121361-game-of-thrones">
+                <label for="serie_obs">⚠️OBSERVAÇÃO:</label>
+                <input type="text" id="serie_obs" name="serie_obs" autocomplete="off" placeholder="Ex: temporada, idioma, etc.">
+            </div>
+            
             <script>
             document.getElementById('tmdb-link').addEventListener('click', function(e) {
                 e.preventDefault();
@@ -301,7 +387,7 @@
             </select>
 
             <label for="message">💬 Mensagem:</label>
-            <textarea id="message" name="message" rows="5" required></textarea>
+            <textarea id="message" name="message" rows="5" required placeholder="Descreva detalhadamente o seu problema ou dúvida"></textarea>
 
             <label for="image">📷 Anexar imagem ou vídeo:</label>
             <input type="file" id="image" name="image" accept="image/*,video/*">

@@ -36,6 +36,25 @@ class TicketController
             $serie_nome = $_POST['serie_nome'] ?? '';
             $serie_tmdb = $_POST['serie_tmdb'] ?? '';
             $serie_obs = $_POST['serie_obs'] ?? '';
+            $filmes_obse = $_POST['filmes_obse'] ?? '';
+            $series_obse = $_POST['series_obse'] ?? '';
+
+            $filmes_obse_label = '';
+            if (isset($_POST['filmes_obse'])) {
+                if ($_POST['filmes_obse'] === 'Solicitar conteúdo') {
+                    $filmes_obse_label = '🆕- Solicitar conteúdo';
+                } elseif ($_POST['filmes_obse'] === 'Corrigir conteúdo') {
+                    $filmes_obse_label = '🛠️- Corrigir conteúdo';
+                }
+            }
+            $series_obse_label = '';
+            if (isset($_POST['series_obse'])) {
+                if ($_POST['series_obse'] === 'Solicitar conteúdo') {
+                    $series_obse_label = '🆕- Solicitar conteúdo';
+                } elseif ($_POST['series_obse'] === 'Corrigir conteúdo') {
+                    $series_obse_label = '🛠️- Corrigir conteúdo';
+                }
+            }
 
             $ticket = [
                 'name' => $name,
@@ -52,10 +71,14 @@ class TicketController
                 $ticket['filme_nome'] = $filme_nome;
                 $ticket['filme_tmdb'] = $filme_tmdb;
                 $ticket['filme_obs'] = $filme_obs;
+                $ticket['filmes_obse'] = $filmes_obse;
+                $ticket['filmes_obse_label'] = $filmes_obse_label;
             } elseif ($produto === 'series') {
                 $ticket['serie_nome'] = $serie_nome;
                 $ticket['serie_tmdb'] = $serie_tmdb;
                 $ticket['serie_obs'] = $serie_obs;
+                $ticket['series_obse'] = $series_obse;
+                $ticket['series_obse_label'] = $series_obse_label;
             }
             $file = __DIR__ . '/../../logs/tickets.txt';
             $tickets = [];
