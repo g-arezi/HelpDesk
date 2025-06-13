@@ -372,15 +372,8 @@
             <label for="subject">🆘 Tópico de ajuda:</label>
             <select id="subject" name="subject" required>
                 <option value="">Selecione um erro</option>
-                <option value="sem_sinal">Sem sinal</option>
-                <option value="conexao_internet">Problemas de conexão com a internet</option>
-                <option value="erro_sistema">Erro no sistema</option>
-                <option value="erro_reprodutor">Erro no reprodutor</option>
-                <option value="erro_servidor">Erro no servidor</option>
-                <option value="erro_configuracao">Erro de configuração</option>
                 <option value="tela_preta">Tela preta</option>
                 <option value="travamento_canais">Travamento de canais</option>
-                <option value="erro_autenticacao">Erro de autenticação</option>
                 <option value="problemas_epg">Problemas com EPG</option>
                 <option value="audio_fora_sincronia">Áudio fora de sincronia</option>
                 <option value="outro">Outros</option>
