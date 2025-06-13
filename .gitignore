@@ -1,6 +1,26 @@
-/vendor
-/public/uploads
-/logs
-/helpdesk-frontend/node_modules
+# Dependências do Composer
+/vendor/
+
+# Uploads e logs
+/public/uploads/
+/logs/
+
+# Node.js (caso use frontend separado)
+node_modules/
+/helpdesk-frontend/node_modules/
+
+# Arquivos temporários e de sistema
+*.log
+*.tmp
+.DS_Store
+Thumbs.db
+
+# Arquivos de build do VSCode
+.vscode/
+
+# Outros arquivos que não devem ir para o repositório
+.env
+
+# Documentação e arquivos locais do frontend
 /helpdesk-frontend/readme.md
 
