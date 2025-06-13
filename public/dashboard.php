@@ -8,6 +8,32 @@ if (!isset($_SESSION['role']) || !in_array($_SESSION['role'], ['admin', 'tecnico
     exit;
 }
 
+// Processa exclusão de tickets primeiro (antes de qualquer output HTML)
+if (isset($_POST['delete_id']) && is_numeric($_POST['delete_id'])) {
+    $deleteId = (int)$_POST['delete_id'];
+    $ticketsFile = __DIR__ . '/../logs/tickets.txt';
+    $existingTickets = [];
+    
+    if (file_exists($ticketsFile)) {
+        $content = file_get_contents($ticketsFile);
+        $existingTickets = json_decode($content, true) ?: [];
+        
+        // Verifica se o índice existe antes de tentar deletar
+        if (isset($existingTickets[$deleteId])) {
+            // Remove o ticket pelo índice
+            array_splice($existingTickets, $deleteId, 1);
+            // Reindexar array após remover o item
+            $existingTickets = array_values($existingTickets);
+            // Salva o array atualizado
+            file_put_contents($ticketsFile, json_encode($existingTickets, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+            
+            // Redireciona para evitar reenvio do formulário
+            header('Location: dashboard.php?deleted=true');
+            exit;
+        }
+    }
+}
+
 // --- QUICK USERS: processamento de POST/GET antes do HTML ---
 $usersFile = __DIR__ . '/../logs/quick_users.txt';
 $users = file_exists($usersFile) ? json_decode(file_get_contents($usersFile), true) : [];
@@ -311,8 +337,7 @@ function card($color, $icon, $label, $count) {
                             <?php endif; ?>
                         </td>
                         <td><?= htmlspecialchars($ticket['telefone'] ?? '') ?></td>
-                        <td>
-                            <?php 
+                        <td>                            <?php 
                             $status = isset($ticket['status']) ? $ticket['status'] : 'nao_aberto';
                             $statusLabel = [
                                 'resolvido' => '<span style="color:#388e3c;font-weight:bold;">✅ Resolvido</span>',
@@ -331,9 +356,8 @@ function card($color, $icon, $label, $count) {
                                 <button type="submit" class="btn" style="padding:2px 10px;font-size:13px;margin-left:4px;background:#0078d7;color:#fff;">Alterar</button>
                             </form>
                         </td>
-                        <td>
-                            <button type="button" class="btn chat-popup-btn" style="padding:2px 10px;font-size:13px;margin-left:4px;background:#43a047;color:#fff;" data-ticket-id="<?= $i+1 ?>" data-email="<?= htmlspecialchars($ticket['email'] ?? '') ?>" data-telefone="<?= htmlspecialchars($ticket['telefone'] ?? '') ?>">Chat Pop-up</button>
-                            <a href="chat_frontend.html?id=<?= $i+1 ?>" class="btn" style="padding:2px 10px;font-size:13px;margin-left:4px;background:#0078d7;color:#fff;" target="_blank">Chat</a>
+                        <td>                            <button type="button" class="btn chat-popup-btn" style="padding:2px 10px;font-size:13px;margin-left:4px;background:#43a047;color:#fff;" data-ticket-id="<?= $i+1 ?>" data-email="<?= htmlspecialchars($ticket['email'] ?? '') ?>" data-telefone="<?= htmlspecialchars($ticket['telefone'] ?? '') ?>">Chat Pop-up</button>
+                            <a href="chat_frontend.html?id=<?= $i+1 ?>" class="btn" style="padding:2px 10px;font-size:13px;margin-left:4px;background:#43a047;color:#fff;" target="_blank">Chat</a>
                             <form method="post" action="dashboard.php" style="margin-top:5px;display:inline-block;">
                                 <input type="hidden" name="delete_id" value="<?= $i ?>">
                                 <button type="submit" class="btn" style="padding:2px 10px;font-size:13px;margin-left:4px;background:#d70022;color:#fff;" onclick="return confirm('Tem certeza que deseja deletar este ticket?');">Deletar</button>
