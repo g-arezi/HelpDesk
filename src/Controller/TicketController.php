@@ -32,18 +32,19 @@ class TicketController
                 if (move_uploaded_file($fileTmp, $filePath)) {
                     $imagePath = 'uploads/' . $fileName;
                 }
-            }
-
-            $produto = $_POST['produto'] ?? '';
-            // Novos campos para filmes/séries
+            }            $produto = $_POST['produto'] ?? '';
+            // Novos campos para filmes/séries/canais
             $filme_nome = $_POST['filme_nome'] ?? '';
             $filme_tmdb = $_POST['filme_tmdb'] ?? '';
             $filme_obs = $_POST['filme_obs'] ?? '';
             $serie_nome = $_POST['serie_nome'] ?? '';
             $serie_tmdb = $_POST['serie_tmdb'] ?? '';
             $serie_obs = $_POST['serie_obs'] ?? '';
+            $canal_nome = $_POST['canal_nome'] ?? '';
+            $canal_obs = $_POST['canal_obs'] ?? '';
             $filmes_obse = $_POST['filmes_obse'] ?? '';
             $series_obse = $_POST['series_obse'] ?? '';
+            $canais_obse = $_POST['canais_obse'] ?? '';
 
             $filmes_obse_label = '';
             if (isset($_POST['filmes_obse'])) {
@@ -60,6 +61,14 @@ class TicketController
                 } elseif ($_POST['series_obse'] === 'Corrigir conteúdo') {
                     $series_obse_label = '🛠️- Corrigir conteúdo';
                 }
+            }
+            $canais_obse_label = '';
+            if (isset($_POST['canais_obse'])) {
+                if ($_POST['canais_obse'] === 'Solicitar conteúdo') {
+                    $canais_obse_label = '🆕- Solicitar conteúdo';
+                } elseif ($_POST['canais_obse'] === 'Corrigir conteúdo') {
+                    $canais_obse_label = '🛠️- Corrigir conteúdo';
+                }
             }            $ticket = [
                 'user' => $user,                'created_by' => [
                     'username' => $user,
@@ -73,8 +82,7 @@ class TicketController
                 'message' => $message,
                 'imagePath' => $imagePath,
                 'status' => 'nao_aberto',
-            ];
-            // Adiciona campos extras se for filmes ou séries
+            ];            // Adiciona campos extras se for filmes, séries ou canais
             if ($produto === 'filmes') {
                 $ticket['filme_nome'] = $filme_nome;
                 $ticket['filme_tmdb'] = $filme_tmdb;
@@ -87,6 +95,12 @@ class TicketController
                 $ticket['serie_obs'] = $serie_obs;
                 $ticket['series_obse'] = $series_obse;
                 $ticket['series_obse_label'] = $series_obse_label;
+            } elseif ($produto === 'canais') {
+                $ticket['canais_obse'] = $canais_obse;
+                $ticket['canais_obse_label'] = $canais_obse_label;
+            }elseif ($produto === 'canais') {
+                $ticket['canais_obse'] = $canais_obse;
+                $ticket['canais_obse_label'] = $canais_obse_label;
             }
             $file = __DIR__ . '/../../logs/tickets.txt';
             $tickets = [];
