@@ -7,6 +7,12 @@ class TicketController
 {
     public function open()
     {
+        // Verificação de autenticação (secundária, já verificado em open.php)
+        if (!isset($_SESSION['auth']) || $_SESSION['auth'] !== true) {
+            header('Location: login.php?access=denied&redirect=' . urlencode($_SERVER['REQUEST_URI']));
+            exit;
+        }
+        
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $name = $_POST['name'] ?? '';
             $email = $_POST['email'] ?? '';

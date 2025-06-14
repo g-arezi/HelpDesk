@@ -1,0 +1,87 @@
+# Proteger arquivos e diretórios
+<FilesMatch "^\.">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Impedir acesso direto aos arquivos de log
+<FilesMatch "\.(txt|log)$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Impedir acesso direto a arquivos de configuração
+<FilesMatch "^(composer\.json|composer\.lock|package\.json)$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Negar acesso ao diretório logs
+<DirectoryMatch "^/logs/">
+    Order allow,deny
+    Deny from all
+</DirectoryMatch>
+
+# Negar acesso ao diretório vendor
+<DirectoryMatch "^/vendor/">
+    Order allow,deny
+    Deny from all
+</DirectoryMatch>
+
+# Negar acesso ao diretório src
+<DirectoryMatch "^/src/">
+    Order allow,deny
+    Deny from all
+</DirectoryMatch>
+
+# Permitir somente acesso a diretório public
+<DirectoryMatch "^/public/">
+    Order allow,deny
+    Allow from all
+</DirectoryMatch>
+
+# Ativar reescrita de URL
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    
+    # Redirecionar tudo para HTTPS se disponível
+    # Descomente as linhas abaixo após configurar HTTPS no servidor
+    # RewriteCond %{HTTPS} !=on
+    # RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+    
+    # Se a solicitação não for para um arquivo ou diretório existente
+    # RewriteCond %{REQUEST_FILENAME} !-f
+    # RewriteCond %{REQUEST_FILENAME} !-d
+    
+    # Redirecionar para o diretório public se necessário
+    # RewriteRule ^(.*)$ public/$1 [L]
+</IfModule>
+
+# Configurações de segurança adicionais
+<IfModule mod_headers.c>
+    # Prevenir clickjacking
+    Header set X-Frame-Options "SAMEORIGIN"
+    
+    # Proteção XSS
+    Header set X-XSS-Protection "1; mode=block"
+    
+    # Prevenir detecção de MIME
+    Header set X-Content-Type-Options "nosniff"
+    
+    # Segurança de transporte
+    # Descomente após configurar HTTPS
+    # Header set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+</IfModule>
+
+# Desativar listagem de diretórios
+Options -Indexes
+
+# PHP settings
+<IfModule mod_php7.c>
+    php_flag display_errors off
+    php_value upload_max_filesize 10M
+    php_value post_max_size 10M
+    php_value max_execution_time 60
+    php_value max_input_time 60
+    php_value memory_limit 128M
+</IfModule>

@@ -230,3 +230,91 @@ Dúvidas? Consulte a documentação oficial do PHP, Apache, Nginx ou entre em co
 
 - Portfólio: [Clique Aqui](https://portifolio-beta-five-52.vercel.app/)
 - Sugestões e melhorias são bem-vindas!
+
+---
+
+## Instruções para Hospedagem
+
+Este documento fornece instruções detalhadas para hospedar o sistema HelpDesk em um servidor web.
+
+### Requisitos do Servidor
+
+- PHP 7.2 ou superior
+- Extensões PHP: json, fileinfo, mbstring
+- Suporte a arquivos .htaccess
+- Permissões de escrita para os diretórios `logs/` e `public/uploads/`
+
+### Passos para Implantação
+
+1. **Preparação dos Arquivos**
+
+   - Faça backup completo do seu projeto
+   - Verifique se os diretórios `logs/` e `public/uploads/` existem e têm permissões de escrita
+
+2. **Upload dos Arquivos**
+
+   - Use FTP, SFTP ou o gerenciador de arquivos do painel de controle da hospedagem
+   - Faça upload de todos os arquivos e diretórios, mantendo a estrutura original
+   - Para hospedagens compartilhadas, você pode precisar fazer upload diretamente para a pasta raiz do domínio (public_html, www, htdocs, etc.)
+
+3. **Configuração de Permissões**
+
+   - Diretórios que precisam de permissão de escrita (chmod 755 ou 775):
+     - `logs/`
+     - `public/uploads/`
+   - Arquivos de log (chmod 644 ou 664):
+     - `logs/tickets.txt`
+     - `logs/user_registrations.txt`
+     - `logs/password_reset_tokens.txt`
+     - `logs/quick_users.txt`
+     - `logs/chat_1.txt`
+
+4. **Configuração do Servidor Web**
+
+   - Se possível, configure o servidor para que a pasta `public/` seja a raiz do site
+   - Caso contrário, você pode usar o arquivo `.htaccess` na raiz para redirecionar tudo para a pasta `public/`
+
+5. **Verificação da Compatibilidade**
+
+   - Acesse `http://seudominio.com/check_compatibility.php` para verificar se o servidor atende aos requisitos
+   - Resolva quaisquer problemas indicados pelo verificador
+
+6. **Atualização de URLs e Configurações**
+
+   - Após a implantação, verifique se todos os links internos estão funcionando corretamente
+   - Se você configurou HTTPS, descomente as linhas relevantes no arquivo `.htaccess`
+
+### Segurança
+
+- O arquivo `.htaccess` inclui regras para proteger diretórios sensíveis
+- Os diretórios `logs/`, `src/`, `vendor/` e `scripts/` não devem ser acessíveis publicamente
+- Se possível, configure o servidor para que apenas a pasta `public/` seja acessível via web
+
+### Solução de Problemas
+
+1. **Problema de Permissões**
+   - Verifique se os diretórios `logs/` e `public/uploads/` têm permissões de escrita
+
+2. **Arquivos de Log Inacessíveis**
+   - Verifique se os arquivos de log existem e têm permissões corretas
+   - Se necessário, crie-os manualmente com conteúdo inicial `[]`
+
+3. **Redirecionamentos Não Funcionam**
+   - Verifique se o módulo `mod_rewrite` está habilitado no servidor
+   - Ajuste o arquivo `.htaccess` conforme necessário
+
+4. **Uploads Não Funcionam**
+   - Verifique as configurações de `upload_max_filesize` e `post_max_size` no PHP
+   - Verifique as permissões do diretório `public/uploads/`
+
+### Migração de Dados
+
+Se você estiver migrando de um ambiente local para um servidor de produção:
+
+1. Faça backup de todos os arquivos em `logs/`
+2. Faça upload desses arquivos para o diretório `logs/` no servidor
+3. Verifique se os arquivos têm permissões corretas após o upload
+
+### Atualização para Banco de Dados
+
+Este sistema usa arquivos de texto para armazenamento. Para uma implementação mais robusta, considere migrar para um banco de dados MySQL ou PostgreSQL no futuro.

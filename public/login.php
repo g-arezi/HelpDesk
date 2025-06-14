@@ -13,7 +13,11 @@ session_start();
 
 // Verifica se o usuário já está autenticado
 if (isset($_SESSION['auth']) && $_SESSION['auth'] === true) {
-    header('Location: tickets.php');
+    if ($_SESSION['role'] === 'cliente') {
+        header('Location: buscarchamados_page.php');
+    } else {
+        header('Location: dashboard.php');
+    }
     exit;
 }
 // Define o cabeçalho de resposta HTTP
@@ -26,15 +30,16 @@ $title = 'Login - HelpDesk';
 define('ROOT_DIR', dirname(__DIR__));
 // Array de usuários e senhas personalizáveis
 $USERS = [
-    'admin' => 'admin321', //podendo ser utilizado API ou banco de dados para autenticação
-    'tecnico' => 'tecnico321', // senha para o usuário tecnico
+    'admin' => ['senha' => 'admin321', 'email' => 'admin@sistema.com'],
+    'tecnico' => ['senha' => 'tecnico321', 'email' => 'tecnico@sistema.com'],
 ];
 
 $error = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $login = $_POST['login'] ?? '';
     $senha = $_POST['senha'] ?? '';
-    if (isset($USERS[$login]) && $USERS[$login] === $senha) {
+      // Verificar usuários administradores/técnicos
+    if (isset($USERS[$login]) && $USERS[$login]['senha'] === $senha) {
         $_SESSION['auth'] = true;
         $_SESSION['user'] = $login;
         // Define o papel do usuário
@@ -46,6 +51,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         header('Location: dashboard.php');
         exit;
     } else {
+    // Verificar usuários clientes
+        $users_file = __DIR__ . '/../logs/user_registrations.txt';
+          if (file_exists($users_file)) {
+            $registrations = json_decode(file_get_contents($users_file), true) ?: [];
+            
+            foreach ($registrations as $user) {
+                // Verifica se o login corresponde ao nome de usuário OU ao email
+                if (($user['username'] === $login || $user['email'] === $login) && $user['status'] === 'approved') {
+                    // Verificar senha
+                    if (password_verify($senha, $user['password'])) {
+                        $_SESSION['auth'] = true;
+                        $_SESSION['user'] = $user['username'];  // Sempre usa o username para a sessão
+                        $_SESSION['role'] = 'cliente';
+                        $_SESSION['user_data'] = $user;
+                        
+                        header('Location: buscarchamados_page.php');
+                        exit;
+                    }
+                }
+            }
+        }
+        
         $error = 'Login ou senha inválidos!';
     }
 }
@@ -94,19 +121,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             align-items: center;
             position: relative;
             z-index: 1;
-        }
-        body.night .container {
+        }        body.night .container {
             background: #232a36 !important;
             color: #e0e0e0;
             box-shadow: 0 8px 32px #0006;
         }
-        h2 { color: #1976d2; margin-bottom: 18px; text-align: center; font-size: 2em; }
+        h2 { color: #000000; margin-bottom: 18px; text-align: center; font-size: 2em; }
         body.night h2 {
-            color: #90caf9 !important;
+            color: #ffffff !important;
         }
-        label { color: #1976d2; font-weight: 500; margin-bottom: 8px; display: block; }
+        label { color: #000000; font-weight: 500; margin-bottom: 8px; display: block; }
         body.night label {
-            color: #b0b0b0 !important;
+            color: #ffffff !important;
         }
         input[type="text"], input[type="password"] {
             width: 100%;
@@ -215,8 +241,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             font-size: 1.1em;
         }
         .night-toggle { position:fixed; top:18px; right:18px; z-index:1000; background:linear-gradient(90deg,#ff6b6b,#b71c1c); color:#fff; border:1px solid #b71c1c; border-radius:20px; padding:8px 18px; cursor:pointer; font-weight:bold; box-shadow:0 2px 12px #0003; font-size: 1.1rem; transition: background 0.3s, color 0.3s; }
-        .night-toggle.night { background:linear-gradient(90deg,#b71c1c,#ff6b6b); color:#fff; border-color:#fff; }
-        body.night { background: #181c24 !important; color: #e0e0e0; }
+        .night-toggle.night { background:linear-gradient(90deg,#b71c1c,#ff6b6b); color:#fff; border-color:#fff; }        body.night { background: #181c24 !important; color: #e0e0e0; }
+        body.night a { color: #ffffff !important; }
         @media (max-width: 500px) {
             .container { max-width: 98vw; padding: 18px 4vw; }
         }
@@ -228,17 +254,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <span class="icon" id="modeIcon">🌞</span>
         <input type="checkbox" id="modeToggle" aria-label="Alternar modo claro/noturno">
         <span id="modeLabel">Claro</span>
-    </div>
-    <div class="container" id="loginContainer">
-        <h2 id="loginTitle">Login</h2>
+    </div>    <div class="container" id="loginContainer">
+        <h2 id="loginTitle">🔐 Login - Plataforma de VODs</h2>
         <?php if ($error): ?>
-            <div style="color:red;"> <?= htmlspecialchars($error) ?> </div>
+            <div style="color:red; margin-bottom: 15px; text-align: center;"> <?= htmlspecialchars($error) ?> </div>
         <?php endif; ?>
         <form method="post">
-            <label id="labelLogin">👤 Usuário:<br><input type="text" name="login" id="loginInput" required></label><br><br>
-            <label id="labelSenha">🔒 Senha:<br><input type="password" name="senha" id="senhaInput" required></label><br><br>
-            <button type="submit" class="btn" id="btnEntrar">Entrar</button>
-        </form>
+            <label id="labelLogin">👤 Usuário ou Email:<br><input type="text" name="login" id="loginInput" required></label><br><br>
+            <label id="labelSenha">🔒 Senha:<br><input type="password" name="senha" id="senhaInput" required></label><br><br>            <button type="submit" class="btn" id="btnEntrar">Entrar</button>
+        </form>        <div style="margin-top: 20px; text-align: center;">
+            <a href="register.php" style="color: #000000; text-decoration: none; font-weight: 500;">Não tem uma conta? Cadastre-se</a>
+            <br><br>
+            <a href="forgot_password.php" style="color: #000000; text-decoration: none; font-weight: 500;">Esqueceu sua senha?</a>
+        </div>
     </div>
     <script>
     // Novo switch de modo

@@ -1,0 +1,10 @@
+# Redirecionamento básico
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    
+    # Redireciona buscarchamados.html para a versão PHP com autenticação
+    RewriteCond %{REQUEST_URI} ^/buscarchamados\.html$ [NC]
+    RewriteRule ^ buscarchamados_page.php [L,R=302]
+    
+    # Mantenha outras regras conforme necessário
+</IfModule>

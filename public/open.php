@@ -2,6 +2,16 @@
 // Arquivo de entrada principal para o site HelpDesk
 require_once __DIR__ . '/../vendor/autoload.php';
 
+// Iniciar a sessão para verificar autenticação
+session_start();
+
+// Verificar se o usuário está autenticado
+if (!isset($_SESSION['auth']) || $_SESSION['auth'] !== true) {
+    // Redirecionar para a página de login
+    header('Location: login.php?access=denied&redirect=' . urlencode($_SERVER['REQUEST_URI']));
+    exit;
+}
+
 use App\Controller\TicketController;
 
 header('Access-Control-Allow-Origin: *');

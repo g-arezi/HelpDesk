@@ -92,6 +92,40 @@ function card($color, $icon, $label, $count) {
         <div style='font-size:2em;margin-top:5px;'>$count</div>
     </div>";
 }
+
+// Processa aprovação/rejeição de usuários
+if (isset($_POST['user_action'], $_POST['user_index']) && $_SESSION['role'] === 'admin') {
+    $userAction = $_POST['user_action'];
+    $userIndex = (int)$_POST['user_index'];
+    $usersFile = __DIR__ . '/../logs/user_registrations.txt';
+    
+    if (file_exists($usersFile)) {
+        $users = json_decode(file_get_contents($usersFile), true) ?: [];
+        
+        if (isset($users[$userIndex])) {
+            if ($userAction === 'approve') {
+                $users[$userIndex]['status'] = 'approved';
+            } elseif ($userAction === 'reject') {
+                $users[$userIndex]['status'] = 'rejected';
+            } elseif ($userAction === 'delete') {
+                array_splice($users, $userIndex, 1);
+            }
+            
+            file_put_contents($usersFile, json_encode($users, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+            header('Location: dashboard.php?user_management=1');
+            exit;
+        }
+    }
+}
+
+// Carrega registros de usuários (apenas para admin)
+$userRegistrations = [];
+if ($_SESSION['role'] === 'admin') {
+    $usersFile = __DIR__ . '/../logs/user_registrations.txt';
+    if (file_exists($usersFile)) {
+        $userRegistrations = json_decode(file_get_contents($usersFile), true) ?: [];
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -120,15 +154,13 @@ function card($color, $icon, $label, $count) {
         .card.resolvido { background:linear-gradient(120deg,#e0ffe7,#388e3c 90%); color:#fff; }
         .card .icon { font-size:2.7em; margin-bottom:10px; }
         .card .label { font-size:1.2em; font-weight:bold; letter-spacing:0.5px; }
-        .card .value { font-size:2.1em; margin-top:5px; font-weight:600; }
-        .section { background:#fff; border-radius:16px; box-shadow:0 2px 16px #0002; padding:28px 32px; margin-bottom:28px; transition: background 0.3s, color 0.3s; }
-        .section h3 { color:#1976d2; margin-top:0; font-size:1.3rem; transition: color 0.3s; }
-        .section.night h3, .main.night h3, h3.night { color: #fff !important; text-shadow: 0 1px 2px #0008; }
-        .chat-link { display:inline-block; margin:10px 0 0 0; background:#1976d2; color:#fff; padding:10px 20px; border-radius:8px; text-decoration:none; font-weight:bold; box-shadow:0 2px 8px #0002; transition: background 0.2s; }
-        .chat-link:hover { background:#1565c0; }
-        table { width: 100%; border-collapse: separate; border-spacing: 0; margin-top: 10px; background: #fff; border-radius: 10px; overflow: hidden; box-shadow:0 1px 8px #e0e0e0; font-size:15px; }
+        .card .value { font-size:2.1em; margin-top:5px; font-weight:600; }        .section { background:#fff; border-radius:16px; box-shadow:0 2px 16px #0002; padding:28px 32px; margin-bottom:28px; transition: background 0.3s, color 0.3s; }
+        .section h3 { color:#000000; margin-top:0; font-size:1.3rem; transition: color 0.3s; }
+        .section.night h3, .main.night h3, h3.night { color: #ffffff !important; text-shadow: 0 1px 2px #0008; }
+        .chat-link { display:inline-block; margin:10px 0 0 0; background:#000000; color:#fff; padding:10px 20px; border-radius:8px; text-decoration:none; font-weight:bold; box-shadow:0 2px 8px #0002; transition: background 0.2s; }
+        .chat-link:hover { background:#333333; }        table { width: 100%; border-collapse: separate; border-spacing: 0; margin-top: 10px; background: #fff; border-radius: 10px; overflow: hidden; box-shadow:0 1px 8px #e0e0e0; font-size:15px; }
         th, td { padding: 13px 10px; text-align: left; border-bottom: 1px solid #e0e0e0; }
-        th { background-color: #f2f6fc; color: #1976d2; font-weight: 600; font-size: 1.05rem; letter-spacing: 0.5px; }
+        th { background-color: #f2f6fc; color: #000000; font-weight: 600; font-size: 1.05rem; letter-spacing: 0.5px; }
         tr:last-child td { border-bottom: none; }
         tr { transition: background 0.2s; }
         tr:hover { background:rgb(201, 201, 201); }
@@ -237,13 +269,15 @@ function card($color, $icon, $label, $count) {
         <span class="icon" id="modeIcon">🌞</span>
         <input type="checkbox" id="modeToggle" aria-label="Alternar modo claro/noturno">
         <span id="modeLabel">Claro</span>
-    </div>
-    <div class="sidebar" id="sidebar">
+    </div>    <div class="sidebar" id="sidebar">
         <h2>Helpdesk System</h2>
         <a href="dashboard.php">🏠 Dashboard</a>
         <a href="tickets.php">🎟️ Tickets</a>
         <a href="open.php">📂 Novo Chamado</a>
         <a href="buscarchamados.html">🔍 Buscar Chamados</a>
+        <?php if ($_SESSION['role'] === 'admin'): ?>
+        <a href="dashboard.php?user_management=1">👥 Gerenciar Usuários</a>
+        <?php endif; ?>
     </div>
     <div class="main" id="main">
         <div class="header">
@@ -356,7 +390,7 @@ function card($color, $icon, $label, $count) {
                                 <button type="submit" class="btn" style="padding:2px 10px;font-size:13px;margin-left:4px;background:#0078d7;color:#fff;">Alterar</button>
                             </form>
                         </td>
-                        <td>                            <button type="button" class="btn chat-popup-btn" style="padding:2px 10px;font-size:13px;margin-left:4px;background:#43a047;color:#fff;" data-ticket-id="<?= $i+1 ?>" data-email="<?= htmlspecialchars($ticket['email'] ?? '') ?>" data-telefone="<?= htmlspecialchars($ticket['telefone'] ?? '') ?>">Chat Pop-up</button>
+                        <td>                            <button type="button" class="btn chat-popup-btn" style="padding:2px 10px;font-size:13px;margin-left:4px;background: #1976D2 ;color: #fff;" data-ticket-id="<?= $i+1 ?>" data-email="<?= htmlspecialchars($ticket['email'] ?? '') ?>" data-telefone="<?= htmlspecialchars($ticket['telefone'] ?? '') ?>">Chat Pop-up</button>
                             <a href="chat_frontend.html?id=<?= $i+1 ?>" class="btn" style="padding:2px 10px;font-size:13px;margin-left:4px;background:#43a047;color:#fff;" target="_blank">Chat</a>
                             <form method="post" action="dashboard.php" style="margin-top:5px;display:inline-block;">
                                 <input type="hidden" name="delete_id" value="<?= $i ?>">
@@ -369,6 +403,73 @@ function card($color, $icon, $label, $count) {
             </table>
             </div>
         </div>
+        <?php if (isset($_GET['user_management']) && $_SESSION['role'] === 'admin'): ?>
+        <div class="section">
+            <h3>👥 Gerenciamento de Usuários</h3>
+            <?php if (empty($userRegistrations)): ?>
+                <p style="text-align: center; color: #888;">Nenhum registro de usuário encontrado.</p>
+            <?php else: ?>
+                <div style="overflow-x:auto; margin: 0 0 20px 0;">
+                    <table class="ticket-table" style="width:100%;background:#fff;border-radius:8px;box-shadow:0 1px 6px #e0e0e0;">
+                        <thead>
+                            <tr>
+                                <th>👤 Usuário</th>
+                                <th>🖥️ Servidor</th>
+                                <th>👑 Usuário do Painel</th>
+                                <th>📅 Data da Recarga</th>
+                                <th>💰 Créditos</th>
+                                <th>📊 Status</th>
+                                <th>⚙️ Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($userRegistrations as $i => $user): ?>
+                            <tr>
+                                <td><?= htmlspecialchars($user['username']) ?></td>
+                                <td><?= htmlspecialchars($user['server_name']) ?></td>
+                                <td><?= htmlspecialchars($user['panel_username']) ?></td>
+                                <td><?= htmlspecialchars($user['last_recharge_date']) ?></td>
+                                <td><?= htmlspecialchars($user['credit_amount']) ?></td>
+                                <td>
+                                    <?php
+                                    $statusLabel = '';
+                                    if ($user['status'] === 'pending') {
+                                        $statusLabel = '<span style="color:#fbc02d;font-weight:bold;">⏳ Pendente</span>';
+                                    } elseif ($user['status'] === 'approved') {
+                                        $statusLabel = '<span style="color:#388e3c;font-weight:bold;">✅ Aprovado</span>';
+                                    } elseif ($user['status'] === 'rejected') {
+                                        $statusLabel = '<span style="color:#d32f2f;font-weight:bold;">❌ Rejeitado</span>';
+                                    }
+                                    echo $statusLabel;
+                                    ?>
+                                </td>
+                                <td>
+                                    <?php if ($user['status'] === 'pending'): ?>
+                                    <form method="post" action="dashboard.php" style="display:inline-block;">
+                                        <input type="hidden" name="user_index" value="<?= $i ?>">
+                                        <input type="hidden" name="user_action" value="approve">
+                                        <button type="submit" class="btn" style="padding:2px 10px;font-size:13px;margin-right:4px;background:#388e3c;color:#fff;">Aprovar</button>
+                                    </form>
+                                    <form method="post" action="dashboard.php" style="display:inline-block;">
+                                        <input type="hidden" name="user_index" value="<?= $i ?>">
+                                        <input type="hidden" name="user_action" value="reject">
+                                        <button type="submit" class="btn" style="padding:2px 10px;font-size:13px;margin-right:4px;background:#d32f2f;color:#fff;">Rejeitar</button>
+                                    </form>
+                                    <?php endif; ?>
+                                    <form method="post" action="dashboard.php" style="display:inline-block;">
+                                        <input type="hidden" name="user_index" value="<?= $i ?>">
+                                        <input type="hidden" name="user_action" value="delete">
+                                        <button type="submit" class="btn" style="padding:2px 10px;font-size:13px;background:#d70022;color:#fff;" onclick="return confirm('Tem certeza que deseja excluir este usuário?');">Excluir</button>
+                                    </form>
+                                </td>
+                            </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+            <?php endif; ?>
+        </div>
+        <?php endif; ?>
     </div>
     <!-- Modal de Chat Pop-up -->
     <div id="chatModal" style="display:none;position:fixed;z-index:9999;left:0;top:0;width:100vw;height:100vh;background:rgba(0,0,0,0.45);align-items:center;justify-content:center;">
