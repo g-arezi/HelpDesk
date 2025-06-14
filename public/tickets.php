@@ -69,8 +69,10 @@ foreach ($tickets as $ticket) {
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Lista de Tickets - HelpDesk</title>
     <link rel="stylesheet" href="assets/style.css">
+    <link rel="stylesheet" href="assets/mobile.css">
     <style>
     body { font-family: 'Segoe UI', Arial, sans-serif; background: #f4f6fa; margin:0; padding:0; transition: background 0.3s, color 0.3s; }
     .container { max-width: 1200px; margin: 40px auto 30px auto; background: #fff; border-radius: 18px; box-shadow: 0 6px 32px #0002; padding: 36px 40px 30px 40px; min-height: 80vh; transition: background 0.3s, color 0.3s; }

@@ -2,8 +2,10 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Chat do Chamado</title>
     <link rel="stylesheet" href="assets/style.css">
+    <link rel="stylesheet" href="assets/mobile.css">
     <style>
         /* Modernização visual do chat */
         body { background: #f4f6fb; }
@@ -197,6 +199,86 @@
         .mode-switch .icon {
             font-size: 1.1em;
         }
+        /* Adicione aqui outros modos escuros */
+
+        /* Estilos responsivos para dispositivos móveis */
+        @media screen and (max-width: 768px) {
+            .chat-container {
+                max-width: 100%;
+                margin: 20px auto;
+                padding: 20px 15px;
+                border-radius: 10px;
+            }
+            
+            h2 {
+                font-size: 1.4rem;
+            }
+            
+            .chat-messages {
+                height: 220px;
+                padding: 10px;
+            }
+            
+            .chat-form {
+                flex-direction: column;
+                gap: 8px;
+            }
+            
+            .chat-form input, 
+            .chat-form button {
+                width: 100%;
+                padding: 12px;
+                font-size: 16px; /* Evita zoom no iOS */
+            }
+            
+            .id-email-telefone {
+                display: flex;
+                flex-direction: column;
+            }
+            
+            input[type="number"], 
+            input[type="email"], 
+            input[type="text"] {
+                width: 100%;
+                margin-right: 0;
+                margin-bottom: 10px;
+                padding: 12px 12px 12px 40px;
+            }
+            
+            #btnCarregar {
+                width: 100%;
+                padding: 12px;
+                margin-top: 5px;
+            }
+        }
+        
+        /* Estilos específicos para iPhone 15 (390px) */
+        @media screen and (max-width: 390px) {
+            .chat-container {
+                padding: 15px 12px;
+                margin: 10px auto;
+            }
+            
+            h2 {
+                font-size: 1.3rem;
+                margin-bottom: 15px;
+            }
+            
+            .chat-messages {
+                height: 200px;
+            }
+            
+            .chat-message {
+                font-size: 0.95em;
+            }
+            
+            .mode-switch {
+                bottom: 10px;
+                left: 10px;
+                padding: 5px 10px;
+                font-size: 0.9rem;
+            }
+        }
     </style>
 </head>
 <body>
@@ -274,8 +356,7 @@
             renderMessages({ error: 'Informe seu e-mail ou telefone para enviar mensagens.' });
             return false;
         }
-        const body = { author, message, email, telefone };
-        fetch(`chat.php?id=${currentTicketId}`, {
+        const body = { author, message, email, telefone };        fetch(`chat.php?id=${currentTicketId}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(body)

@@ -2,8 +2,10 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Buscar Chamados</title>
     <link rel="stylesheet" href="assets/style.css">
+    <link rel="stylesheet" href="assets/mobile.css">
     <style>
         body { font-family: Arial, sans-serif; background: #f4f8fb; margin:0; transition: background 0.3s, color 0.3s; }
         .container { max-width: 700px; margin: 60px auto 30px auto; background: #fff; border-radius: 14px; box-shadow: 0 4px 24px #0002; padding: 36px 40px 30px 40px; }
@@ -80,24 +82,90 @@
         tr.night:hover { background-color: #222b38; }
         .btn.night { background: #1976d2; color: #fff; }
         .btn.night:hover { background: #1565c0; }
-        .ticket-list { max-width: 700px; margin: 30px auto; }
-        .ticket { border: 1px solid #ccc; border-radius: 8px; padding: 16px; margin-bottom: 16px; background: #fafafa; }
-        .chat-messages { height: 200px; overflow-y: auto; border: 1px solid #eee; padding: 10px; background: #fff; margin-bottom: 10px; }
-        .chat-message { margin-bottom: 8px; }
-        .chat-message .author { font-weight: bold; }
-        .chat-message .timestamp { color: #888; font-size: 0.85em; margin-left: 8px; }
-        .chat-form { display: flex; gap: 8px; }
-        .chat-form input, .chat-form button { padding: 8px; }
-        .chat-form input { flex: 1; }
-        .chat-area { margin-top: 10px; }
-        .btn-chat {
-            background: linear-gradient(90deg, #43a047 60%, #66bb6a 100%) !important;
-            color: #fff !important;
-            border: none !important;
+        
+        /* Estilos para os novos campos de formulário */
+        .input-field label { color: #333; transition: color 0.3s; }
+        body.night .input-field label { color: #fff; }
+        
+        .input-field input { 
+            background: #fff; 
+            color: #333;
+            transition: background 0.3s, color 0.3s, border 0.3s;
         }
-        .btn-chat:hover {
-            background: #388e3c !important;
-            color: #fff !important;
+        
+        body.night .input-field input { 
+            background: #1e2430; 
+            color: #e0e0e0;
+            border-color: #444;
+        }
+        
+        .input-field input:focus {
+            border-color: #1976d2;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(25, 118, 210, 0.2);
+        }
+        
+        body.night .input-field input:focus {
+            border-color: #90caf9;
+            box-shadow: 0 0 0 2px rgba(144, 202, 249, 0.2);
+        }
+          /* Estilos responsivos para dispositivos móveis */
+        @media screen and (max-width: 768px) {
+            .container {
+                max-width: 100%;
+                margin: 20px auto;
+                padding: 20px;
+                border-radius: 8px;
+            }
+            
+            .input-field {
+                width: 100%;
+            }
+            
+            .input-field input {
+                padding: 16px 15px !important;
+                font-size: 16px !important;
+            }
+            
+            #searchForm button {
+                padding: 16px !important;
+                font-size: 16px !important;
+                width: 100%;
+            }
+            
+            table {
+                display: block;
+                overflow-x: auto;
+                white-space: nowrap;
+            }
+            
+            .mode-switch {
+                bottom: 10px;
+                left: 10px;
+                padding: 5px 10px;
+                font-size: 0.9rem;
+            }
+        }
+        
+        /* Estilos específicos para iPhone 15 (390px) */
+        @media screen and (max-width: 390px) {
+            h2 {
+                font-size: 1.5em;
+            }
+            
+            .container {
+                padding: 15px;
+            }
+            
+            th, td {
+                padding: 8px 6px;
+                font-size: 0.9em;
+            }
+            
+            .btn {
+                padding: 8px 12px;
+                font-size: 0.9em;
+            }
         }
     </style>
 </head>
@@ -108,12 +176,17 @@
         <input type="checkbox" id="modeToggle" aria-label="Alternar modo claro/noturno">
         <span id="modeLabel">Claro</span>
     </div>
-    <div class="container" id="container">
-        <h2>🔎 Buscar Chamados</h2>
-        <form id="searchForm" style="margin-bottom:20px;display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
-            <input type="email" id="email" placeholder="📧 Seu e-mail" style="flex:1;min-width:180px;" class="form-field">
-            <input type="text" id="telefone" placeholder="📱 Seu telefone" style="flex:1;min-width:180px;" class="form-field">
-            <button type="submit" class="btn">Buscar</button>
+    <div class="container" id="container">        <h2>🔎 Buscar Chamados</h2>
+        <form id="searchForm" style="margin-bottom:30px;display:flex;flex-direction:column;gap:15px;align-items:stretch;">
+            <div class="input-field" style="position:relative;">
+                <label for="email" style="display:block;margin-bottom:5px;font-weight:bold;">📧 Seu e-mail:</label>
+                <input type="email" id="email" placeholder="Digite seu e-mail" style="width:100%;padding:14px 15px;box-sizing:border-box;font-size:16px;border-radius:8px;border:1.5px solid #cfd8dc;" class="form-field">
+            </div>
+            <div class="input-field" style="position:relative;">
+                <label for="telefone" style="display:block;margin-bottom:5px;font-weight:bold;">📱 Seu telefone:</label>
+                <input type="text" id="telefone" placeholder="Digite seu telefone" style="width:100%;padding:14px 15px;box-sizing:border-box;font-size:16px;border-radius:8px;border:1.5px solid #cfd8dc;" class="form-field">
+            </div>
+            <button type="submit" class="btn" style="padding:14px;font-size:16px;font-weight:bold;margin-top:10px;">Buscar Chamados</button>
         </form>
         <div id="result"></div>
     </div>
@@ -122,14 +195,15 @@
     const modeSwitch = document.getElementById('modeSwitch');
     const modeToggle = document.getElementById('modeToggle');
     const modeIcon = document.getElementById('modeIcon');
-    const modeLabel = document.getElementById('modeLabel');
-    function setMode(night) {
+    const modeLabel = document.getElementById('modeLabel');    function setMode(night) {
         document.body.classList.toggle('night', night);
         document.getElementById('container').classList.toggle('night', night);
         document.querySelectorAll('table').forEach(e=>e.classList.toggle('night', night));
         document.querySelectorAll('th').forEach(e=>e.classList.toggle('night', night));
         document.querySelectorAll('tr').forEach(e=>e.classList.toggle('night', night));
         document.querySelectorAll('.btn').forEach(e=>e.classList.toggle('night', night));
+        document.querySelectorAll('.input-field label').forEach(e=>e.classList.toggle('night', night));
+        document.querySelectorAll('.input-field input').forEach(e=>e.classList.toggle('night', night));
         modeSwitch.classList.toggle('light', !night);
         modeSwitch.classList.toggle('night', night);
         modeToggle.checked = night;
@@ -150,8 +224,7 @@
     if(localStorage.getItem('nightMode')) setMode(true);
     else setMode(false);
     </script>
-    <script>
-    document.getElementById('searchForm').onsubmit = function(e) {
+    <script>    document.getElementById('searchForm').onsubmit = function(e) {
         e.preventDefault();
         const email = document.getElementById('email').value.trim();
         const telefone = document.getElementById('telefone').value.trim();
@@ -173,6 +246,47 @@
                 if(document.body.classList.contains('night')) toggleNightMode(true);
             });
     };
+    </script>
+    
+    <!-- Script para ajustes em dispositivos móveis -->
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Detecta se é um dispositivo móvel
+        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth <= 768;
+        
+        if (isMobile) {
+            // Aumenta o tamanho dos inputs em dispositivos móveis
+            const inputs = document.querySelectorAll('.input-field input');
+            inputs.forEach(input => {
+                input.style.padding = '16px 15px';
+                input.style.fontSize = '16px'; // Evita zoom no iOS
+            });
+            
+            // Aumenta o botão de busca
+            const submitButton = document.querySelector('#searchForm button');
+            submitButton.style.padding = '16px';
+            submitButton.style.fontSize = '16px';
+            
+            // Adiciona efeito de feedback visual ao tocar nos inputs
+            inputs.forEach(input => {
+                input.addEventListener('touchstart', function() {
+                    this.style.backgroundColor = document.body.classList.contains('night') ? '#2c3850' : '#f0f8ff';
+                });
+                
+                input.addEventListener('touchend', function() {
+                    setTimeout(() => {
+                        this.style.backgroundColor = document.body.classList.contains('night') ? '#1e2430' : '#fff';
+                    }, 200);
+                });
+            });
+            
+            // Ajustes específicos para iPhone
+            if (window.innerWidth <= 390) {
+                document.querySelector('h2').style.fontSize = '1.5em';
+                document.querySelector('.container').style.padding = '20px 15px';
+            }
+        }
+    });
     </script>
 </body>
 </html>

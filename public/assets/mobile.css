@@ -1,0 +1,82 @@
+/* Estilos responsivos para dispositivos móveis */
+@media screen and (max-width: 768px) {
+    /* Ajustes gerais */
+    body {
+        font-size: 16px;
+    }
+    
+    .container {
+        max-width: 100% !important;
+        margin: 0 !important;
+        padding: 20px !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+    }
+    
+    /* Ajustes para formulários */
+    input, textarea, select {
+        font-size: 16px !important; /* Previne zoom automático no iOS */
+        padding: 12px !important;
+    }
+    
+    /* Ajustes para botões */
+    .btn {
+        width: 100% !important;
+        padding: 14px !important;
+        font-size: 16px !important;
+        margin-top: 10px !important;
+    }
+    
+    /* Ajustes para tabelas */
+    table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+    
+    /* Ajuste para os menus */
+    .menu-container {
+        flex-direction: column !important;
+    }
+    
+    /* Ajuste para o painel de dashboard */
+    .dashboard-grid {
+        grid-template-columns: 1fr !important;
+    }
+    
+    .card {
+        margin-bottom: 15px !important;
+    }
+    
+    /* Ajuste para o seletor de modo noturno */
+    .mode-switch {
+        bottom: 10px !important;
+        left: 10px !important;
+    }
+}
+
+/* Estilos específicos para iPhone 15 (390px de largura) */
+@media screen and (max-width: 390px) {
+    h2 {
+        font-size: 1.5em !important;
+    }
+    
+    .container {
+        padding: 15px !important;
+    }
+    
+    /* Ajustes para login e formulários em telas pequenas */
+    input, textarea, select {
+        margin-bottom: 12px !important;
+    }
+    
+    /* Simplificar visualização de chamados */
+    .ticket-card {
+        padding: 10px !important;
+    }
+    
+    /* Ajustes para cabeçalhos e rodapés */
+    header, footer {
+        padding: 10px !important;
+    }
+}

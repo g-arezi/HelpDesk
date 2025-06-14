@@ -73,16 +73,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
         
-        $error = 'Login ou senha inválidos!';
-    }
+        $error = 'Login ou senha inválidos!';    }
 }
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Login - HelpDesk</title>
     <link rel="stylesheet" href="assets/style.css">
+    <link rel="stylesheet" href="assets/mobile.css">
     <style>
         body {
             background: #f4f6fb;
@@ -185,6 +186,109 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             color: #fff !important;
         }
         .btn:hover { background: #125ea7; }
+        
+        /* Estilos melhorados para o formulário */
+        .form-group {
+            margin-bottom: 15px;
+            width: 100%;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            font-size: 1rem;
+        }
+          .form-group input {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1.5px solid #cfd8dc;
+            font-size: 1rem;
+            background: #fafdff;
+            color: #222;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+        }
+        
+        .form-group input.night {
+            background: #232837;
+            color: #e0e0e0;
+            border: 1.5px solid #444;
+        }
+        
+        .auth-link {
+            color: #1976d2;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+            display: inline-block;
+            padding: 5px;
+        }
+        
+        .auth-link:hover {
+            color: #1565c0;
+            text-decoration: underline;
+        }
+        
+        body.night .auth-link {
+            color: #90caf9;
+        }
+        
+        body.night .auth-link:hover {
+            color: #bbdefb;
+        }
+        
+        /* Ajustes para dispositivos móveis */
+        @media screen and (max-width: 768px) {
+            .container {
+                width: 90%;
+                max-width: 400px;
+                padding: 25px 20px;
+                margin: 0 auto;
+                border-radius: 12px;
+            }
+            
+            .form-group input {
+                padding: 14px;
+                font-size: 16px; /* Previne zoom no iOS */
+            }
+            
+            .btn {
+                padding: 15px;
+                font-size: 16px;
+            }
+            
+            .auth-link {
+                padding: 10px 5px;
+                font-size: 15px;
+            }
+        }
+        
+        @media screen and (max-width: 390px) {
+            .container {
+                width: 95%;
+                padding: 20px 15px;
+            }
+            
+            h2 {
+                font-size: 1.6em;
+            }
+            
+            .form-group {
+                margin-bottom: 12px;
+            }
+            
+            .form-group label {
+                font-size: 0.95rem;
+            }
+            
+            .form-group input {
+                padding: 15px;
+                font-size: 16px;
+            }
+        }
+        
         /* Night/Light mode switcher - canto inferior esquerdo */
         .mode-switch {
             position: fixed;
@@ -249,23 +353,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </style>
 </head>
 <body>
-    <!-- Switch de modo claro/noturno -->
-    <div class="mode-switch light" id="modeSwitch">
+    <!-- Switch de modo claro/noturno -->    <div class="mode-switch light" id="modeSwitch">
         <span class="icon" id="modeIcon">🌞</span>
         <input type="checkbox" id="modeToggle" aria-label="Alternar modo claro/noturno">
         <span id="modeLabel">Claro</span>
-    </div>    <div class="container" id="loginContainer">
-        <h2 id="loginTitle">🔐 Login - Plataforma de VODs</h2>
+    </div>
+    
+    <div class="container" id="loginContainer">
+        <h2 id="loginTitle">🔐 Login - Sistema HelpDesk</h2>
         <?php if ($error): ?>
             <div style="color:red; margin-bottom: 15px; text-align: center;"> <?= htmlspecialchars($error) ?> </div>
         <?php endif; ?>
-        <form method="post">
-            <label id="labelLogin">👤 Usuário ou Email:<br><input type="text" name="login" id="loginInput" required></label><br><br>
-            <label id="labelSenha">🔒 Senha:<br><input type="password" name="senha" id="senhaInput" required></label><br><br>            <button type="submit" class="btn" id="btnEntrar">Entrar</button>
-        </form>        <div style="margin-top: 20px; text-align: center;">
-            <a href="register.php" style="color: #000000; text-decoration: none; font-weight: 500;">Não tem uma conta? Cadastre-se</a>
+        <form method="post" style="width:100%;">
+            <div class="form-group">
+                <label id="labelLogin" for="loginInput">👤 Usuário ou Email:</label>
+                <input type="text" name="login" id="loginInput" required autocomplete="username">
+            </div>
+            <div class="form-group">
+                <label id="labelSenha" for="senhaInput">🔒 Senha:</label>
+                <input type="password" name="senha" id="senhaInput" required autocomplete="current-password">
+            </div>            <button type="submit" class="btn" id="btnEntrar">Entrar</button>
+        </form>
+        
+        <div style="margin-top: 20px; text-align: center; width:100%;">
+            <a href="register.php" class="auth-link">Não tem uma conta? Cadastre-se</a>
             <br><br>
-            <a href="forgot_password.php" style="color: #000000; text-decoration: none; font-weight: 500;">Esqueceu sua senha?</a>
+            <a href="forgot_password.php" class="auth-link">Esqueceu sua senha?</a>
         </div>
     </div>
     <script>
@@ -273,12 +386,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     const modeSwitch = document.getElementById('modeSwitch');
     const modeToggle = document.getElementById('modeToggle');
     const modeIcon = document.getElementById('modeIcon');
-    const modeLabel = document.getElementById('modeLabel');
-    function setMode(night) {
+    const modeLabel = document.getElementById('modeLabel');    function setMode(night) {
+        // Aplicar o modo night ao corpo da página
         document.body.classList.toggle('night', night);
+        
+        // Atualizar o switch de modo
         modeSwitch.classList.toggle('light', !night);
         modeSwitch.classList.toggle('night', night);
         modeToggle.checked = night;
+        
+        // Atualizar os elementos do formulário
+        const inputs = document.querySelectorAll('.form-group input');
+        inputs.forEach(input => {
+            input.classList.toggle('night', night);
+        });
+        
+        // Atualizar o botão de envio
+        document.getElementById('btnEntrar').classList.toggle('night', night);
+        
+        // Atualizar os links de autenticação
+        document.querySelectorAll('.auth-link').forEach(link => {
+            if (night) {
+                link.style.color = '#90caf9';
+            } else {
+                link.style.color = '#1976d2';
+            }
+        });
+        
+        // Atualizar o ícone e o texto do switch
         if(night) {
             modeIcon.textContent = '🌙';
             modeLabel.textContent = 'Noturno';
@@ -294,7 +429,50 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     });
     // Inicialização
     if(localStorage.getItem('nightMode')) setMode(true);
-    else setMode(false);
+    else setMode(false);    </script>    <script>
+    // Script para ajustes em dispositivos móveis
+    document.addEventListener('DOMContentLoaded', function() {
+        // Detecta se é um dispositivo móvel
+        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth <= 768;
+        
+        if (isMobile) {
+            // Ajustes para todos os dispositivos móveis
+            document.querySelectorAll('.form-group input').forEach(input => {
+                input.style.padding = '16px';
+                input.style.fontSize = '16px'; // Evita zoom no iOS
+            });
+            
+            document.getElementById('btnEntrar').style.padding = '16px';
+            
+            // Ajusta tamanho dos links para serem mais fáceis de tocar
+            document.querySelectorAll('.auth-link').forEach(link => {
+                link.style.padding = '10px 5px';
+                link.style.display = 'inline-block';
+            });
+            
+            // Adiciona feedback visual ao tocar nos inputs
+            document.querySelectorAll('.form-group input').forEach(input => {
+                input.addEventListener('touchstart', function() {
+                    this.style.backgroundColor = document.body.classList.contains('night') ? '#2c3850' : '#f0f8ff';
+                });
+                
+                input.addEventListener('touchend', function() {
+                    setTimeout(() => {
+                        this.style.backgroundColor = document.body.classList.contains('night') ? '#232837' : '#fafdff';
+                    }, 200);
+                });
+            });
+            
+            // Ajustes específicos para iPhone 15
+            if (window.innerWidth <= 390) {
+                document.getElementById('loginTitle').style.fontSize = '1.5em';
+                document.getElementById('loginContainer').style.padding = '20px 15px';
+                
+                // Aumenta ainda mais o botão para facilitar o toque
+                document.getElementById('btnEntrar').style.padding = '18px';
+            }
+        }
+    });
     </script>
 </body>
 </html>

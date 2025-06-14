@@ -131,10 +131,12 @@ if ($_SESSION['role'] === 'admin') {
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Dashboard - Helpdesk</title>
+    <link rel="stylesheet" href="assets/mobile.css">
     <style>
         body { font-family: 'Segoe UI', Arial, sans-serif; background: #f4f8fb; margin:0; transition: background 0.3s, color 0.3s; }
-        .sidebar { width:220px; background: #232a36; height:100vh; position:fixed; left:0; top:0; padding:30px 0; transition: background 0.3s, color 0.3s; box-shadow: 2px 0 16px #0001; border-radius: 0 18px 18px 0; }
+        .sidebar { width:220px; background: #232a36; height:100vh; position:fixed; left:0; top:0; padding:30px 0; transition: background 0.3s, color 0.3s; box-shadow: 2px 0 16px #0001; border-radius: 0 18px 18px 0; z-index: 1000; }
         .sidebar h2 { color: #1976d2; text-align:center; margin-bottom:30px; font-size:1.6rem; letter-spacing:1px; transition: color 0.3s; }
         .sidebar a { display:block; color:#1976d2; text-decoration:none; padding:12px 30px; margin:8px 0; border-radius:8px; font-weight:500; transition: background 0.2s, color 0.2s; }
         .sidebar a:hover { background:#bbdefb; }
@@ -198,69 +200,83 @@ if ($_SESSION['role'] === 'admin') {
         .card.analise.night { background:linear-gradient(120deg,#3a2e1a,#fbc02d 90%); color:#fff; }
         .card.resolvido.night { background:linear-gradient(120deg,#1a3a23,#388e3c 90%); color:#fff; }
         table.night { background: #232a36 !important; color: #e0e0e0; box-shadow:0 1px 8px #0006; }
-        th.night { background: #263238 !important; color:rgb(255, 255, 255); }
-        tr.night:hover { background-color: #222b38 !important; }
-        /* .btn.night { background: #b71c1c !important; color: #fff; } */
-        /* .btn.night:hover { background: #ff6b6b !important; color: #fff; } */
-        /* .chat-link.night { background: #b71c1c !important; color: #fff; } */
-        /* .chat-link.night:hover { background: #ff6b6b !important; color: #fff; } */
-        /* Night/Light mode switcher - canto inferior esquerdo */
-        .mode-switch {
-            position: fixed;
-            left: 18px;
-            bottom: 18px;
-            z-index: 1000;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            background: #232a36;
-            border-radius: 18px;
-            padding: 6px 14px 6px 10px;
-            box-shadow: 0 2px 12px #0003;
-            color: #fff;
-            font-size: 1.05rem;
-            font-weight: 500;
-            border: 1px solid #232a36;
-            transition: background 0.3s, color 0.3s;
+        
+        /* Estilos responsivos para dispositivos móveis */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                border-radius: 0;
+                padding: 15px 0;
+                overflow-x: auto;
+                white-space: nowrap;
+                display: flex;
+                flex-direction: row;
+                justify-content: center;
+                align-items: center;
+            }
+            
+            .sidebar h2 {
+                display: none;
+            }
+            
+            .sidebar a {
+                display: inline-block;
+                padding: 10px 15px;
+                margin: 0 5px;
+            }
+            
+            .main {
+                margin-left: 0;
+                padding: 20px;
+            }
+            
+            .cards {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .card {
+                min-width: 100%;
+            }
+            
+            table {
+                display: block;
+                overflow-x: auto;
+                white-space: nowrap;
+            }
+            
+            .night-toggle {
+                bottom: 10px;
+                left: 10px;
+                padding: 8px 15px;
+                font-size: 0.9rem;
+            }
         }
-        .mode-switch.light {
-            background: #e3f2fd;
-            color: #1976d2;
-            border: 1px solid #b3c6e0;
+        
+        /* Ajustes específicos para iPhone 15 (390px) */
+        @media (max-width: 390px) {
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .header h1 {
+                font-size: 1.8rem;
+                margin-bottom: 15px;
+            }
+            
+            .section {
+                padding: 20px;
+            }
+            
+            .btn {
+                display: block;
+                width: 100%;
+                margin: 5px 0;
+            }
         }
-        .mode-switch input[type="checkbox"] {
-            width: 36px;
-            height: 20px;
-            appearance: none;
-            background: #bdbdbd;
-            outline: none;
-            border-radius: 12px;
-            position: relative;
-            transition: background 0.3s;
-            cursor: pointer;
-        }
-        .mode-switch input[type="checkbox"]:checked {
-            background: #1976d2;
-        }
-        .mode-switch input[type="checkbox"]::before {
-            content: '';
-            position: absolute;
-            left: 3px;
-            top: 3px;
-            width: 14px;
-            height: 14px;
-            background: #fff;
-            border-radius: 50%;
-            transition: left 0.3s;
-        }
-        .mode-switch input[type="checkbox"]:checked::before {
-            left: 19px;
-        }
-        .mode-switch .icon {
-            font-size: 1.1em;
-        }
-        @media (max-width:900px) { .main { margin-left:0; padding:20px 2vw; } .sidebar { position:static; width:100%; height:auto; border-radius:0; } .cards { flex-direction:column; gap:18px; } }
-        @media (max-width:700px) { .main { padding:10px 1vw; } .section { padding:12px 6px; } .card { padding:16px 0 12px 0; } th, td { font-size:12px; padding:7px 4px; } .sidebar h2 { font-size:1.1rem; } .header h1 { font-size:1.1rem; } }
     </style>
 </head>
 <body>

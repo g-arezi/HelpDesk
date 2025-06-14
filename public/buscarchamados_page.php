@@ -13,8 +13,10 @@ if (!isset($_SESSION['auth']) || $_SESSION['auth'] !== true) {
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Buscar Chamados</title>
     <link rel="stylesheet" href="assets/style.css">
+    <link rel="stylesheet" href="assets/mobile.css">
     <style>
         body { font-family: Arial, sans-serif; background: #f4f8fb; margin:0; transition: background 0.3s, color 0.3s; }
         .container { max-width: 700px; margin: 60px auto 30px auto; background: #fff; border-radius: 14px; box-shadow: 0 4px 24px #0002; padding: 36px 40px 30px 40px; }

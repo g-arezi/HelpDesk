@@ -49,13 +49,43 @@
     # RewriteCond %{HTTPS} !=on
     # RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
     
-    # Se a solicitação não for para um arquivo ou diretório existente
-    # RewriteCond %{REQUEST_FILENAME} !-f
-    # RewriteCond %{REQUEST_FILENAME} !-d
+    # Evitar loops de redirecionamento - não redirecionar se já estiver em public
+    RewriteCond %{THE_REQUEST} !^[A-Z]{3,}\s/+public/ [NC]
     
-    # Redirecionar para o diretório public se necessário
-    # RewriteRule ^(.*)$ public/$1 [L]
+    # Se a solicitação não for para um arquivo ou diretório existente
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    
+    # Redirecionar para o diretório public
+    RewriteRule ^(.*)$ public/$1 [L]
 </IfModule>
+
+# Configurar PHP em caso de error 500
+<IfModule mod_php7.c>
+    php_flag display_errors off
+    php_value error_reporting E_ALL
+    php_value upload_max_filesize 10M
+    php_value post_max_size 10M
+    php_value max_execution_time 60
+    php_value max_input_time 60
+    php_value memory_limit 128M
+</IfModule>
+
+<IfModule mod_php.c>
+    php_flag display_errors off
+    php_value error_reporting E_ALL
+    php_value upload_max_filesize 10M
+    php_value post_max_size 10M
+    php_value max_execution_time 60
+    php_value max_input_time 60
+    php_value memory_limit 128M
+</IfModule>
+
+# Permitir apenas acesso a certos arquivos
+<FilesMatch "^(index\.php|check_compatibility\.php|info\.php|init_logs\.php|diagnose_error_500\.php)$">
+    Order allow,deny
+    Allow from all
+</FilesMatch>
 
 # Configurações de segurança adicionais
 <IfModule mod_headers.c>
@@ -75,13 +105,3 @@
 
 # Desativar listagem de diretórios
 Options -Indexes
-
-# PHP settings
-<IfModule mod_php7.c>
-    php_flag display_errors off
-    php_value upload_max_filesize 10M
-    php_value post_max_size 10M
-    php_value max_execution_time 60
-    php_value max_input_time 60
-    php_value memory_limit 128M
-</IfModule>

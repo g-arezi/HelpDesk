@@ -6,6 +6,7 @@ require_once 'client_auth_check.php';
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Cliente - Abrir Chamado</title>
     <style>
         body { font-family: 'Segoe UI', Arial, sans-serif; background: #f4f8fb; margin: 0; padding: 0; transition: background 0.3s, color 0.3s; }

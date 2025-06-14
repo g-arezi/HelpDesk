@@ -1,4 +1,4 @@
-# Redirecionamento básico
+# Configurações do diretório public
 <IfModule mod_rewrite.c>
     RewriteEngine On
     
@@ -6,5 +6,51 @@
     RewriteCond %{REQUEST_URI} ^/buscarchamados\.html$ [NC]
     RewriteRule ^ buscarchamados_page.php [L,R=302]
     
-    # Mantenha outras regras conforme necessário
+    # Se o arquivo solicitado não existe, tente .php
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME}.php -f
+    RewriteRule ^(.*)$ $1.php [L]
+</IfModule>
+
+# Configurações de PHP para este diretório
+<IfModule mod_php7.c>
+    php_flag display_errors off
+    php_value error_reporting E_ALL
+    php_value upload_max_filesize 10M
+    php_value post_max_size 10M
+    php_value max_execution_time 60
+    php_value max_input_time 60
+    php_value memory_limit 128M
+</IfModule>
+
+<IfModule mod_php.c>
+    php_flag display_errors off
+    php_value error_reporting E_ALL
+    php_value upload_max_filesize 10M
+    php_value post_max_size 10M
+    php_value max_execution_time 60
+    php_value max_input_time 60
+    php_value memory_limit 128M
+</IfModule>
+
+# Permitir acesso aos arquivos neste diretório
+<FilesMatch "\.(php|html|css|js|png|jpg|jpeg|gif|ico|pdf)$">
+    Order allow,deny
+    Allow from all
+</FilesMatch>
+
+# Desativar listagem de diretórios
+Options -Indexes
+
+# Configurações de segurança
+<IfModule mod_headers.c>
+    # Prevenir clickjacking
+    Header set X-Frame-Options "SAMEORIGIN"
+    
+    # Proteção XSS
+    Header set X-XSS-Protection "1; mode=block"
+    
+    # Prevenir detecção de MIME
+    Header set X-Content-Type-Options "nosniff"
 </IfModule>
