@@ -281,17 +281,13 @@
         <a href="open.php" style="background:#43a047;">🆕 Abrir Chamado</a>
     </div>
     <div class="container">
-        <h2>Abrir Chamado</h2>
-        <form method="post" action="open.php" enctype="multipart/form-data">
-            <label for="name">👤 Nome:</label>
-            <input type="text" id="name" name="name" required placeholder="Digite seu nome completo">
-
-            <label for="telefone">📞 Telefone para contato:</label>
-            <input type="text" id="telefone" name="telefone" required placeholder="(DDD) 99999-9999">
-
-            <label for="email">✉️ E-mail:</label>
-            <input type="email" id="email" name="email" required placeholder="seu@email.com">
-            
+        <h2>Abrir Chamado</h2>        <form method="post" action="open.php" enctype="multipart/form-data">
+            <!-- Campos de identificação removidos - agora usando dados da sessão -->
+            <div class="user-info-alert" style="background: #e3f2fd; color: #1976d2; padding: 15px; border-radius: 10px; margin-bottom: 20px; border: 1px solid #b3e5fc;">
+                <p style="margin: 0; font-size: 16px; font-weight: 500;">
+                    <span style="font-weight: bold;">✅ Identificação automática:</span> Este chamado será aberto com as suas informações de usuário.
+                </p>
+            </div>
             <label for="produto">📦 Produto/Serviço:</label>
             <select id="produto" name="produto" required>
                 <option value="">Selecione um produto/serviço</option>
@@ -299,9 +295,8 @@
                 <option value="filmes">Filmes</option>
                 <option value="series">Séries</option>
                 <option value="outros">Outros</option>
-            </select>
-            <div id="produto-observacao" style="display:none; margin-top:8px; color:#1976d2; font-size:0.98em;"></div>
-            <div style="margin-bottom:10px;color:#1976d2;font-size:0.98em;">
+            </select>            <div id="produto-observacao" style="display:none; margin-top:8px; color:#1976d2; font-size:0.98em;"></div>
+            <div id="tmdb-observacao" style="display:none; margin-bottom:10px;color:#1976d2;font-size:0.98em;">
                 <b>Observação:</b> Para encontrar o código TMDB, acesse 
                 <a href="#" 
                    style="color:#1976d2;text-decoration:underline;cursor:pointer;" 
@@ -506,6 +501,7 @@
     // Observação dinâmica e campos extras para filmes/séries
 const produtoSelect = document.getElementById('produto');
 const obsDiv = document.getElementById('produto-observacao');
+const tmdbObservacao = document.getElementById('tmdb-observacao');
 const filmesCampos = document.getElementById('filmes-campos');
 const seriesCampos = document.getElementById('series-campos');
 const filmeNome = document.getElementById('filme_nome');
@@ -514,22 +510,27 @@ const serieNome = document.getElementById('serie_nome');
 const serieTmdb = document.getElementById('serie_tmdb');
 
 produtoSelect.addEventListener('change', function() {
+    // Reset all
     obsDiv.style.display = 'none';
+    tmdbObservacao.style.display = 'none';
     filmesCampos.style.display = 'none';
     seriesCampos.style.display = 'none';
     filmeNome.required = false;
     filmeTmdb.required = false;
     serieNome.required = false;
     serieTmdb.required = false;
+    
     if (this.value === 'filmes') {
         obsDiv.textContent = 'Ao selecionar FILMES, informe o nome do filme e o código TMDB (obrigatórios), além de uma observação se desejar.';
         obsDiv.style.display = 'block';
+        tmdbObservacao.style.display = 'block';
         filmesCampos.style.display = 'block';
         filmeNome.required = true;
         filmeTmdb.required = true;
     } else if (this.value === 'series') {
         obsDiv.textContent = 'Ao selecionar SÉRIES, informe o nome da série e o código TMDB (obrigatórios), além de uma observação se desejar.';
         obsDiv.style.display = 'block';
+        tmdbObservacao.style.display = 'block';
         seriesCampos.style.display = 'block';
         serieNome.required = true;
         serieTmdb.required = true;

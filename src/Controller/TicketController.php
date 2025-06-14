@@ -4,8 +4,7 @@ namespace App\Controller;
 require_once __DIR__ . '/../../public/api_cors.php';
 
 class TicketController
-{
-    public function open()
+{    public function open()
     {
         // Verificação de autenticação (secundária, já verificado em open.php)
         if (!isset($_SESSION['auth']) || $_SESSION['auth'] !== true) {
@@ -14,11 +13,12 @@ class TicketController
         }
         
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $name = $_POST['name'] ?? '';
-            $email = $_POST['email'] ?? '';
+            // Usar os dados do usuário da sessão
+            $user = $_SESSION['user'] ?? '';
+            $user_data = $_SESSION['user_data'] ?? [];
+            
             $subject = $_POST['subject'] ?? '';
             $message = isset($_POST['message']) ? trim($_POST['message']) : '';
-            $telefone = $_POST['telefone'] ?? '';
 
             $imagePath = null;
             if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
@@ -60,16 +60,18 @@ class TicketController
                 } elseif ($_POST['series_obse'] === 'Corrigir conteúdo') {
                     $series_obse_label = '🛠️- Corrigir conteúdo';
                 }
-            }
-
-            $ticket = [
-                'name' => $name,
-                'email' => $email,
+            }            $ticket = [
+                'user' => $user,                'created_by' => [
+                    'username' => $user,
+                    'email' => $user_data['email'] ?? '',
+                    'telefone' => $user_data['telefone'] ?? '',
+                    'role' => $_SESSION['role'] ?? 'cliente',
+                    'panel_username' => $user_data['panel_username'] ?? ''
+                ],
                 'produto' => $produto,
                 'subject' => $subject,
                 'message' => $message,
                 'imagePath' => $imagePath,
-                'telefone' => $telefone,
                 'status' => 'nao_aberto',
             ];
             // Adiciona campos extras se for filmes ou séries

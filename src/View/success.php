@@ -167,9 +167,8 @@
                 <span class="slider"></span>
             </label>
             <span id="modeLabel">Claro</span>
-        </div>
-        <div class="info-box" id="infoBox">
-            <strong>E-mail informado:</strong> <span style="color:#1976d2;"> <?= htmlspecialchars($lastTicket['email'] ?? '') ?> </span><br>
+        </div>        <div class="info-box" id="infoBox">
+            <strong>Usuário:</strong> <span style="color:#1976d2;"> <?= htmlspecialchars(isset($lastTicket['user']) ? $lastTicket['user'] : ($_SESSION['user'] ?? 'Não identificado')) ?> </span><br>
             <strong>Mensagem enviada:</strong><br>
             <span style="color:#333;"> <?= nl2br(htmlspecialchars($lastTicket['message'] ?? '')) ?> </span>
         </div>

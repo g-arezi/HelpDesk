@@ -42,6 +42,46 @@ Este documento descreve as alterações feitas para tornar o sistema responsivo 
      - Aumento dos controles de formulário para facilitar o toque
      - Ajuste na altura da área de mensagens para diferentes dispositivos
 
+7. **Adaptação da Lista de Tickets**
+   - O arquivo `tickets.php` foi atualizado com:
+     - Tabela responsiva com duas visualizações possíveis (padrão e mobile)
+     - Atributos data-label para exibição adequada em telas pequenas
+     - Botão para alternar entre visualização de tabela tradicional e visualização mobile
+     - Estilo específico para cada tipo de dispositivo (desktop, tablet, smartphone)
+     - Reorganização dos controles de ação para melhor acesso em telas touch
+     - Ajuste dos espaçamentos e tamanhos de fonte para diferentes dispositivos
+     - Melhorias no controle de modo noturno para visualização móvel
+
+## Boas Práticas para Tabelas em Dispositivos Móveis
+
+Para tabelas em dispositivos móveis, adotamos duas abordagens que podem ser usadas de acordo com o contexto:
+
+1. **Tabelas com Rolagem Horizontal**
+   - Adequada para dados tabulares que precisam manter a relação visual entre colunas
+   - Implementada usando `overflow-x: auto` no contêiner da tabela
+   - Indicadores visuais mostram ao usuário que há mais conteúdo para a direita
+   - Utilizada em tabelas com muitas colunas quando todas são essenciais
+
+2. **Visualização de Tabela Responsiva**
+   - Transforma a tabela em cards verticais em dispositivos móveis
+   - Cada linha se torna um card independente com layout vertical
+   - Utiliza atributos `data-label` nas células para mostrar o título da coluna antes de cada valor
+   - Possibilita ver todos os dados sem necessidade de rolagem horizontal
+   - Ideal para interfaces onde o usuário precisa ver todos os dados de um registro de uma vez
+
+3. **Alternância entre Modos de Visualização**
+   - Implementado um botão que permite ao usuário escolher o modo de visualização preferido
+   - A preferência é salva no localStorage para manter consistência entre sessões
+   - Adaptação automática baseada no tamanho da tela, com opção de substituição manual
+
+4. **Otimizações para Ações em Tabelas**
+   - Botões de ação aumentados para facilitar o toque
+   - Espaçamento adequado entre controles interativos
+   - Feedback visual aprimorado para interações em tela sensível ao toque
+   - Organização vertical de múltiplas ações para evitar toques acidentais
+
+Estas técnicas foram aplicadas em `tickets.php` e podem ser estendidas para outras páginas que utilizam tabelas no sistema.
+
 ## Como Testar
 
 Para testar a visualização em dispositivos móveis:

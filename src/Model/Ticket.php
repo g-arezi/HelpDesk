@@ -3,22 +3,20 @@ namespace App\Model;
 
 class Ticket
 {
-    public $name;
-    public $email;
+    public $user;
     public $produto;
     public $subject;
     public $message;
     public $imagePath;
-    public $telefone;
+    public $created_by;
 
-    public function __construct($name, $email, $produto, $subject, $message, $imagePath = null, $telefone = null)
+    public function __construct($user, $produto, $subject, $message, $imagePath = null, $created_by = null)
     {
-        $this->name = $name;
-        $this->email = $email;
+        $this->user = $user;
         $this->produto = $produto;
         $this->subject = $subject;
         $this->message = $message;
         $this->imagePath = $imagePath;
-        $this->telefone = $telefone;
+        $this->created_by = $created_by;
     }
 }

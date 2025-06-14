@@ -9,8 +9,10 @@ Sistema de HelpDesk simples e moderno, desenvolvido em PHP, para registro, acomp
 ## Novidades e Melhorias Recentes
 
 - **Chat em tempo real por chamado** (cliente e técnico/admin)
-- **Busca de chamados por e-mail ou telefone**
+- **Busca de chamados por e-mail, telefone ou usuário logado**
 - **Botão de chat direto na listagem de tickets**
+- **Interface responsiva para dispositivos móveis (incluindo iPhone)**
+- **Modo noturno para melhor visualização em ambientes com pouca luz**
 - **Permissões aprimoradas no chat** (técnico/admin identificado)
 - **Upload de imagens com suporte a arrastar/colar**
 - **Página de busca amigável para usuários**
@@ -36,10 +38,13 @@ Sistema de HelpDesk simples e moderno, desenvolvido em PHP, para registro, acomp
 - **Abertura e acompanhamento de chamados**
 - **Chat em tempo real por chamado**
 - **Upload de imagens**
-- **Busca de chamados por e-mail/telefone**
-- **Login/logout para técnicos/admins**
+- **Busca de chamados por e-mail/telefone/usuário**
+- **Login/logout para técnicos/admins e clientes**
 - **Edição e exclusão de chamados**
 - **Controle de permissões**
+- **Modo noturno**
+- **Interface responsiva para mobile**
+- **Dashboard com estatísticas**
 
 ---
 
@@ -63,7 +68,15 @@ Sistema de HelpDesk simples e moderno, desenvolvido em PHP, para registro, acomp
    ```
 4. Acesse `http://localhost:8000/open.php` no navegador.
 
-### 3. Ajuste de Permissões (Linux)
+### 3. Scripts de Migração (Quando Necessário)
+
+Se precisar atualizar os tickets existentes com novos campos:
+
+```bash
+php -f scripts/migrate_tickets_panel_username.php
+```
+
+### 4. Ajuste de Permissões (Linux)
 
 Garanta permissão de escrita nas pastas `uploads/` e `logs/`:
 ```bash

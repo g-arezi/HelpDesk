@@ -131,7 +131,7 @@ if ($_SESSION['role'] === 'admin') {
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>Dashboard - Helpdesk</title>
     <link rel="stylesheet" href="assets/mobile.css">
     <style>
@@ -188,21 +188,58 @@ if ($_SESSION['role'] === 'admin') {
         .sidebar.night a { color: #fff !important; text-shadow: 0 1px 2px #0008; }
         .sidebar a:hover { background:#bbdefb; }
         .sidebar.night a:hover { background: #263238; color: #fff !important; }
-        /* Night mode styles */
-        body.night { background: #181c24 !important; color: #e0e0e0; }
-        .sidebar.night { background: #232a36 !important; color: #fff; box-shadow: 2px 0 16px #0006; }
-        .sidebar.night a { color: #fff !important; text-shadow: 0 1px 2px #0008; }
-        .sidebar.night a:hover { background: #263238; }
-        .main.night { background: #181c24 !important; color: #e0e0e0; }
-        .section.night { background: #232a36 !important; color: #e0e0e0; box-shadow: 0 2px 16px #0006; }
-        .card.night { box-shadow:0 2px 12px #0006; }
-        .card.aberto.night { background:linear-gradient(120deg,#3a2323,#b71c1c 90%); color:#fff; }
-        .card.analise.night { background:linear-gradient(120deg,#3a2e1a,#fbc02d 90%); color:#fff; }
-        .card.resolvido.night { background:linear-gradient(120deg,#1a3a23,#388e3c 90%); color:#fff; }
-        table.night { background: #232a36 !important; color: #e0e0e0; box-shadow:0 1px 8px #0006; }
+        /* Night/Light mode switcher - canto inferior esquerdo */
+        .mode-switch {
+            position: fixed !important;
+            left: 18px !important;
+            bottom: 18px !important;
+            z-index: 9999 !important; 
+            display: flex !important;
+            opacity: 1 !important;
+            visibility: visible !important;
+            border: 2px solid #1976d2 !important;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.3) !important;
+            pointer-events: auto !important;
+        }
+        .mode-switch.light {
+            background: #e3f2fd;
+            color: #1976d2;
+            border: 1px solid #b3c6e0;
+        }
+        .mode-switch input[type="checkbox"] {
+            width: 36px;
+            height: 20px;
+            appearance: none;
+            background: #bdbdbd;
+            outline: none;
+            border-radius: 12px;
+            position: relative;
+            transition: background 0.3s;
+            cursor: pointer;
+        }
+        .mode-switch input[type="checkbox"]:checked {
+            background: #1976d2;
+        }
+        .mode-switch input[type="checkbox"]::before {
+            content: '';
+            position: absolute;
+            left: 3px;
+            top: 3px;
+            width: 14px;
+            height: 14px;
+            background: #fff;
+            border-radius: 50%;
+            transition: left 0.3s;
+        }
+        .mode-switch input[type="checkbox"]:checked::before {
+            left: 19px;
+        }
+        .mode-switch .icon {
+            font-size: 1.1em;
+        }
         
-        /* Estilos responsivos para dispositivos móveis */
-        @media (max-width: 768px) {
+        /* Responsividade */
+        @media (max-width: 1200px) {
             .sidebar {
                 width: 100%;
                 height: auto;
@@ -225,6 +262,7 @@ if ($_SESSION['role'] === 'admin') {
                 display: inline-block;
                 padding: 10px 15px;
                 margin: 0 5px;
+                font-size: 14px;
             }
             
             .main {
@@ -253,6 +291,22 @@ if ($_SESSION['role'] === 'admin') {
                 padding: 8px 15px;
                 font-size: 0.9rem;
             }
+            
+            /* Ajustes para botões no mobile */
+            .btn, 
+            button[type="submit"],
+            .chat-link,
+            .logout {
+                font-size: 14px !important;
+                padding: 8px 12px !important;
+                height: auto !important;
+                line-height: 1.4 !important;
+            }
+            
+            /* Ajustar layout de ações na tabela */
+            table .btn {
+                margin: 3px 2px !important;
+            }
         }
         
         /* Ajustes específicos para iPhone 15 (390px) */
@@ -274,10 +328,41 @@ if ($_SESSION['role'] === 'admin') {
             .btn {
                 display: block;
                 width: 100%;
-                margin: 5px 0;
-            }
+                margin: 5px 0;            }
+        }
+        
+        /* Force visibility of night mode switch */
+        .mode-switch {
+            position: fixed !important;
+            left: 18px !important;
+            bottom: 18px !important;
+            z-index: 9999 !important; 
+            display: flex !important;
+            opacity: 1 !important;
+            visibility: visible !important;
+            border: 2px solid #1976d2 !important;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.3) !important;
+            pointer-events: auto !important;
+            transform: scale(1.05);
+        }
+        
+        /* Preload night mode to prevent flashing */
+        .night-mode-preload {
+            background-color: #181c24 !important;
+            color: #e0e0e0 !important;
         }
     </style>
+    <script>
+        // Force night mode if stored in localStorage
+        if (localStorage.getItem('nightMode') === '1') {
+            document.documentElement.classList.add('night-mode-preload');
+            document.addEventListener('DOMContentLoaded', function() {
+                setTimeout(function() {
+                    document.documentElement.classList.remove('night-mode-preload');
+                }, 100);
+            });
+        }
+    </script>
 </head>
 <body>
     <!-- Switch de modo claro/noturno -->
@@ -285,7 +370,7 @@ if ($_SESSION['role'] === 'admin') {
         <span class="icon" id="modeIcon">🌞</span>
         <input type="checkbox" id="modeToggle" aria-label="Alternar modo claro/noturno">
         <span id="modeLabel">Claro</span>
-    </div>    <div class="sidebar" id="sidebar">
+    </div><div class="sidebar" id="sidebar">
         <h2>Helpdesk System</h2>
         <a href="dashboard.php">🏠 Dashboard</a>
         <a href="tickets.php">🎟️ Tickets</a>
@@ -319,9 +404,8 @@ if ($_SESSION['role'] === 'admin') {
                 <div class="value" id="card-resolvido-value"><?=$chamados['resolvido']?></div>
             </div>
         </div>
-        <div class="section">
-            <h3>Chat do Chamado</h3>
-            <form method="get" action="chat_frontend.html" target="_blank" style="margin-top:10px;">
+        <div class="section">            <h3>Chat do Chamado</h3>
+            <form method="get" action="chat_frontend.html" target="_blank" style="margin-top:10px;" class="mobile-form">
                 <label for="chat_id">ID do chamado:</label>
                 <input type="number" min="1" name="id" id="chat_id" required style="width:80px;">
                 <button type="submit" class="chat-link">Abrir Chat</button>
@@ -333,27 +417,45 @@ if ($_SESSION['role'] === 'admin') {
         <div class="section">
             <h3>Lista de Tickets</h3>
             <div style="overflow-x:auto; margin: 0 0 20px 0;">
-            <table class="ticket-table" style="width:100%;background:#fff;border-radius:8px;box-shadow:0 1px 6px #e0e0e0;">
-                <thead>
-                    <tr>
+            <table class="ticket-table" style="width:100%;background:#fff;border-radius:8px;box-shadow:0 1px 6px #e0e0e0;">                <thead>                    <tr>
                         <th>🆔 ID</th>
-                        <th>👤 Nome</th>
-                        <th>📧 E-mail</th>
+                        <th>👤 Usuário</th>
+                        <th>👑 Usuário do Painel</th>
                         <th>📦 Produto</th>
                         <th>📝 Assunto</th>
                         <th>💬 Mensagem</th>
                         <th>🖼️ Imagem</th>
-                        <th>📱 Telefone</th>
                         <th>📊 Status</th>
                         <th>⚙️ Ações</th>
                     </tr>
                 </thead>
                 <tbody id="tickets-tbody">
-                    <?php foreach ($tickets as $i => $ticket): ?>
-                    <tr>
+                    <?php foreach ($tickets as $i => $ticket): ?>                    <tr>
                         <td><?= $i + 1 ?></td>
-                        <td><?= htmlspecialchars($ticket['name'] ?? '') ?></td>
-                        <td><?= htmlspecialchars($ticket['email'] ?? '') ?></td>
+                        <td>
+                            <?php 
+                            if (isset($ticket['user'])) {
+                                echo htmlspecialchars($ticket['user']);
+                            } elseif (isset($ticket['created_by']) && isset($ticket['created_by']['username'])) {
+                                echo htmlspecialchars($ticket['created_by']['username']);
+                            } elseif (isset($ticket['name'])) {
+                                // Compatibilidade com tickets antigos
+                                echo htmlspecialchars($ticket['name']);
+                            } else {
+                                echo 'Usuário desconhecido';                            }
+                            ?>
+                        </td>                        <td>                            <?php 
+                            if (isset($ticket['created_by']) && isset($ticket['created_by']['panel_username']) && !empty($ticket['created_by']['panel_username'])) {
+                                echo htmlspecialchars($ticket['created_by']['panel_username']);
+                            } elseif (isset($ticket['username_painel']) && !empty($ticket['username_painel'])) {
+                                echo htmlspecialchars($ticket['username_painel']);
+                            } elseif (isset($_SESSION['username']) && !empty($_SESSION['username'])) {
+                                echo htmlspecialchars($_SESSION['username']);
+                            } else {
+                                echo '-';
+                            }
+                            ?>
+                        </td>
                         <td><?= htmlspecialchars($ticket['produto'] ?? '') ?></td>
                         <td><?= htmlspecialchars($ticket['subject'] ?? '') ?></td>
                         <td style="max-width:250px;word-break:break-word;">
@@ -383,10 +485,8 @@ if ($_SESSION['role'] === 'admin') {
                                     <img src="<?= htmlspecialchars($ticket['imagePath']) ?>" alt="Imagem" style="max-width:80px;max-height:80px;border-radius:6px;box-shadow:0 1px 4px #ccc;">
                                 </a>
                             <?php else: ?>
-                                <span style="color:#aaa;">-</span>
-                            <?php endif; ?>
+                                <span style="color:#aaa;">-</span>                            <?php endif; ?>
                         </td>
-                        <td><?= htmlspecialchars($ticket['telefone'] ?? '') ?></td>
                         <td>                            <?php 
                             $status = isset($ticket['status']) ? $ticket['status'] : 'nao_aberto';
                             $statusLabel = [
@@ -397,20 +497,20 @@ if ($_SESSION['role'] === 'admin') {
                             echo $statusLabel[$status] ?? $statusLabel['nao_aberto'];
                             ?>
                             <form method="post" action="dashboard.php" style="margin-top:5px;display:inline-block;" onsubmit="return alterarStatusDashboard(this, event)">
-                                <input type="hidden" name="id" value="<?= $i ?>">
-                                <select name="status" style="padding:2px 6px;">
+                                <input type="hidden" name="id" value="<?= $i ?>">                                <select name="status" style="padding:2px 6px;">
                                     <option value="nao_aberto" <?= $status==='nao_aberto'?'selected':''; ?>>Não aberto</option>
                                     <option value="em_analise" <?= $status==='em_analise'?'selected':''; ?>>Em análise</option>
                                     <option value="resolvido" <?= $status==='resolvido'?'selected':''; ?>>Resolvido</option>
                                 </select>
-                                <button type="submit" class="btn" style="padding:2px 10px;font-size:13px;margin-left:4px;background:#0078d7;color:#fff;">Alterar</button>
+                                <button type="submit" class="btn action-btn" style="padding:2px 10px;font-size:13px;margin-left:4px;background:#0078d7;color:#fff;">Alterar</button>
                             </form>
-                        </td>
-                        <td>                            <button type="button" class="btn chat-popup-btn" style="padding:2px 10px;font-size:13px;margin-left:4px;background: #1976D2 ;color: #fff;" data-ticket-id="<?= $i+1 ?>" data-email="<?= htmlspecialchars($ticket['email'] ?? '') ?>" data-telefone="<?= htmlspecialchars($ticket['telefone'] ?? '') ?>">Chat Pop-up</button>
-                            <a href="chat_frontend.html?id=<?= $i+1 ?>" class="btn" style="padding:2px 10px;font-size:13px;margin-left:4px;background:#43a047;color:#fff;" target="_blank">Chat</a>
+                        </td>                        <td>                            <button type="button" class="btn action-btn chat-popup-btn" style="padding:2px 10px;font-size:13px;margin-left:4px;background: #1976D2 ;color: #fff;" data-ticket-id="<?= $i+1 ?>" 
+                            data-email="<?= htmlspecialchars(isset($ticket['created_by']['email']) ? $ticket['created_by']['email'] : ($ticket['email'] ?? '')) ?>" 
+                            data-telefone="<?= htmlspecialchars(isset($ticket['created_by']['telefone']) ? $ticket['created_by']['telefone'] : ($ticket['telefone'] ?? '')) ?>">Chat Pop-up</button>
+                            <a href="chat_frontend.html?id=<?= $i+1 ?>" class="btn action-btn" style="padding:2px 10px;font-size:13px;margin-left:4px;background:#43a047;color:#fff;" target="_blank">Chat</a>
                             <form method="post" action="dashboard.php" style="margin-top:5px;display:inline-block;">
                                 <input type="hidden" name="delete_id" value="<?= $i ?>">
-                                <button type="submit" class="btn" style="padding:2px 10px;font-size:13px;margin-left:4px;background:#d70022;color:#fff;" onclick="return confirm('Tem certeza que deseja deletar este ticket?');">Deletar</button>
+                                <button type="submit" class="btn action-btn" style="padding:2px 10px;font-size:13px;margin-left:4px;background:#d70022;color:#fff;" onclick="return confirm('Tem certeza que deseja deletar este ticket?');">Deletar</button>
                             </form>
                         </td>
                     </tr>
@@ -460,22 +560,21 @@ if ($_SESSION['role'] === 'admin') {
                                     ?>
                                 </td>
                                 <td>
-                                    <?php if ($user['status'] === 'pending'): ?>
-                                    <form method="post" action="dashboard.php" style="display:inline-block;">
+                                    <?php if ($user['status'] === 'pending'): ?>                                    <form method="post" action="dashboard.php" style="display:inline-block;">
                                         <input type="hidden" name="user_index" value="<?= $i ?>">
                                         <input type="hidden" name="user_action" value="approve">
-                                        <button type="submit" class="btn" style="padding:2px 10px;font-size:13px;margin-right:4px;background:#388e3c;color:#fff;">Aprovar</button>
+                                        <button type="submit" class="btn action-btn" style="padding:2px 10px;font-size:13px;margin-right:4px;background:#388e3c;color:#fff;">Aprovar</button>
                                     </form>
                                     <form method="post" action="dashboard.php" style="display:inline-block;">
                                         <input type="hidden" name="user_index" value="<?= $i ?>">
                                         <input type="hidden" name="user_action" value="reject">
-                                        <button type="submit" class="btn" style="padding:2px 10px;font-size:13px;margin-right:4px;background:#d32f2f;color:#fff;">Rejeitar</button>
+                                        <button type="submit" class="btn action-btn" style="padding:2px 10px;font-size:13px;margin-right:4px;background:#d32f2f;color:#fff;">Rejeitar</button>
                                     </form>
                                     <?php endif; ?>
                                     <form method="post" action="dashboard.php" style="display:inline-block;">
                                         <input type="hidden" name="user_index" value="<?= $i ?>">
                                         <input type="hidden" name="user_action" value="delete">
-                                        <button type="submit" class="btn" style="padding:2px 10px;font-size:13px;background:#d70022;color:#fff;" onclick="return confirm('Tem certeza que deseja excluir este usuário?');">Excluir</button>
+                                        <button type="submit" class="btn action-btn" style="padding:2px 10px;font-size:13px;background:#d70022;color:#fff;" onclick="return confirm('Tem certeza que deseja excluir este usuário?');">Excluir</button>
                                     </form>
                                 </td>
                             </tr>
@@ -499,79 +598,208 @@ if ($_SESSION['role'] === 'admin') {
     const modeSwitch = document.getElementById('modeSwitch');
     const modeToggle = document.getElementById('modeToggle');
     const modeIcon = document.getElementById('modeIcon');
-    const modeLabel = document.getElementById('modeLabel');
-    function setMode(night) {
-        document.body.classList.toggle('night', night);
-        document.getElementById('sidebar').classList.toggle('night', night);
-        document.getElementById('main').classList.toggle('night', night);
+    const modeLabel = document.getElementById('modeLabel');    function setMode(night) {
+        console.log('Setting night mode:', night);
+        
+        // Force apply night class directly
+        if (night) {
+            document.body.classList.add('night');
+            if (document.getElementById('sidebar')) document.getElementById('sidebar').classList.add('night');
+            if (document.getElementById('main')) document.getElementById('main').classList.add('night');
+            document.querySelectorAll('.section').forEach(e => e.classList.add('night'));
+            document.querySelectorAll('.card').forEach(e => e.classList.add('night'));
+        } else {
+            document.body.classList.remove('night');
+            if (document.getElementById('sidebar')) document.getElementById('sidebar').classList.remove('night');
+            if (document.getElementById('main')) document.getElementById('main').classList.remove('night');
+            document.querySelectorAll('.section').forEach(e => e.classList.remove('night'));
+            document.querySelectorAll('.card').forEach(e => e.classList.remove('night'));
+        }
+        
+        // Grupos de elementos
         document.querySelectorAll('.section').forEach(e=>e.classList.toggle('night', night));
         document.querySelectorAll('.card').forEach(e=>e.classList.toggle('night', night));
-        document.querySelectorAll('table').forEach(e=>e.classList.toggle('night', night));
-        document.querySelectorAll('th').forEach(e=>e.classList.toggle('night', night));
-        document.querySelectorAll('tr').forEach(e=>e.classList.toggle('night', night));
+        
+        // Aplicando night mode em todas as tabelas e seus elementos
+        document.querySelectorAll('table').forEach(table => {
+            table.classList.toggle('night', night);
+            
+            // Aplicar a classe em cada elemento da tabela
+            table.querySelectorAll('th').forEach(th => th.classList.toggle('night', night));
+            table.querySelectorAll('tr').forEach(tr => tr.classList.toggle('night', night));
+            table.querySelectorAll('td').forEach(td => td.classList.toggle('night', night));
+        });
+        
+        // Botões e links
         document.querySelectorAll('.btn').forEach(e=>e.classList.toggle('night', night));
         document.querySelectorAll('.chat-link').forEach(e=>e.classList.toggle('night', night));
-        modeSwitch.classList.toggle('light', !night);
-        modeSwitch.classList.toggle('night', night);
-        modeToggle.checked = night;
+        document.querySelectorAll('.action-btn').forEach(e=>e.classList.toggle('night', night));
+        document.querySelectorAll('a').forEach(e=>e.classList.toggle('night', night));
+        
+        // Cards e dashboards (estatísticas)
+        document.querySelectorAll('.dashboard-grid .card').forEach(e=>e.classList.toggle('night', night));
+        document.querySelectorAll('.summary-box').forEach(e=>e.classList.toggle('night', night));
+        document.querySelectorAll('.status-badge').forEach(e=>e.classList.toggle('night', night));
+        
+        // Elementos de formulário
+        document.querySelectorAll('input, select, textarea').forEach(e=>e.classList.toggle('night', night));
+        
+        // Mobile específico
+        document.querySelectorAll('.mobile-view-toggle').forEach(e=>e.classList.toggle('night', night));
+        document.querySelectorAll('.table-scroll-hint').forEach(e=>e.classList.toggle('night', night));
+        document.querySelectorAll('.ticket-table-container').forEach(e=>e.classList.toggle('night', night));
+          // Toggle de modo
+        if (modeSwitch) {
+            modeSwitch.classList.toggle('light', !night);
+            modeSwitch.classList.toggle('night', night);
+            modeSwitch.style.display = 'flex';
+            modeSwitch.style.opacity = '1';
+            modeSwitch.style.zIndex = '1000';
+        }
+        
+        if (modeToggle) {
+            modeToggle.checked = night;
+        }
+        
+        // Texto e ícones
         if(night) {
-            modeIcon.textContent = '🌙';
-            modeLabel.textContent = 'Noturno';
+            if (modeIcon) modeIcon.textContent = '🌙';
+            if (modeLabel) modeLabel.textContent = 'Noturno';
             localStorage.setItem('nightMode','1');
         } else {
-            modeIcon.textContent = '🌞';
-            modeLabel.textContent = 'Claro';
+            if (modeIcon) modeIcon.textContent = '🌞';
+            if (modeLabel) modeLabel.textContent = 'Claro';
             localStorage.removeItem('nightMode');
         }
+        
+        // Updates específicos
         if(typeof updateChatModalNightMode === 'function') updateChatModalNightMode();
-    }
-    modeToggle.addEventListener('change', function() {
-        setMode(this.checked);
-    });
-    // Inicialização
-    if(localStorage.getItem('nightMode')) setMode(true);
-    else setMode(false);
+    }    // Garante que o night mode funcione em todos os elementos    document.addEventListener('DOMContentLoaded', function() {
+        console.log('DOM Content Loaded - Initializing night mode');
+        
+        // Certifica-se de que temos acesso aos elementos do DOM
+        const modeSwitch = document.getElementById('modeSwitch');
+        const modeToggle = document.getElementById('modeToggle');
+        
+        console.log('Mode switch found:', modeSwitch);
+        console.log('Mode toggle found:', modeToggle);
+        
+        if (modeSwitch) {
+            // Garantir que o switch esteja visível
+            modeSwitch.style.display = 'flex';
+            modeSwitch.style.opacity = '1';
+            modeSwitch.style.zIndex = '1000';
+            console.log('Mode switch display set to flex');
+        }
+        
+        if (modeToggle) {
+            // Adiciona listener para o toggle
+            modeToggle.addEventListener('change', function() {
+                console.log('Toggle changed to:', this.checked);
+                setMode(this.checked);
+            });
+            
+            // Inicialização do modo correto
+            if(localStorage.getItem('nightMode')) {
+                console.log('Night mode found in localStorage');
+                setMode(true);
+                modeToggle.checked = true;
+            } else {
+                console.log('No night mode in localStorage, using light mode');
+                setMode(false);
+            }
+        } else {
+            console.error('Elemento de toggle de modo noturno não encontrado!');
+        }
+        
     // Remove botão antigo se existir
-    var oldBtn = document.getElementById('nightToggle');
-    if(oldBtn) oldBtn.remove();
-    // Chat Pop-up para todos os chamados
+        var oldBtn = document.getElementById('nightToggle');
+        if(oldBtn) oldBtn.remove();
+    });
+    
+    // Função global para inicializar o modo noturno
+    function initializeNightMode() {
+        console.log('Initializing night mode globally');
+        const modeSwitch = document.getElementById('modeSwitch');
+        const modeToggle = document.getElementById('modeToggle');
+        
+        if (modeSwitch) {
+            modeSwitch.style.display = 'flex';
+            modeSwitch.style.opacity = '1';
+            modeSwitch.style.visibility = 'visible';
+            console.log('Mode switch made visible');
+        }
+        
+        if (modeToggle) {
+            if (localStorage.getItem('nightMode')) {
+                setMode(true);
+                modeToggle.checked = true;
+            }
+            
+            modeToggle.addEventListener('change', function() {
+                setMode(this.checked);
+            });
+        }
+    }
+      // Inicializar modo noturno imediatamente e quando a página carregar completamente
+    // Aplicar imediatamente para evitar flash
+    (function() {
+        if (localStorage.getItem('nightMode') === '1') {
+            setMode(true);
+        }
+    })();
+    
+    // E também quando carregar completamente a página
+    window.onload = function() {
+        initializeNightMode();
+    };// Chat Pop-up para todos os chamados
     function openChatPopup(ticketId, email, telefone) {
         const chatModal = document.getElementById('chatModal');
         const chatIframe = document.getElementById('chatIframe');
+        const chatModalContent = document.getElementById('chatModalContent');
+        
         // Monta a URL do chat com os dados do chamado
         let url = `chat_frontend.html?id=${encodeURIComponent(ticketId)}`;
         if(email) url += `&email=${encodeURIComponent(email)}`;
         if(telefone) url += `&telefone=${encodeURIComponent(telefone)}`;
         chatIframe.src = url;
         chatModal.style.display = 'flex';
+        
         // Night mode no modal
         if(document.body.classList.contains('night')) {
             chatModal.style.background = 'rgba(24,28,36,0.85)';
+            chatModalContent.style.background = '#232a36';
             chatModalContent.classList.add('night');
         } else {
             chatModal.style.background = 'rgba(0,0,0,0.45)';
+            chatModalContent.style.background = '#fff';
             chatModalContent.classList.remove('night');
         }
     }
+    
     // Chat Pop-up para usuários rápidos
     function openQuickUserChatPopup(email, telefone, author) {
         const chatModal = document.getElementById('chatModal');
         const chatIframe = document.getElementById('chatIframe');
+        const chatModalContent = document.getElementById('chatModalContent');
+        
         let url = `chat_frontend.html?email=${encodeURIComponent(email)}&telefone=${encodeURIComponent(telefone)}&author=${encodeURIComponent(author)}`;
         chatIframe.src = url;
         chatModal.style.display = 'flex';
+        
         // Night mode no modal
         if(document.body.classList.contains('night')) {
             chatModal.style.background = 'rgba(24,28,36,0.85)';
+            chatModalContent.style.background = '#232a36';
             chatModalContent.classList.add('night');
         } else {
             chatModal.style.background = 'rgba(0,0,0,0.45)';
+            chatModalContent.style.background = '#fff';
             chatModalContent.classList.remove('night');
         }
-    }
-    document.querySelectorAll('.chat-popup-btn').forEach(btn => {
+    }    document.querySelectorAll('.chat-popup-btn').forEach(btn => {
         btn.addEventListener('click', function() {
-            openQuickUserChatPopup(this.dataset.email, this.dataset.telefone, this.dataset.author);
+            openChatPopup(this.dataset.ticketId, this.dataset.email, this.dataset.telefone);
         });
     });
     document.getElementById('closeChatModal').onclick = function() {
@@ -586,20 +814,212 @@ if ($_SESSION['role'] === 'admin') {
             modal.style.display = 'none';
             document.getElementById('chatIframe').src = '';
         }
-    });
-    // Night mode dinâmico no modal
+    });    // Night mode dinâmico no modal
     function updateChatModalNightMode() {
         const chatModal = document.getElementById('chatModal');
         const chatModalContent = document.getElementById('chatModalContent');
         if(document.body.classList.contains('night')) {
             chatModal.style.background = 'rgba(24,28,36,0.85)';
             chatModalContent.style.background = '#232a36';
+            chatModalContent.classList.add('night');
         } else {
             chatModal.style.background = 'rgba(0,0,0,0.45)';
             chatModalContent.style.background = '#fff';
+            chatModalContent.classList.remove('night');
         }
+    }    // Update chat modal night mode if needed
+    if (document.getElementById('chatModalContent')) {
+        updateChatModalNightMode();
     }
-    document.getElementById('nightToggle').addEventListener('click', updateChatModalNightMode);
+    
+    // Garante que o night mode funcione em todos os elementos
+    window.addEventListener('DOMContentLoaded', function() {
+        // Inicializa o modo correto
+        if(localStorage.getItem('nightMode')) {
+            setMode(true);
+            document.getElementById('modeToggle').checked = true;
+        }
+    });
+    
+    // Função para renderizar tickets a partir de uma chamada AJAX
+    function renderTickets(data) {
+        // Atualiza contadores nas cards
+        document.getElementById('card-aberto-value').innerText = data.chamados.aberto;
+        document.getElementById('card-analise-value').innerText = data.chamados.analise;
+        document.getElementById('card-resolvido-value').innerText = data.chamados.resolvido;
+        
+        // Atualiza tabela
+        let tbody = document.getElementById('tickets-tbody');
+        tbody.innerHTML = ''; // Limpa o conteúdo atual
+        
+        data.tickets.forEach(function(ticket, i) {
+            let row = document.createElement('tr');
+            
+            // Define o conteúdo HTML da linha com todos os dados do ticket
+            row.innerHTML = `
+                <td data-label="#️⃣ ID">${i + 1}</td>
+                <td data-label="👤 Usuário">${ticket.created_by && ticket.created_by.username ? escapeHtml(ticket.created_by.username) : (ticket.user ? escapeHtml(ticket.user) : (ticket.name ? escapeHtml(ticket.name) : 'Usuário desconhecido'))}</td>
+                <td data-label="👑 Usuário do Painel">${getPanelUsername(ticket)}</td>
+                <td data-label="📦 Produto">${ticket.produto ? escapeHtml(ticket.produto) : ''}</td>
+                <td data-label="📝 Assunto">${ticket.subject ? escapeHtml(ticket.subject) : ''}</td>
+                <td data-label="💬 Mensagem" style='max-width:250px;word-break:break-word;'>${renderMessage(ticket)}</td>
+                <td data-label="🖼️ Imagem">${ticket.imagePath ? `<a href='${escapeHtml(ticket.imagePath)}' target='_blank'><img src='${escapeHtml(ticket.imagePath)}' alt='Imagem' style='max-width:80px;max-height:80px;border-radius:6px;box-shadow:0 1px 4px #ccc;'></a>` : '<span style="color:#aaa;">-</span>'}</td>
+                <td data-label="📊 Status">${renderStatus(ticket.status, i)}</td>
+                <td data-label="⚙️ Ações">
+                    <button type="button" class="btn action-btn chat-popup-btn" style="padding:2px 10px;font-size:13px;margin-left:4px;background: #1976D2;color: #fff;" 
+                        data-ticket-id="${i+1}" 
+                        data-email="${ticket.created_by && ticket.created_by.email ? escapeHtml(ticket.created_by.email) : (ticket.email ? escapeHtml(ticket.email) : '')}" 
+                        data-telefone="${ticket.created_by && ticket.created_by.telefone ? escapeHtml(ticket.created_by.telefone) : (ticket.telefone ? escapeHtml(ticket.telefone) : '')}">
+                        Chat Pop-up
+                    </button>
+                    <a href="chat_frontend.html?id=${i+1}" class="btn action-btn" style="padding:2px 10px;font-size:13px;margin-left:4px;background:#43a047;color:#fff;" target="_blank">Chat</a>
+                    <form method="post" action="dashboard.php" style="margin-top:5px;display:inline-block;">
+                        <input type="hidden" name="delete_id" value="${i}">
+                        <button type="submit" class="btn action-btn" style="padding:2px 10px;font-size:13px;margin-left:4px;background:#d70022;color:#fff;" onclick="return confirm('Tem certeza que deseja deletar este ticket?');">Deletar</button>
+                    </form>
+                </td>
+            `;
+            
+            tbody.appendChild(row);
+        });
+        
+        // Aplicar o modo correto (claro/escuro) aos novos elementos
+        if(document.body.classList.contains('night')) {
+            document.querySelectorAll('.ticket-table tr, .ticket-table th, .ticket-table td').forEach(el => {
+                el.classList.add('night');
+            });
+        }
+        
+        // Ativar os botões de chat pop-up
+        document.querySelectorAll('.chat-popup-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                openChatPopup(this.dataset.ticketId, this.dataset.email, this.dataset.telefone);
+            });
+        });
+    }
+    
+    // Função auxiliar para escapar HTML
+    function getPanelUsername(ticket) {
+        // Try to get panel username from various possible locations
+        if (ticket.created_by && ticket.created_by.panel_username && ticket.created_by.panel_username.trim() !== '') {
+            return escapeHtml(ticket.created_by.panel_username);
+        } else if (ticket.username_painel && ticket.username_painel.trim() !== '') {
+            return escapeHtml(ticket.username_painel);
+        } else if (ticket.created_by && ticket.created_by.username) {
+            // Fallback to username if no panel username exists
+            return escapeHtml(ticket.created_by.username);
+        } else if (ticket.user) {
+            // Further fallback to user if no created_by exists
+            return escapeHtml(ticket.user);
+        }
+        return '-';
+    }
+    
+    function escapeHtml(text) {
+        if (!text) return '';
+        var map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
+        return text.toString().replace(/[&<>"']/g, function(m) { return map[m]; });
+    }
+    
+    // Função para renderizar mensagem com campos extras
+    function renderMessage(ticket) {
+        let messageHtml = '';
+        
+        // Exibe campos extras para filmes/séries
+        if ((ticket.produto || '') === 'filmes') {
+            if (!!(ticket.filmes_obse_label)) messageHtml += '<b>Opção:</b> ' + escapeHtml(ticket.filmes_obse_label) + '<br>';
+            else if (!!(ticket.filmes_obse)) messageHtml += '<b>Opção:</b> ' + escapeHtml(ticket.filmes_obse) + '<br>';
+            messageHtml += '<b>🍿 Filme:</b> ' + escapeHtml(ticket.filme_nome || '-') + '<br>';
+            messageHtml += '<b>🌟 TMDB:</b> ' + escapeHtml(ticket.filme_tmdb || '-') + '<br>';
+            if (!!(ticket.filme_obs)) messageHtml += '<b>⚠️OBS:</b> ' + escapeHtml(ticket.filme_obs) + '<br>';
+            messageHtml += '<hr style="margin:4px 0;">';
+        } else if ((ticket.produto || '') === 'series') {
+            if (!!(ticket.series_obse_label)) messageHtml += '<b>Opção:</b> ' + escapeHtml(ticket.series_obse_label) + '<br>';
+            else if (!!(ticket.series_obse)) messageHtml += '<b>Opção:</b> ' + escapeHtml(ticket.series_obse) + '<br>';
+            messageHtml += '<b>📽 Série:</b> ' + escapeHtml(ticket.serie_nome || '-') + '<br>';
+            messageHtml += '<b>🌟 TMDB:</b> ' + escapeHtml(ticket.serie_tmdb || '-') + '<br>';
+            if (!!(ticket.serie_obs)) messageHtml += '<b>⚠️OBS:</b> ' + escapeHtml(ticket.serie_obs) + '<br>';
+            messageHtml += '<hr style="margin:4px 0;">';
+        }
+        
+        // Adiciona a mensagem principal
+        messageHtml += (ticket.message || '').replace(/\n/g, '<br>');
+        
+        return messageHtml;
+    }
+    
+    // Função para renderizar status com seletor
+    function renderStatus(status, i) {
+        let statusText = '';
+        if (status === 'resolvido') {
+            statusText = '<span style="color:#388e3c;font-weight:bold;">✅ Resolvido</span>';
+        } else if (status === 'em_analise') {
+            statusText = '<span style="color:#fbc02d;font-weight:bold;">⏳ Em análise</span>';
+        } else {
+            statusText = '<span style="color:#d32f2f;font-weight:bold;">🔒 Não aberto</span>';
+        }
+        
+        return `${statusText}
+            <form method="post" action="dashboard.php" style="margin-top:5px;display:inline-block;" onsubmit="return alterarStatusDashboard(this, event)">
+                <input type="hidden" name="id" value="${i}">
+                <select name="status" style="padding:2px 6px;">
+                    <option value="nao_aberto" ${status==='nao_aberto'?'selected':''}>Não aberto</option>
+                    <option value="em_analise" ${status==='em_analise'?'selected':''}>Em análise</option>
+                    <option value="resolvido" ${status==='resolvido'?'selected':''}>Resolvido</option>
+                </select>
+                <button type="submit" class="btn action-btn" style="padding:2px 10px;font-size:13px;margin-left:4px;background:#0078d7;color:#fff;">Alterar</button>
+            </form>`;
+    }
+    
+    // Função para alterar status via ajax
+    function alterarStatusDashboard(form, event) {
+        event.preventDefault();
+        const id = form.querySelector('input[name="id"]').value;
+        const status = form.querySelector('select[name="status"]').value;
+        
+        fetch('update_ticket_status.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ id, status })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                updateTickets();
+            } else {
+                alert('Erro ao atualizar status');
+            }
+        })
+        .catch(error => {
+            console.error('Erro:', error);
+            alert('Erro ao atualizar status');
+        });
+        
+        return false;
+    }
+    
+    // Função para buscar dados atualizados
+    function updateTickets() {
+        fetch('dashboard_data.php')
+            .then(response => response.json())
+            .then(data => {
+                renderTickets(data);
+            })
+            .catch(error => {
+                console.error('Erro ao atualizar tickets:', error);
+            });
+    }
+    
+    // Inicializar e configurar atualização periódica
+    document.addEventListener('DOMContentLoaded', function() {
+        // Carrega os tickets inicialmente
+        updateTickets();
+        
+        // Atualiza a cada 30 segundos (30000ms)
+        setInterval(updateTickets, 30000);
+    });
     </script>
-</body>
+    </body>
 </html>

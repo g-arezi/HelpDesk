@@ -176,7 +176,22 @@
         <input type="checkbox" id="modeToggle" aria-label="Alternar modo claro/noturno">
         <span id="modeLabel">Claro</span>
     </div>
-    <div class="container" id="container">        <h2>🔎 Buscar Chamados</h2>
+    <div class="container" id="container">        <h2>🔎 Buscar Chamados</h2>        <script>
+        // Check if user is logged in by checking session data through an API call
+        fetch('client_auth_check.php', {
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.authenticated) {
+                // User is logged in, redirect to buscarchamados_page.php
+                window.location.href = 'buscarchamados_page.php';
+            }
+        })
+        .catch(error => console.error('Error checking authentication status:', error));
+        </script>
         <form id="searchForm" style="margin-bottom:30px;display:flex;flex-direction:column;gap:15px;align-items:stretch;">
             <div class="input-field" style="position:relative;">
                 <label for="email" style="display:block;margin-bottom:5px;font-weight:bold;">📧 Seu e-mail:</label>

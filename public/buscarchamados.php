@@ -1,17 +1,20 @@
 <?php
 require_once __DIR__ . '/api_cors.php';
 header('Content-Type: application/json; charset=utf-8');
+session_start(); // Start session to be able to check for logged-in user
 
 // API: retorna apenas JSON, sem HTML
 // Uso: GET /buscarchamados.php?email=...&telefone=...
+// Se usuário estiver logado, também procura por username
 
 $email = isset($_GET['email']) ? trim($_GET['email']) : '';
 $telefone = isset($_GET['telefone']) ? trim($_GET['telefone']) : '';
+$username = isset($_SESSION['user']) ? $_SESSION['user'] : '';
 $file = __DIR__ . '/../logs/tickets.txt'; 
 $result = [];
 $error = '';
 
-if ((($email && filter_var($email, FILTER_VALIDATE_EMAIL)) || $telefone) && file_exists($file)) {
+if ((($email && filter_var($email, FILTER_VALIDATE_EMAIL)) || $telefone || $username) && file_exists($file)) {
     $content = file_get_contents($file);
     $tickets = [];
     $tryArray = json_decode($content, true);
@@ -28,19 +31,33 @@ if ((($email && filter_var($email, FILTER_VALIDATE_EMAIL)) || $telefone) && file
                 }
             }
         }
-    }
-    foreach ($tickets as $idx => $ticket) {
+    }    foreach ($tickets as $idx => $ticket) {
         $ticketEmail = isset($ticket['email']) ? strtolower(trim($ticket['email'])) : '';
         $ticketTelefone = isset($ticket['telefone']) ? trim($ticket['telefone']) : '';
+        $ticketUser = isset($ticket['user']) ? trim($ticket['user']) : '';
+        $ticketCreatedBy = isset($ticket['created_by']) && isset($ticket['created_by']['username']) ? 
+                          trim($ticket['created_by']['username']) : '';
 
         $match = false;
-        if ($email && $telefone) {
+        
+        // Verificar correspondência de nome de usuário se estiver logado
+        if ($username && ($username === $ticketUser || $username === $ticketCreatedBy)) {
+            $match = true;
+        }
+        // Verificar email e telefone conforme o método antigo
+        else if ($email && $telefone) {
             // Ambos preenchidos: busca por ambos
             $match = ($ticketEmail === strtolower($email)) && ($ticketTelefone === $telefone);
         } elseif ($email) {
-            $match = ($ticketEmail === strtolower($email));
+            // Verifica também o email do created_by
+            $createdByEmail = isset($ticket['created_by']) && isset($ticket['created_by']['email']) ? 
+                             strtolower(trim($ticket['created_by']['email'])) : '';
+            $match = ($ticketEmail === strtolower($email)) || ($createdByEmail === strtolower($email));
         } elseif ($telefone) {
-            $match = ($ticketTelefone === $telefone);
+            // Verifica também o telefone do created_by
+            $createdByTelefone = isset($ticket['created_by']) && isset($ticket['created_by']['telefone']) ? 
+                               trim($ticket['created_by']['telefone']) : '';
+            $match = ($ticketTelefone === $telefone) || ($createdByTelefone === $telefone);
         }
 
         if ($match) {

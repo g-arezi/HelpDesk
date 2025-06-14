@@ -137,12 +137,13 @@ if (!isset($_SESSION['auth']) || $_SESSION['auth'] !== true) {
     </div>
     <div class="container" id="container">
         <h2>🔎 Buscar Chamados</h2>
-        
-        <div class="user-info">
+          <div class="user-info">
             Olá, <strong><?php echo htmlspecialchars($_SESSION['user']); ?></strong>! 
             <?php if($_SESSION['role'] === 'cliente'): ?>
             (Cliente)
             <?php endif; ?>
+            <br>
+            <p style="margin-top: 5px;">Seus chamados abertos serão exibidos abaixo.</p>
         </div>
         
         <form id="searchForm" style="margin-bottom:20px;display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
@@ -214,11 +215,10 @@ if (!isset($_SESSION['auth']) || $_SESSION['auth'] !== true) {
             .then(r=>r.json())
             .then(data=>{
                 let html = '';
-                if(data && Array.isArray(data.tickets) && data.tickets.length) {
-                    html += '<table><thead><tr><th>🆔 ID</th><th>📋 Status</th><th>📝 Assunto</th><th>💬 Mensagem</th><th>📞 Telefone</th><th></th></tr></thead><tbody>';
+                if(data && Array.isArray(data.tickets) && data.tickets.length) {                    html += '<table><thead><tr><th>🆔 ID</th><th>📋 Status</th><th>📝 Assunto</th><th>� Produto</th><th>� Mensagem</th><th></th></tr></thead><tbody>';
                     data.tickets.forEach(row=>{
                         // Passa email e telefone na URL para o chat
-                        html += `<tr><td>${row.id}</td><td>${row.status}</td><td>${row.subject}</td><td>${row.message}</td><td>${row.telefone}</td><td><a href="chat_frontend.html?id=${row.id}&email=${encodeURIComponent(email)}&telefone=${encodeURIComponent(telefone)}" class="btn btn-chat" target="_blank">Chat</a></td></tr>`;
+                        html += `<tr><td>${row.id}</td><td>${row.status}</td><td>${row.subject}</td><td>${row.produto}</td><td>${row.message}</td><td><a href="chat_frontend.html?id=${row.id}&email=${encodeURIComponent(email)}&telefone=${encodeURIComponent(telefone)}" class="btn btn-chat" target="_blank">Chat</a></td></tr>`;
                     });
                     html += '</tbody></table>';
                 } else {

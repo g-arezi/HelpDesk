@@ -53,6 +53,169 @@
         bottom: 10px !important;
         left: 10px !important;
     }
+    
+    /* Ajustes específicos para tickets.php */
+    .ticket-table {
+        border-radius: 0 !important;
+        margin: 10px -15px !important;
+        width: calc(100% + 30px) !important;
+    }
+    
+    .ticket-table th, 
+    .ticket-table td {
+        padding: 10px 8px !important;
+        font-size: 14px !important;
+    }
+    
+    .summary-box {
+        flex-direction: column !important;
+        padding: 15px !important;
+        gap: 15px !important;
+    }
+    
+    .summary-box .btn {
+        margin-top: 5px !important;
+    }
+    
+    /* Melhor visibilidade para ações em mobile */
+    .ticket-table select {
+        width: 100% !important;
+        margin-bottom: 5px !important;
+        margin-top: 5px !important;
+    }
+    
+    .ticket-table .btn {
+        padding: 8px !important;
+        margin: 3px 0 !important;
+        display: block !important;
+        width: 100% !important;
+    }
+    
+    /* Ajuste para evitar sobreposição com o modo noturno */
+    form[method="post"] {
+        margin-bottom: 8px !important;
+    }
+    
+    /* Ajustes específicos para botões no dashboard */
+    .dashboard-btn,
+    .chat-link,
+    .chat-popup-btn,
+    .logout,
+    .main .btn {
+        font-size: 14px !important;
+        padding: 8px 12px !important;
+        white-space: nowrap !important;
+        text-overflow: ellipsis !important;
+        overflow: hidden !important;
+        max-width: 100% !important;
+        display: inline-block !important;
+        text-align: center !important;
+        margin: 5px 0 !important;
+    }
+    
+    /* Ajuste para ações de tabela no dashboard */
+    .main table .btn {
+        font-size: 13px !important;
+        padding: 6px 10px !important;
+        margin: 3px 2px !important;
+        display: inline-block !important;
+        width: auto !important;
+    }
+    
+    /* Manter tamanho dos ícones proporcional */
+    .main .icon,
+    .card .icon {
+        font-size: 1.5em !important;
+    }
+    
+    /* Ajuste de tamanho de texto em cards */
+    .card .label {
+        font-size: 0.9em !important;
+        letter-spacing: 0 !important;
+    }
+    
+    .card .value {
+        font-size: 1.6em !important;
+    }
+    
+    /* Estilos para botões de ação em tabelas */
+    .action-btn {
+        display: inline-block !important;
+        width: auto !important;
+        font-size: 13px !important;
+        padding: 6px 10px !important;
+        margin: 3px !important;
+        text-align: center !important;
+        line-height: 1.3 !important;
+        height: auto !important;
+        overflow: visible !important;
+        white-space: nowrap !important;
+    }
+    
+    /* Garantir que elementos dentro de células de tabela não fiquem desproporcionais */
+    td select, 
+    td input {
+        max-width: 100% !important;
+        font-size: 14px !important;
+        padding: 6px !important;
+        margin: 2px 0 !important;
+    }
+    
+    /* Ajuste específico para formulários em mobile */
+    .mobile-form {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: flex-start !important;
+    }
+    
+    .mobile-form label {
+        margin-bottom: 5px !important;
+    }
+    
+    .mobile-form input {
+        width: 100% !important;
+        max-width: 200px !important;
+        margin-bottom: 10px !important;
+    }
+    
+    .mobile-form button {
+        align-self: flex-start !important;
+    }
+    
+    /* Estilo para o botão de alternar visualização em mobile */
+    .mobile-view-toggle {
+        position: sticky !important;
+        top: 0 !important;
+        z-index: 100 !important;
+        background: rgba(255,255,255,0.95) !important;
+        padding: 8px 0 !important;
+        margin: 0 0 10px 0 !important;
+        backdrop-filter: blur(5px) !important;
+        -webkit-backdrop-filter: blur(5px) !important;
+    }
+      body.night .mobile-view-toggle {
+        background: rgba(35, 42, 54, 0.95) !important;
+    }
+    
+    #toggleView {
+        transition: all 0.3s ease !important;
+    }
+    
+    #toggleView.night {
+        background: #1976d2 !important;
+        color: #ffffff !important;
+        border-color: #1565c0 !important;
+    }
+    
+    #toggleView:active {
+        transform: scale(0.95) !important;
+    }
+    
+    /* Ajuste do indicador de rolagem em modo noturno */
+    .table-scroll-hint.night {
+        background: rgba(35, 42, 54, 0.8) !important;
+        color: #90caf9 !important;
+    }
 }
 
 /* Estilos específicos para iPhone 15 (390px de largura) */
@@ -78,5 +241,538 @@
     /* Ajustes para cabeçalhos e rodapés */
     header, footer {
         padding: 10px !important;
+    }
+    
+    /* Ajustes específicos para a tabela de tickets em telas muito pequenas */
+    .ticket-table th, 
+    .ticket-table td {
+        padding: 8px 4px !important;
+        font-size: 12px !important;
+    }
+    
+    /* Botão de alternar modo noturno em telas pequenas */
+    .mode-switch {
+        padding: 5px 10px !important;
+        font-size: 0.9rem !important;
+    }
+    
+    .mode-switch input[type="checkbox"] {
+        width: 32px !important;
+        height: 18px !important;
+    }
+    
+    .mode-switch input[type="checkbox"]::before {
+        width: 12px !important;
+        height: 12px !important;
+    }
+    
+    .mode-switch input[type="checkbox"]:checked::before {
+        left: 17px !important;
+    }
+    
+    /* Ajustes específicos para botões em telas muito pequenas */
+    .main .btn,
+    .chat-link,
+    .chat-popup-btn,
+    .logout {
+        font-size: 12px !important;
+        padding: 6px 8px !important;
+        margin: 2px 1px !important;
+    }
+    
+    /* Alinhamento de botões em telas pequenas */
+    .main td .btn {
+        display: block !important;
+        width: 100% !important;
+        margin: 4px 0 !important;
+    }
+    
+    /* Ajuste para cards no dashboard em telas pequenas */
+    .card {
+        padding: 12px !important;
+    }
+    
+    .card .icon {
+        font-size: 1.3em !important;
+        margin-bottom: 6px !important;
+    }
+    
+    .card .label {
+        font-size: 0.8em !important;
+    }
+    
+    .card .value {
+        font-size: 1.4em !important;
+        margin-top: 2px !important;
+    }
+}
+
+/* Ajustes específicos para layout de tabela em tickets.php */
+@media screen and (max-width: 768px) {
+    /* Transforma a tabela para visualização vertical em mobile */
+    .ticket-table-mobile-view {
+        display: block !important;
+    }
+    
+    .ticket-table-mobile-view thead {
+        display: none !important;
+    }
+    
+    .ticket-table-mobile-view tbody, 
+    .ticket-table-mobile-view tr {
+        display: block !important;
+        width: 100% !important;
+    }
+    
+    .ticket-table-mobile-view tr {
+        margin-bottom: 15px !important;
+        border: 1px solid #e0e0e0 !important;
+        border-radius: 8px !important;
+        padding: 10px !important;
+        background: #fff !important;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
+    }
+    
+    .ticket-table-mobile-view tr.night {
+        background: #232a36 !important;
+        border: 1px solid #34404e !important;
+    }
+    
+    .ticket-table-mobile-view td {
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        padding: 8px 5px !important;
+        border-bottom: 1px solid #eee !important;
+        text-align: right !important;
+    }
+    
+    .ticket-table-mobile-view td:last-child {
+        border-bottom: none !important;
+    }
+    
+    .ticket-table-mobile-view td:before {
+        content: attr(data-label) !important;
+        font-weight: bold !important;
+        text-align: left !important;
+        padding-right: 10px !important;
+    }
+    
+    /* Melhoria para visualização de ações em telas pequenas */
+    .ticket-table-mobile-view td:last-child {
+        flex-direction: column !important;
+        align-items: stretch !important;
+    }
+    
+    .ticket-table-mobile-view .btn {
+        margin: 5px 0 !important;
+    }
+}
+
+/* Aprimoramentos para visualização de tabelas em mobile */
+@media screen and (max-width: 768px) {
+    /* Garantir que tabelas possam rolar horizontalmente para ver todos os dados */
+    table {
+        display: block !important;
+        overflow-x: auto !important;
+        width: 100% !important;
+        -webkit-overflow-scrolling: touch !important; /* melhor rolagem para iOS */
+    }
+    
+    /* Indicador visual de rolagem horizontal */
+    .table-scroll-hint {
+        display: block !important;
+        text-align: center !important;
+        padding: 5px !important;
+        font-size: 12px !important;
+        color: #666 !important;
+        margin-bottom: 5px !important;
+        animation: pulse 1.5s infinite !important;
+    }
+    
+    @keyframes pulse {
+        0% { opacity: 0.5; }
+        50% { opacity: 1; }
+        100% { opacity: 0.5; }
+    }
+    
+    /* Melhorar visualização da tabela de tickets */
+    .ticket-table-mobile-view {
+        display: block !important;
+    }
+    
+    .ticket-table td {
+        min-width: 80px !important; /* largura mínima para células */
+        white-space: normal !important; /* permitir quebra de texto */
+    }
+    
+    /* Aumentar tamanho dos elementos dentro da tabela para facilitar toque */
+    .ticket-table select,
+    .ticket-table button {
+        min-height: 30px !important;
+    }
+    
+    /* Ajustar coluna de mensagens para melhor visualização */
+    .ticket-table td[data-label="💬 Mensagem"] {
+        max-width: 200px !important;
+        white-space: normal !important;
+        word-break: break-word !important;
+    }
+    
+    /* Melhoria para visualização no modo vertical (cards) */
+    .ticket-table-mobile-view td {
+        white-space: normal !important;
+        word-break: break-word !important;
+    }
+}
+
+/* Otimizações para visualização de tabela em modo card no mobile */
+@media screen and (max-width: 768px) {
+    /* Melhorias no layout de cards de tickets */
+    .ticket-table-mobile-view tr {
+        display: block !important;
+        margin-bottom: 20px !important;
+        border-radius: 12px !important;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
+        background: #fff !important;
+        padding: 15px 10px !important;
+        position: relative !important;
+    }
+    
+    .ticket-table-mobile-view tr.night {
+        background: #232a36 !important;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.25) !important;
+    }
+    
+    .ticket-table-mobile-view td {
+        display: block !important;
+        text-align: left !important;
+        padding: 8px 5px !important;
+        border-bottom: 1px dashed #eee !important;
+        position: relative !important;
+    }
+    
+    .ticket-table-mobile-view tr.night td {
+        border-bottom: 1px dashed #333c4a !important;
+    }
+    
+    .ticket-table-mobile-view td:last-child {
+        border-bottom: none !important;
+        padding-top: 15px !important;
+    }
+    
+    .ticket-table-mobile-view td:before {
+        content: attr(data-label) !important;
+        width: 100% !important;
+        display: block !important;
+        font-weight: bold !important;
+        margin-bottom: 5px !important;
+        color: #0078d7 !important;
+        font-size: 14px !important;
+    }
+    
+    .ticket-table-mobile-view tr.night td:before {
+        color: #90caf9 !important;
+    }
+    
+    /* Melhorar exibição de mensagens no modo card */
+    .ticket-table-mobile-view td[data-label="💬 Mensagem"] {
+        white-space: normal !important;
+        word-break: break-word !important;
+        max-width: none !important; /* permitir usar largura total do card */
+        padding: 10px 5px !important;
+        background: #f9f9f9 !important;
+        border-radius: 8px !important;
+        margin: 5px 0 !important;
+    }
+    
+    .ticket-table-mobile-view tr.night td[data-label="💬 Mensagem"] {
+        background: #1e2530 !important;
+    }
+    
+    /* Melhorar exibição de imagens */
+    .ticket-table-mobile-view td[data-label="🖼️ Imagem"] img {
+        max-width: 120px !important;
+        max-height: 120px !important;
+        margin: 5px auto !important;
+        display: block !important;
+    }
+    
+    /* Centralizar botões de ação */
+    .ticket-table-mobile-view td[data-label="⚙️ Ações"] {
+        text-align: center !important;
+    }
+    
+    /* Melhor visualização de status */
+    .ticket-table-mobile-view td[data-label="🔖 Status"] select,
+    .ticket-table-mobile-view td[data-label="🔖 Status"] button {
+        margin-top: 8px !important;
+        display: inline-block !important;
+    }
+}
+
+/* Melhorias para o modo noturno em dispositivos móveis */
+@media screen and (max-width: 768px) {
+    /* Fundo mais escuro para o modo noturno */
+    body.night {
+        background-color: #121212 !important;
+        color: #e0e0e0 !important;
+    }
+    
+    /* Melhorar contraste para o modo noturno */
+    .container.night,
+    .main.night,
+    .section.night,
+    .card.night {
+        background-color: #1a1a2e !important;
+        color: #e0e0e0 !important;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5) !important;
+    }
+      /* Ajuste para cards no modo noturno */
+    .card.night {
+        background-color: #232a36 !important;
+        color: #e0e0e0 !important;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6) !important;
+    }
+    
+    /* Contraste melhorado para tabelas em modo noturno */
+    table.night, 
+    .ticket-table.night {
+        background: #1a1a2e !important;
+        color: #e0e0e0 !important;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5) !important;
+    }
+    
+    /* Contraste para células de tabela */
+    .ticket-table.night th {
+        background: #232a36 !important;
+        color: #90caf9 !important;
+        border-bottom: 1px solid #2c3e50 !important;
+    }
+    
+    .ticket-table.night td {
+        border-bottom: 1px solid #2c3e50 !important;
+        color: #e0e0e0 !important;
+    }
+    
+    .ticket-table.night tr:hover {
+        background: #252538 !important;
+    }
+    
+    /* Melhorar visualização de cards em modo mobile com night mode */
+    .ticket-table-mobile-view tr.night {
+        background: #232a36 !important;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5) !important;
+        color: #e0e0e0 !important;
+    }
+
+    .ticket-table-mobile-view tr.night td {
+        background: transparent !important;
+        color: #e0e0e0 !important;
+    }
+
+    .ticket-table-mobile-view tr.night td:before {
+        color: #90caf9 !important;
+    }
+    
+    /* Dashboard específico para modo noturno */
+    .status-badge.night {
+        background-color: #2c3e50 !important;
+        color: #e0e0e0 !important;
+    }
+    
+    /* Botões em modo noturno */
+    .btn.night, .action-btn.night {
+        background: #1976d2 !important; 
+        color: #ffffff !important;
+    }
+    
+    .btn.night:hover, .action-btn.night:hover {
+        background: #1565c0 !important;
+    }
+    
+    /* Ajustes para formulários em modo noturno */
+    body.night input,
+    body.night textarea,
+    body.night select {
+        background: #2a2a3d !important;
+        color: #e0e0e0 !important;
+        border: 1px solid #3e3e5c !important;
+    }
+    
+    /* Switch de modo noturno aprimorado */
+    .mode-switch.night {
+        background: #2d3748 !important;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4) !important;
+        border: 1px solid #4a5568 !important;
+    }
+    
+    /* Indicador de rolagem no modo noturno */
+    body.night .table-scroll-hint {
+        color: #90caf9 !important;
+    }
+    
+    /* Melhorar visibilidade da visualização em card no modo noturno */
+    .ticket-table-mobile-view.night tr {
+        background-color: #1a1a2e !important;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5) !important;
+        border: 1px solid #2c3e50 !important;
+    }
+    
+    body.night .btn,
+    body.night .action-btn {
+        background-color: #2d3748 !important;
+        color: #e0e0e0 !important;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4) !important;
+    }
+    
+    body.night .btn:hover,
+    body.night .action-btn:hover {
+        background-color: #3a4a61 !important;
+    }
+    
+    /* Contraste para botões de ação específicos */
+    body.night .btn[style*='background:#388e3c'],
+    body.night .btn[style*='background:#43a047'] {
+        background-color: #2e7d32 !important;
+    }
+    
+    body.night .btn[style*='background:#d32f2f'],
+    body.night .btn[style*='background:#d70022'] {
+        background-color: #b71c1c !important;
+    }
+    
+    body.night .btn[style*='background:#0078d7'],
+    body.night .btn[style*='background:#1976D2'] {
+        background-color: #0d47a1 !important;
+    }
+}
+
+/* Ajustes específicos para iPhone 15 */
+@media screen and (max-width: 390px) {
+    body.night .mode-switch {
+        padding: 5px 10px !important;
+        left: 8px !important;
+        bottom: 8px !important;
+    }
+    
+    body.night .btn,
+    body.night .action-btn {
+        margin: 5px 0 !important;
+    }
+}
+
+/* Estilos específicos para elementos de dashboard no modo noturno em mobile */
+@media screen and (max-width: 768px) {
+    /* Sidebar no modo noturno */
+    .sidebar.night {
+        background-color: #1a1a2e !important;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4) !important;
+    }
+    
+    /* Cards no dashboard no modo noturno */
+    .card.aberto.night {
+        background: linear-gradient(120deg, #5c0000, #b71c1c 90%) !important;
+    }
+    
+    .card.analise.night {
+        background: linear-gradient(120deg, #663c00, #f57c00 90%) !important;
+    }
+    
+    .card.resolvido.night {
+        background: linear-gradient(120deg, #1a3a23, #388e3c 90%) !important;
+    }
+    
+    /* Ajustes para tabelas no dashboard no modo noturno */
+    .main.night table {
+        background: #1a1a2e !important;
+        color: #e0e0e0 !important;
+    }
+    
+    .main.night table th {
+        background: #232a36 !important;
+        color: #90caf9 !important;
+        border-bottom: 1px solid #2c3e50 !important;
+    }
+    
+    .main.night table tr {
+        border-bottom: 1px solid #2c3e50 !important;
+    }
+    
+    .main.night table tr:hover {
+        background: #252538 !important;
+    }
+    
+    /* Botões em tabelas do dashboard em modo noturno */
+    .main.night .action-btn,
+    .main.night .btn {
+        border: none !important;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5) !important;
+    }
+    
+    /* Ajustes para modal de chat no modo noturno */
+    #chatModalContent.night {
+        background: #1a1a2e !important;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6) !important;
+    }
+}
+
+/* iPhone 15 específico para o dashboard no modo noturno */
+@media screen and (max-width: 390px) {
+    /* Deixar cards mais compactos em telas pequenas */
+    .card.night .icon {
+        font-size: 1.8em !important;
+    }
+    
+    /* Ajustar tamanho de texto */
+    .main.night h3 {
+        font-size: 1.2em !important;
+    }
+}
+
+/* Melhorias adicionais para o modo noturno em visualização mobile */
+@media screen and (max-width: 768px) {
+    /* Melhorar contraste dos botões de ação no modo noturno */
+    .ticket-table-mobile-view.night .btn.night,
+    .ticket-table-mobile-view.night .action-btn.night {
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4) !important;
+        border: 1px solid #3a4a61 !important;
+    }
+    
+    /* Melhorar visibilidade para células específicas no modo card noturno */
+    .ticket-table-mobile-view.night td[data-label="📊 Status"] {
+        background: #1c2331 !important;
+        border-radius: 6px !important;
+        padding: 10px !important;
+    }
+    
+    /* Melhorar visualização do seletor de status */
+    .ticket-table-mobile-view.night td[data-label="🔖 Status"] select,
+    .ticket-table-mobile-view.night td[data-label="📊 Status"] select {
+        background: #2a2a3d !important;
+        color: #e0e0e0 !important;
+        border: 1px solid #3e3e5c !important;
+        padding: 8px !important;
+        width: 100% !important;
+        margin-bottom: 8px !important;
+        border-radius: 4px !important;
+    }
+    
+    /* Melhorar contraste para os status coloridos */
+    body.night .ticket-table span[style*="color:green"],
+    body.night .ticket-table span[style*="color:#388e3c"] {
+        color: #4caf50 !important;
+    }
+    
+    body.night .ticket-table span[style*="color:orange"],
+    body.night .ticket-table span[style*="color:#ff9800"],
+    body.night .ticket-table span[style*="color:#fbc02d"] {
+        color: #ffb74d !important;
+    }
+    
+    body.night .ticket-table span[style*="color:red"],
+    body.night .ticket-table span[style*="color:#d70022"],
+    body.night .ticket-table span[style*="color:#d32f2f"] {
+        color: #ef5350 !important;
     }
 }
