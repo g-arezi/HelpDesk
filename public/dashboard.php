@@ -136,6 +136,7 @@ if ($_SESSION['role'] === 'admin') {
     <link rel="stylesheet" href="assets/mobile.css">
     <style>
         body { font-family: 'Segoe UI', Arial, sans-serif; background: #f4f8fb; margin:0; transition: background 0.3s, color 0.3s; }
+        body.night { background: #181c24; color: #e0e0e0; }
         .sidebar { width:220px; background: #232a36; height:100vh; position:fixed; left:0; top:0; padding:30px 0; transition: background 0.3s, color 0.3s; box-shadow: 2px 0 16px #0001; border-radius: 0 18px 18px 0; z-index: 1000; }
         .sidebar h2 { color: #1976d2; text-align:center; margin-bottom:30px; font-size:1.6rem; letter-spacing:1px; transition: color 0.3s; }
         .sidebar a { display:block; color:#1976d2; text-decoration:none; padding:12px 30px; margin:8px 0; border-radius:8px; font-weight:500; transition: background 0.2s, color 0.2s; }
@@ -143,29 +144,40 @@ if ($_SESSION['role'] === 'admin') {
         /* Night mode styles */
         .sidebar.night h2 { color: #fff !important; text-shadow: 0 1px 2px #0008; }
         .sidebar.night a { color: #fff !important; text-shadow: 0 1px 2px #0008; }
-        .sidebar.night a:hover { background: #263238; }
-        .main { margin-left:240px; padding:40px 40px 30px 40px; min-height:100vh; transition: background 0.3s, color 0.3s; background: #f4f8fb; }
+        .sidebar.night a:hover { background: #263238; }        .main { margin-left:240px; padding:40px 40px 30px 40px; min-height:100vh; transition: background 0.3s, color 0.3s; background: #f4f8fb; }
+        .main.night { background: #1e2430; color: #e0e0e0; }
         .header { display:flex; justify-content:space-between; align-items:center; margin-bottom: 18px; }
-        .header h1 { color: #232a36; font-size:2.2rem; letter-spacing:1px; }
+        .header h1 { color: #232a36; font-size:2.2rem; letter-spacing:1px; transition: color 0.3s; }
+        .header.night h1, body.night .header h1 { color: #fff !important; }
         .logout { background:#d32f2f; color:#fff; border:none; padding:10px 22px; border-radius:8px; cursor:pointer; box-shadow:0 2px 8px #0002; font-size:1.1rem; font-weight:bold; transition: background 0.2s; }
         .logout:hover { background:#b71c1c; }
         .cards { display:flex; gap:24px; margin:30px 0 24px 0; flex-wrap:wrap; }
         .card { flex:1; min-width:200px; margin:0; padding:28px 0 22px 0; border-radius:16px; box-shadow:0 2px 12px #0002; text-align:center; background:linear-gradient(120deg,#fff,#f4f8fb 80%); transition: background 0.3s, color 0.3s; }
         .card.aberto { background:linear-gradient(120deg,#ffdde1,#d32f2f 90%); color:#fff; }
         .card.analise { background:linear-gradient(120deg,#fffbe7,#fbc02d 90%); color:#fff; }
-        .card.resolvido { background:linear-gradient(120deg,#e0ffe7,#388e3c 90%); color:#fff; }
-        .card .icon { font-size:2.7em; margin-bottom:10px; }
+        .card.resolvido { background:linear-gradient(120deg,#e0ffe7,#388e3c 90%); color:#fff; }        .card .icon { font-size:2.7em; margin-bottom:10px; }
         .card .label { font-size:1.2em; font-weight:bold; letter-spacing:0.5px; }
-        .card .value { font-size:2.1em; margin-top:5px; font-weight:600; }        .section { background:#fff; border-radius:16px; box-shadow:0 2px 16px #0002; padding:28px 32px; margin-bottom:28px; transition: background 0.3s, color 0.3s; }
+        .card .value { font-size:2.1em; margin-top:5px; font-weight:600; }        
+        .section { background:#fff; border-radius:16px; box-shadow:0 2px 16px #0002; padding:28px 32px; margin-bottom:28px; transition: background 0.3s, color 0.3s; }
+        .section.night { background: #232a36; color: #e0e0e0; box-shadow: 0 2px 16px rgba(0, 0, 0, 0.4); }
         .section h3 { color:#000000; margin-top:0; font-size:1.3rem; transition: color 0.3s; }
         .section.night h3, .main.night h3, h3.night { color: #ffffff !important; text-shadow: 0 1px 2px #0008; }
-        .chat-link { display:inline-block; margin:10px 0 0 0; background:#000000; color:#fff; padding:10px 20px; border-radius:8px; text-decoration:none; font-weight:bold; box-shadow:0 2px 8px #0002; transition: background 0.2s; }
-        .chat-link:hover { background:#333333; }        table { width: 100%; border-collapse: separate; border-spacing: 0; margin-top: 10px; background: #fff; border-radius: 10px; overflow: hidden; box-shadow:0 1px 8px #e0e0e0; font-size:15px; }
-        th, td { padding: 13px 10px; text-align: left; border-bottom: 1px solid #e0e0e0; }
-        th { background-color: #f2f6fc; color: #000000; font-weight: 600; font-size: 1.05rem; letter-spacing: 0.5px; }
+        .chat-link { display:inline-block; margin:10px 0 0 0; background:#000000; color:#fff; padding:10px 20px; border-radius:8px; text-decoration:none; font-weight:bold; box-shadow:0 2px 8px #0002; transition: background 0.2s; }        .chat-link:hover { background:#333333; }
+        .chat-link.night { background: #1976d2; }
+        .chat-link.night:hover { background: #1565c0; }
+          table { width: 100%; border-collapse: separate; border-spacing: 0; margin-top: 10px; background: #fff; border-radius: 10px; overflow: hidden; box-shadow:0 1px 8px #e0e0e0; font-size:15px; transition: background 0.3s, color 0.3s; }
+        table.night { background: #232a36; color: #e0e0e0; box-shadow: 0 1px 8px rgba(0, 0, 0, 0.4); }
+        th, td { padding: 13px 10px; text-align: left; border-bottom: 1px solid #e0e0e0; transition: background 0.3s, border-color 0.3s, color 0.3s; }
+        th { background-color: #f2f6fc; color: #000000; font-weight: 600; font-size: 1.05rem; letter-spacing: 0.5px; transition: background 0.3s, color 0.3s; }
+        table.night th { background-color: #1e2430; color: #ffffff !important; }
+        table.night td { border-bottom: 1px solid #2c3e50; color: #e0e0e0; }
+        td.night { background-color: #232a36; color: #e0e0e0; border-bottom: 1px solid #2c3e50; }
         tr:last-child td { border-bottom: none; }
         tr { transition: background 0.2s; }
         tr:hover { background:rgb(201, 201, 201); }
+        table.night tr:hover { background: #2c3e50; }
+        tr.night:hover { background: #2c3e50; }
+        tr.night td { background-color: #232a36; color: #e0e0e0; border-bottom: 1px solid #2c3e50; }
         .btn { padding: 7px 16px; background: #0078d7; color: #fff; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; box-shadow: 0 1px 4px #0001; transition: background 0.2s, color 0.2s; margin: 2px 0; }
         .btn:hover { background: #0056a3; }
         .btn[style*='background:#d70022'] { background: #d70022 !important; }
@@ -187,8 +199,7 @@ if ($_SESSION['role'] === 'admin') {
         .sidebar a { color: #f4f8fb; transition: color 0.3s; }
         .sidebar.night a { color: #fff !important; text-shadow: 0 1px 2px #0008; }
         .sidebar a:hover { background:#bbdefb; }
-        .sidebar.night a:hover { background: #263238; color: #fff !important; }
-        /* Night/Light mode switcher - canto inferior esquerdo */
+        .sidebar.night a:hover { background: #263238; color: #fff !important; }        /* Night/Light mode switcher - canto inferior esquerdo */
         .mode-switch {
             position: fixed !important;
             left: 18px !important;
@@ -200,11 +211,18 @@ if ($_SESSION['role'] === 'admin') {
             border: 2px solid #1976d2 !important;
             box-shadow: 0 2px 20px rgba(0, 0, 0, 0.3) !important;
             pointer-events: auto !important;
+            padding: 6px 14px 6px 10px;
+            border-radius: 18px;
         }
         .mode-switch.light {
             background: #e3f2fd;
             color: #1976d2;
             border: 1px solid #b3c6e0;
+        }
+        .mode-switch.night {
+            background: #232a36;
+            color: #fff;
+            border: 1px solid #1976d2;
         }
         .mode-switch input[type="checkbox"] {
             width: 36px;
@@ -351,10 +369,33 @@ if ($_SESSION['role'] === 'admin') {
             background-color: #181c24 !important;
             color: #e0e0e0 !important;
         }
-    </style>
-    <script>
-        // Force night mode if stored in localStorage
+        
+        /* Form elements in night mode */
+        input.night, select.night, textarea.night { 
+            background-color: #2a2a3d !important; 
+            color: #e0e0e0 !important; 
+            border: 1px solid #3e3e5c !important;
+        }
+        
+        body.night input, body.night select, body.night textarea {
+            background-color: #2a2a3d !important; 
+            color: #e0e0e0 !important; 
+            border: 1px solid #3e3e5c !important;
+        }
+        
+        /* Improved visibility for form labels in night mode */
+        body.night label {
+            color: #e0e0e0 !important;
+        }
+        
+        /* Make sure status colors are properly visible in night mode */
+        body.night span[style*="color:#d32f2f"] { color: #ff6b6b !important; }
+        body.night span[style*="color:#fbc02d"] { color: #ffd54f !important; }
+        body.night span[style*="color:#388e3c"] { color: #81c784 !important; }
+    </style>    <script>
+        // Check for night mode preference without forcing it
         if (localStorage.getItem('nightMode') === '1') {
+            // Just add a helper class for initial load
             document.documentElement.classList.add('night-mode-preload');
             document.addEventListener('DOMContentLoaded', function() {
                 setTimeout(function() {
@@ -601,24 +642,20 @@ if ($_SESSION['role'] === 'admin') {
     const modeLabel = document.getElementById('modeLabel');    function setMode(night) {
         console.log('Setting night mode:', night);
         
-        // Force apply night class directly
-        if (night) {
-            document.body.classList.add('night');
-            if (document.getElementById('sidebar')) document.getElementById('sidebar').classList.add('night');
-            if (document.getElementById('main')) document.getElementById('main').classList.add('night');
-            document.querySelectorAll('.section').forEach(e => e.classList.add('night'));
-            document.querySelectorAll('.card').forEach(e => e.classList.add('night'));
-        } else {
-            document.body.classList.remove('night');
-            if (document.getElementById('sidebar')) document.getElementById('sidebar').classList.remove('night');
-            if (document.getElementById('main')) document.getElementById('main').classList.remove('night');
-            document.querySelectorAll('.section').forEach(e => e.classList.remove('night'));
-            document.querySelectorAll('.card').forEach(e => e.classList.remove('night'));
-        }
+        // Toggle de modo
+        const modeToggle = document.getElementById('modeToggle');
+        const modeIcon = document.getElementById('modeIcon');
+        const modeLabel = document.getElementById('modeLabel');
+        const modeSwitch = document.getElementById('modeSwitch');
+        
+        // Elementos principais
+        document.body.classList.toggle('night', night);
+        if (document.getElementById('sidebar')) document.getElementById('sidebar').classList.toggle('night', night);
+        if (document.getElementById('main')) document.getElementById('main').classList.toggle('night', night);
         
         // Grupos de elementos
-        document.querySelectorAll('.section').forEach(e=>e.classList.toggle('night', night));
-        document.querySelectorAll('.card').forEach(e=>e.classList.toggle('night', night));
+        document.querySelectorAll('.section').forEach(e => e.classList.toggle('night', night));
+        document.querySelectorAll('.card').forEach(e => e.classList.toggle('night', night));
         
         // Aplicando night mode em todas as tabelas e seus elementos
         document.querySelectorAll('table').forEach(table => {
@@ -627,37 +664,50 @@ if ($_SESSION['role'] === 'admin') {
             // Aplicar a classe em cada elemento da tabela
             table.querySelectorAll('th').forEach(th => th.classList.toggle('night', night));
             table.querySelectorAll('tr').forEach(tr => tr.classList.toggle('night', night));
-            table.querySelectorAll('td').forEach(td => td.classList.toggle('night', night));
+            
+            // Aplica a classe night em cada célula da tabela com estilos específicos
+            table.querySelectorAll('td').forEach(td => {
+                td.classList.toggle('night', night);
+                // Garantir visibilidade do texto nas células no modo noturno
+                if (night) {
+                    // Garantir que os elementos dentro das células também estejam visíveis
+                    td.querySelectorAll('span, a, button, input, select').forEach(el => {
+                        el.classList.add('night');
+                    });
+                } else {
+                    td.querySelectorAll('span, a, button, input, select').forEach(el => {
+                        el.classList.remove('night');
+                    });
+                }
+            });
         });
         
         // Botões e links
-        document.querySelectorAll('.btn').forEach(e=>e.classList.toggle('night', night));
-        document.querySelectorAll('.chat-link').forEach(e=>e.classList.toggle('night', night));
-        document.querySelectorAll('.action-btn').forEach(e=>e.classList.toggle('night', night));
-        document.querySelectorAll('a').forEach(e=>e.classList.toggle('night', night));
+        document.querySelectorAll('.btn').forEach(e => e.classList.toggle('night', night));
+        document.querySelectorAll('.chat-link').forEach(e => e.classList.toggle('night', night));
+        document.querySelectorAll('.action-btn').forEach(e => e.classList.toggle('night', night));
+        document.querySelectorAll('a').forEach(e => e.classList.toggle('night', night));
         
         // Cards e dashboards (estatísticas)
-        document.querySelectorAll('.dashboard-grid .card').forEach(e=>e.classList.toggle('night', night));
-        document.querySelectorAll('.summary-box').forEach(e=>e.classList.toggle('night', night));
-        document.querySelectorAll('.status-badge').forEach(e=>e.classList.toggle('night', night));
+        document.querySelectorAll('.dashboard-grid .card').forEach(e => e.classList.toggle('night', night));
+        document.querySelectorAll('.summary-box').forEach(e => e.classList.toggle('night', night));
+        document.querySelectorAll('.status-badge').forEach(e => e.classList.toggle('night', night));
         
         // Elementos de formulário
-        document.querySelectorAll('input, select, textarea').forEach(e=>e.classList.toggle('night', night));
+        document.querySelectorAll('input, select, textarea').forEach(e => e.classList.toggle('night', night));
         
         // Mobile específico
-        document.querySelectorAll('.mobile-view-toggle').forEach(e=>e.classList.toggle('night', night));
-        document.querySelectorAll('.table-scroll-hint').forEach(e=>e.classList.toggle('night', night));
-        document.querySelectorAll('.ticket-table-container').forEach(e=>e.classList.toggle('night', night));
-          // Toggle de modo
+        document.querySelectorAll('.mobile-view-toggle').forEach(e => e.classList.toggle('night', night));
+        document.querySelectorAll('.table-scroll-hint').forEach(e => e.classList.toggle('night', night));
+        document.querySelectorAll('.ticket-table-container').forEach(e => e.classList.toggle('night', night));
+        
+        // Toggle de modo
         if (modeSwitch) {
             modeSwitch.classList.toggle('light', !night);
             modeSwitch.classList.toggle('night', night);
-            modeSwitch.style.display = 'flex';
-            modeSwitch.style.opacity = '1';
-            modeSwitch.style.zIndex = '1000';
         }
         
-        if (modeToggle) {
+        if (modeToggle && modeToggle.checked !== night) {
             modeToggle.checked = night;
         }
         
@@ -674,8 +724,9 @@ if ($_SESSION['role'] === 'admin') {
         
         // Updates específicos
         if(typeof updateChatModalNightMode === 'function') updateChatModalNightMode();
-    }    // Garante que o night mode funcione em todos os elementos    document.addEventListener('DOMContentLoaded', function() {
-        console.log('DOM Content Loaded - Initializing night mode');
+    }// Configurar o seletor de modo noturno sem forçar
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('DOM Content Loaded - Setting up night mode toggle');
         
         // Certifica-se de que temos acesso aos elementos do DOM
         const modeSwitch = document.getElementById('modeSwitch');
@@ -685,7 +736,7 @@ if ($_SESSION['role'] === 'admin') {
         console.log('Mode toggle found:', modeToggle);
         
         if (modeSwitch) {
-            // Garantir que o switch esteja visível
+            // Garantir que o seletor esteja visível
             modeSwitch.style.display = 'flex';
             modeSwitch.style.opacity = '1';
             modeSwitch.style.zIndex = '1000';
@@ -693,37 +744,36 @@ if ($_SESSION['role'] === 'admin') {
         }
         
         if (modeToggle) {
-            // Adiciona listener para o toggle
+            // Configurar o estado do toggle de acordo com a preferência salva
+            const savedPreference = localStorage.getItem('nightMode') === '1';
+            modeToggle.checked = savedPreference;
+            
+            // Aplicar o modo se necessário
+            if (savedPreference) {
+                setMode(true);
+            }
+            
+            // Adiciona listener para o toggle de modo
             modeToggle.addEventListener('change', function() {
                 console.log('Toggle changed to:', this.checked);
                 setMode(this.checked);
             });
-            
-            // Inicialização do modo correto
-            if(localStorage.getItem('nightMode')) {
-                console.log('Night mode found in localStorage');
-                setMode(true);
-                modeToggle.checked = true;
-            } else {
-                console.log('No night mode in localStorage, using light mode');
-                setMode(false);
-            }
         } else {
             console.error('Elemento de toggle de modo noturno não encontrado!');
         }
         
-    // Remove botão antigo se existir
+        // Remove botão antigo se existir
         var oldBtn = document.getElementById('nightToggle');
         if(oldBtn) oldBtn.remove();
     });
-    
-    // Função global para inicializar o modo noturno
+      // Função global para inicializar o modo noturno
     function initializeNightMode() {
-        console.log('Initializing night mode globally');
+        console.log('Setting up night mode toggle');
         const modeSwitch = document.getElementById('modeSwitch');
         const modeToggle = document.getElementById('modeToggle');
         
         if (modeSwitch) {
+            // Garantir que o seletor esteja visível
             modeSwitch.style.display = 'flex';
             modeSwitch.style.opacity = '1';
             modeSwitch.style.visibility = 'visible';
@@ -731,27 +781,49 @@ if ($_SESSION['role'] === 'admin') {
         }
         
         if (modeToggle) {
-            if (localStorage.getItem('nightMode')) {
-                setMode(true);
-                modeToggle.checked = true;
-            }
+            // Configurar o estado do toggle de acordo com a preferência salva
+            const savedPreference = localStorage.getItem('nightMode') === '1';
+            modeToggle.checked = savedPreference;
             
-            modeToggle.addEventListener('change', function() {
-                setMode(this.checked);
-            });
+            // Aplicar o modo se necessário
+            if (savedPreference) {
+                setMode(true);
+            }
         }
-    }
-      // Inicializar modo noturno imediatamente e quando a página carregar completamente
-    // Aplicar imediatamente para evitar flash
+    }// Inicializar modo noturno usando o seletor existente
+    // Verificar preferência sem forçar
     (function() {
+        // Apenas verificamos a preferência, sem forçar o modo
         if (localStorage.getItem('nightMode') === '1') {
-            setMode(true);
+            // O modo será aplicado corretamente no DOMContentLoaded
         }
     })();
     
-    // E também quando carregar completamente a página
+    // Quando a página carregar completamente
     window.onload = function() {
-        initializeNightMode();
+        const modeToggle = document.getElementById('modeToggle');
+        if (modeToggle) {
+            // Configurar o estado do toggle de acordo com a preferência
+            const savedPreference = localStorage.getItem('nightMode') === '1';
+            if (modeToggle.checked !== savedPreference) {
+                modeToggle.checked = savedPreference;
+            }
+            
+            // Atualizar ícone e texto
+            const modeIcon = document.getElementById('modeIcon');
+            const modeLabel = document.getElementById('modeLabel');
+            const modeSwitch = document.getElementById('modeSwitch');
+            
+            if (savedPreference) {
+                if (modeIcon) modeIcon.textContent = '🌙';
+                if (modeLabel) modeLabel.textContent = 'Noturno';
+                if (modeSwitch) modeSwitch.classList.remove('light');
+            } else {
+                if (modeIcon) modeIcon.textContent = '🌞';
+                if (modeLabel) modeLabel.textContent = 'Claro';
+                if (modeSwitch) modeSwitch.classList.add('light');
+            }
+        }
     };// Chat Pop-up para todos os chamados
     function openChatPopup(ticketId, email, telefone) {
         const chatModal = document.getElementById('chatModal');

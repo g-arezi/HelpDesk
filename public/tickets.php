@@ -76,14 +76,12 @@ foreach ($tickets as $ticket) {
     <link rel="stylesheet" href="assets/style.css">
     <link rel="stylesheet" href="assets/mobile.css">
     <style>    body { font-family: 'Segoe UI', Arial, sans-serif; background: #f4f6fa; margin:0; padding:0; transition: background 0.3s, color 0.3s; }
-    .container { max-width: 1200px; margin: 20px auto; background: #fff; border-radius: 18px; box-shadow: 0 6px 32px #0002; padding: 20px; min-height: 80vh; transition: background 0.3s, color 0.3s; }
-    h2 { color:rgb(2, 2, 2); text-align: left; font-size: 2.1rem; margin-bottom: 24px; letter-spacing: 1px; }
-    body.night h2 { color: #fff; }
+    .container { max-width: 1200px; margin: 20px auto; background: #fff; border-radius: 18px; box-shadow: 0 6px 32px #0002; padding: 20px; min-height: 80vh; transition: background 0.3s, color 0.3s; }    h2 { color: #232a36; text-align: left; font-size: 2.1rem; margin-bottom: 24px; letter-spacing: 1px; transition: color 0.3s; }
+    body.night h2 { color: #fff !important; text-shadow: 0 1px 2px #0008; }
     .summary-box { margin: 0 0 24px 0; padding: 18px 24px; background: #f8fafd; border-radius: 10px; box-shadow: 0 2px 8px #0001; display: flex; gap: 36px; max-width: 700px; }
     .summary-box div { font-size: 1.1rem; }
     .summary-box strong { font-weight: 600; }
-    .summary-box span { font-size: 1.2rem; }
-    .ticket-table { width: 100%; border-collapse: separate; border-spacing: 0; background: #fff; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 12px #0001; margin-top: 24px; font-size: 15px; }
+    .summary-box span { font-size: 1.2rem; }    .ticket-table { width: 100%; border-collapse: separate; border-spacing: 0; background: #fff; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 12px #0001; margin-top: 24px; font-size: 15px; }
     .ticket-table th, .ticket-table td { padding: 13px 10px; text-align: left; border-bottom: 1px solid #e0e0e0; }
     .ticket-table th { 
         background: #f2f6fc; 
@@ -99,37 +97,53 @@ foreach ($tickets as $ticket) {
     .ticket-table tr:last-child td { border-bottom: none; }
     .ticket-table tr { transition: background 0.2s; }
     .ticket-table tr:hover { background: #f0f4fa; }
-    .btn { padding: 7px 16px; background: #0078d7; color: #fff; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; box-shadow: 0 1px 4px #0001; transition: background 0.2s, color 0.2s; margin: 2px 0; }
+    .ticket-table.night tr:hover { background: #2c3e50 !important; }    .btn { padding: 7px 16px; background: #0078d7; color: #fff; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; box-shadow: 0 1px 4px #0001; transition: background 0.2s, color 0.2s; margin: 2px 0; }
     .btn:hover { background: #0056a3; }
     .btn[style*='background:#d70022'] { background: #d70022 !important; }
     .btn[style*='background:#d70022']:hover { background: #b71c1c !important; }
     .btn[style*='background:#0078d7'] { background: #0078d7 !important; }
     .btn[style*='background:#0078d7']:hover { background: #0056a3 !important; }
+    .btn.night { background: #1976d2 !important; color: #fff; }
+    .btn.night:hover { background: #1565c0 !important; }
     .night-toggle { position:fixed; top:24px; left:24px; z-index:1000; background:linear-gradient(90deg,#ff6b6b,#b71c1c); color:#fff; border:1px solid #b71c1c; border-radius:20px; padding:10px 22px; cursor:pointer; font-weight:bold; box-shadow:0 2px 12px #0003; font-size: 1.1rem; transition: background 0.3s, color 0.3s; }
-    .night-toggle.night { background:linear-gradient(90deg,#b71c1c,#ff6b6b); color:#fff; border-color:#fff; }    /* Modo noturno */
-    body.night { background: #181c24 !important; color: #e0e0e0; }
+    .night-toggle.night { background:linear-gradient(90deg,#b71c1c,#ff6b6b); color:#fff; border-color:#fff; }    /* Modo noturno */    body.night { background: #181c24 !important; color: #e0e0e0; }
     .container.night { background: #232a36 !important; color: #e0e0e0; box-shadow: 0 6px 32px #0006; }
     .ticket-table.night { background: #232a36 !important; color: #e0e0e0; box-shadow: 0 2px 12px #0006; }
     .ticket-table.night th { background: #263238 !important; color: #90caf9; }
     .ticket-table.night tr:hover { background-color: #222b38 !important; }
-    .btn.night { background: #b71c1c !important; color: #fff; }
-    .btn.night:hover { background: #ff6b6b !important; color: #fff; }
+    .btn.night { background: #1976d2 !important; color: #fff; }
+    .btn.night:hover { background: #1565c0 !important; color: #fff; }
     .summary-box.night { background: #232a36 !important; color: #e0e0e0; box-shadow: 0 2px 8px #0006; }
     
     /* Aprimoramentos do modo noturno */
-    .ticket-table.night td { border-bottom: 1px solid #2c3e50 !important; }
+    .ticket-table.night td { 
+        border-bottom: 1px solid #2c3e50 !important; 
+        background-color: #232a36 !important; 
+        color: #e0e0e0 !important; 
+    }
+    td.night { 
+        background-color: #232a36 !important; 
+        color: #e0e0e0 !important; 
+        border-bottom: 1px solid #2c3e50 !important; 
+    }
+    tr.night { 
+        background-color: #232a36 !important; 
+    }
+    tr.night:hover { 
+        background-color: #2c3e50 !important; 
+    }
     .ticket-table.night select, 
     .ticket-table.night input { background: #2a2a3d !important; color: #e0e0e0 !important; border: 1px solid #3e3e5c !important; }
     
     /* Mobile específico - modo noturno */
     .mobile-view-toggle.night { background: rgba(35, 42, 54, 0.95) !important; }
-    #toggleView.night { background: #0d47a1 !important; color: #fff !important; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4) !important; }
+    #toggleView.night { background: #1976d2 !important; color: #fff !important; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4) !important; }
     .table-scroll-hint.night { color: #90caf9 !important; }
     .ticket-table-container.night { background: #232a36 !important; }
     
     /* Melhorias para o modo card no noturno */
     .ticket-table-mobile-view.night tr { background: #232a36 !important; box-shadow: 0 2px 12px rgba(0, 0, 0, 0.5) !important; border: 1px solid #2c3e50 !important; }
-    .ticket-table-mobile-view.night td { border-bottom: 1px dashed #36404c !important; }
+    .ticket-table-mobile-view.night td { border-bottom: 1px dashed #36404c !important; background-color: #232a36 !important; color: #e0e0e0 !important; }
     .ticket-table-mobile-view.night td:before { color: #90caf9 !important; }
     .ticket-table-mobile-view.night td[data-label="💬 Mensagem"] { background: #1e2530 !important; }
     /* Night/Light mode switcher - canto inferior esquerdo (igual dashboard) */
@@ -215,10 +229,10 @@ foreach ($tickets as $ticket) {
         background-color: #181c24 !important;
         color: #e0e0e0 !important;
     }
-    </style>
-    <script>
-        // Force night mode if stored in localStorage
+    </style>    <script>
+        // Check for night mode preference without forcing it
         if (localStorage.getItem('nightMode') === '1') {
+            // Just add a helper class for initial load
             document.documentElement.classList.add('night-mode-preload');
             document.addEventListener('DOMContentLoaded', function() {
                 setTimeout(function() {
@@ -228,7 +242,7 @@ foreach ($tickets as $ticket) {
         }
     </script>
 </head>
-<body style="margin:0;padding:0;background:#f4f6fa;">
+<body>
     <!-- Switch de modo claro/noturno -->
     <div class="mode-switch light" id="modeSwitch">
         <span class="icon" id="modeIcon">🌞</span>
@@ -412,12 +426,30 @@ foreach ($tickets as $ticket) {
         if (isNightMode) {
             const ticketTable = document.getElementById('ticketTable');
             ticketTable.classList.add('night');
+            
+            // Aplicar a todos os elementos da tabela
             ticketTable.querySelectorAll('tr').forEach(tr => tr.classList.add('night'));
             ticketTable.querySelectorAll('th').forEach(th => th.classList.add('night'));
-            ticketTable.querySelectorAll('td').forEach(td => td.classList.add('night'));
+            
+            // Aplicar a todas as células com estilos específicos
+            ticketTable.querySelectorAll('td').forEach(td => {
+                td.classList.add('night');
+                
+                // Aplicar aos elementos dentro das células também
+                td.querySelectorAll('span, a, button, input, select').forEach(el => {
+                    el.classList.add('night');
+                });
+            });
             
             // Atualiza também os botões dentro da tabela
             ticketTable.querySelectorAll('.btn').forEach(btn => btn.classList.add('night'));
+            
+            // Aplica estilo night em elementos específicos de tabela mobile
+            if (document.querySelector('.ticket-table-mobile-view')) {
+                document.querySelectorAll('.ticket-table-mobile-view td[data-label="💬 Mensagem"]').forEach(td => {
+                    td.style.backgroundColor = '#1e2530';
+                });
+            }
         }
     }
     function escapeHtml(text) {
@@ -522,84 +554,74 @@ foreach ($tickets as $ticket) {
     const modeSwitch = document.getElementById('modeSwitch');
     const modeToggle = document.getElementById('modeToggle');
     const modeIcon = document.getElementById('modeIcon');
-    const modeLabel = document.getElementById('modeLabel');    function setMode(night) {
+    const modeLabel = document.getElementById('modeLabel');    // Função para aplicar modo noturno/claro
+    function setMode(night) {
         console.log('Setting night mode:', night);
         
-        // Diretamente aplicar ou remover classes para garantir funcionamento
-        if (night) {
-            // Elementos principais
-            document.body.classList.add('night');
-            document.getElementById('container').classList.add('night');
+        // Elementos principais
+        document.body.classList.toggle('night', night);
+        document.getElementById('container').classList.toggle('night', night);
+        document.getElementById('ticketTable').classList.toggle('night', night);
+        document.getElementById('summaryBox').classList.toggle('night', night);
+        document.getElementById('modeSwitch').classList.toggle('light', !night);
+        
+        // Aplicando night mode em todas as tabelas e seus elementos
+        document.querySelectorAll('table').forEach(table => {
+            table.classList.toggle('night', night);
             
-            // Grupos de elementos
-            document.querySelectorAll('.btn').forEach(e => e.classList.add('night'));
-            document.querySelectorAll('.action-btn').forEach(e => e.classList.add('night'));
-            document.querySelectorAll('a').forEach(e => e.classList.add('night'));
-        } else {
-            // Elementos principais
-            document.body.classList.remove('night');
-            document.getElementById('container').classList.remove('night');
+            // Aplica classes night em todos os elementos da tabela
+            table.querySelectorAll('th').forEach(th => th.classList.toggle('night', night));
+            table.querySelectorAll('tr').forEach(tr => tr.classList.toggle('night', night));
             
-            // Grupos de elementos
-            document.querySelectorAll('.btn').forEach(e => e.classList.remove('night'));
-            document.querySelectorAll('.action-btn').forEach(e => e.classList.remove('night'));
-            document.querySelectorAll('a').forEach(e => e.classList.remove('night'));
-        }
+            // Aplica classes night em cada célula com estilo específico
+            table.querySelectorAll('td').forEach(td => {
+                td.classList.toggle('night', night);
+                
+                // Garante que os elementos dentro das células também sejam afetados pelo modo noturno
+                if (night) {
+                    td.querySelectorAll('span, a, button, input, select').forEach(el => {
+                        el.classList.add('night');
+                    });
+                } else {
+                    td.querySelectorAll('span, a, button, input, select').forEach(el => {
+                        el.classList.remove('night');
+                    });
+                }
+            });
+        });
         
-        // Elementos específicos
-        let summary = document.getElementById('summaryBox');
-        if(summary) summary.classList.toggle('night', night);
+        // Botões e links
+        document.querySelectorAll('.btn').forEach(e => e.classList.toggle('night', night));
+        document.querySelectorAll('a').forEach(e => e.classList.toggle('night', night));
         
-        // Toggle mode switch state
-        if (modeSwitch) {
-            modeSwitch.classList.toggle('light', !night);
-            modeSwitch.classList.toggle('night', night);
-            modeSwitch.style.display = 'flex';
-            modeSwitch.style.opacity = '1';
-        }
+        // Containers específicos
+        document.querySelectorAll('.ticket-table-container').forEach(e => e.classList.toggle('night', night));
         
-        if (modeToggle) {
+        // Elementos de formulário
+        document.querySelectorAll('input, select, textarea').forEach(e => e.classList.toggle('night', night));
+        
+        // Mobile específico
+        document.querySelectorAll('.mobile-view-toggle').forEach(e => e.classList.toggle('night', night));
+        document.querySelectorAll('.table-scroll-hint').forEach(e => e.classList.toggle('night', night));
+        
+        // Toggle de modo
+        const modeToggle = document.getElementById('modeToggle');
+        const modeIcon = document.getElementById('modeIcon');
+        const modeLabel = document.getElementById('modeLabel');
+        const modeSwitch = document.getElementById('modeSwitch');
+        
+        if (modeToggle && modeToggle.checked !== night) {
             modeToggle.checked = night;
         }
         
-        // Adiciona classe night à tabela inteira para afetar visualização em cards
-        const ticketTable = document.getElementById('ticketTable');
-        if (ticketTable) {
-            ticketTable.classList.toggle('night', night);
-            
-            // Adicionar classe night em todos os elementos da tabela
-            ticketTable.querySelectorAll('tr').forEach(tr => {
-                tr.classList.toggle('night', night);
-            });
-            
-            ticketTable.querySelectorAll('th').forEach(th => {
-                th.classList.toggle('night', night);
-            });
-            
-            ticketTable.querySelectorAll('td').forEach(td => {
-                td.classList.toggle('night', night);
-            });
-            
-            // Tratamento específico para visualização mobile (cards)
-            if (ticketTable.classList.contains('ticket-table-mobile-view')) {
-                ticketTable.querySelectorAll('tr').forEach(tr => {
-                    tr.querySelectorAll('td').forEach(td => td.classList.toggle('night', night));
-                });
-            }
+        if (modeSwitch) {
+            modeSwitch.classList.toggle('light', !night);
         }
-        
-        // Mobile específico
-        document.querySelectorAll('.mobile-view-toggle').forEach(e=>e.classList.toggle('night', night));
-        document.querySelectorAll('.table-scroll-hint').forEach(e=>e.classList.toggle('night', night));
-        document.querySelectorAll('.ticket-table-container').forEach(e=>e.classList.toggle('night', night));
-        
-        // Elementos de formulário
-        document.querySelectorAll('input, select, textarea').forEach(e=>e.classList.toggle('night', night));
         
         // Texto e ícones
         if(night) {
-            modeIcon.textContent = '🌙';
-            modeLabel.textContent = 'Noturno';
+            if (modeIcon) modeIcon.textContent = '🌙';
+            if (modeLabel) modeLabel.textContent = 'Noturno';
             localStorage.setItem('nightMode','1');
             
             // Atualizar botão de toggle de visualização no modo noturno
@@ -610,8 +632,8 @@ foreach ($tickets as $ticket) {
             let scrollHint = document.getElementById('scrollHint');
             if(scrollHint) scrollHint.classList.add('night');
         } else {
-            modeIcon.textContent = '🌞';
-            modeLabel.textContent = 'Claro';
+            if (modeIcon) modeIcon.textContent = '🌞';
+            if (modeLabel) modeLabel.textContent = 'Claro';
             localStorage.removeItem('nightMode');
             
             // Atualizar botão de toggle de visualização no modo claro
@@ -626,38 +648,104 @@ foreach ($tickets as $ticket) {
     
     // Remove botão antigo
     var oldBtn = document.getElementById('nightToggle');
-    if(oldBtn) oldBtn.remove();
-        // Garante que o night mode funcione em todos os elementos
+    if(oldBtn) oldBtn.remove();    // Configurar o seletor de modo noturno sem forçar
     document.addEventListener('DOMContentLoaded', function() {
+        console.log('DOM Content Loaded - Setting up night mode toggle');
+        
         // Certifica-se de que temos acesso aos elementos do DOM
         const modeSwitch = document.getElementById('modeSwitch');
         const modeToggle = document.getElementById('modeToggle');
         
+        console.log('Mode switch found:', modeSwitch);
+        console.log('Mode toggle found:', modeToggle);
+        
+        if (modeSwitch) {
+            // Garantir que o seletor esteja visível
+            modeSwitch.style.display = 'flex';
+            modeSwitch.style.opacity = '1';
+            modeSwitch.style.zIndex = '1000';
+        }
+        
         if (modeToggle) {
-            // Inicializa o modo correto
-            if(localStorage.getItem('nightMode')) {
+            // Configurar o estado do toggle de acordo com a preferência salva
+            const savedPreference = localStorage.getItem('nightMode') === '1';
+            modeToggle.checked = savedPreference;
+            
+            // Aplicar o modo se necessário
+            if (savedPreference) {
                 setMode(true);
-                modeToggle.checked = true;
-            } else {
-                setMode(false);
-                modeToggle.checked = false;
             }
             
             // Adiciona listener para o toggle de modo
             modeToggle.addEventListener('change', function() {
                 setMode(this.checked);
             });
-            
-            // Garante que o modo switch seja visível
-            if (modeSwitch) {
-                modeSwitch.style.display = 'flex';
-                modeSwitch.style.opacity = '1';
-                modeSwitch.style.zIndex = '1000';
-            }
         } else {
             console.error('Elemento de toggle de modo noturno não encontrado!');
         }
+        
+        // Remove botão antigo se existir
+        var oldBtn = document.getElementById('nightToggle');
+        if(oldBtn) oldBtn.remove();
     });
+      // Função global para inicializar o modo noturno
+    function initializeNightMode() {
+        console.log('Setting up night mode toggle');
+        const modeSwitch = document.getElementById('modeSwitch');
+        const modeToggle = document.getElementById('modeToggle');
+        
+        if (modeSwitch) {
+            // Garantir que o seletor esteja visível
+            modeSwitch.style.display = 'flex';
+            modeSwitch.style.opacity = '1';
+            modeSwitch.style.zIndex = '1000';
+        }
+        
+        if (modeToggle) {
+            // Configurar o estado do toggle de acordo com a preferência salva
+            const savedPreference = localStorage.getItem('nightMode') === '1';
+            modeToggle.checked = savedPreference;
+            
+            // Aplicar o modo se necessário
+            if (savedPreference) {
+                setMode(true);
+            }
+        }
+    }
+      // Inicializar modo noturno imediatamente e quando a página carregar completamente
+    // Usar o seletor existente sem forçar modo noturno
+    (function() {
+        // Apenas verificar preferência, sem forçar
+        if (localStorage.getItem('nightMode') === '1') {
+            // O setMode será chamado pelo evento DOMContentLoaded
+        }
+    })();
+      // Quando a página carregar completamente, verificamos o estado do toggle
+    window.onload = function() {
+        const modeToggle = document.getElementById('modeToggle');
+        if (modeToggle) {
+            // Configurar o estado do toggle de acordo com a preferência
+            const savedPreference = localStorage.getItem('nightMode') === '1';
+            if (modeToggle.checked !== savedPreference) {
+                modeToggle.checked = savedPreference;
+            }
+            
+            // Atualizar ícone e texto
+            const modeIcon = document.getElementById('modeIcon');
+            const modeLabel = document.getElementById('modeLabel');
+            const modeSwitch = document.getElementById('modeSwitch');
+            
+            if (savedPreference) {
+                if (modeIcon) modeIcon.textContent = '🌙';
+                if (modeLabel) modeLabel.textContent = 'Noturno';
+                if (modeSwitch) modeSwitch.classList.remove('light');
+            } else {
+                if (modeIcon) modeIcon.textContent = '🌞';
+                if (modeLabel) modeLabel.textContent = 'Claro';
+                if (modeSwitch) modeSwitch.classList.add('light');
+            }
+        }
+    };
     
     // Funções para melhorar responsividade e visibilidade mobile
       // Verificar se está em um dispositivo móvel
@@ -682,6 +770,8 @@ foreach ($tickets as $ticket) {
         scrollHint.style.display = 'block';
     }    // Função para aplicar o modo de visualização atual
     function applyCurrentViewMode() {
+        const isNightMode = document.body.classList.contains('night');
+        
         if (mobileViewActive) {
             ticketTable.classList.add('ticket-table-mobile-view');
             if (toggleViewBtn) toggleViewBtn.textContent = 'Visualização Normal';
@@ -689,7 +779,7 @@ foreach ($tickets as $ticket) {
             if (scrollHint) scrollHint.style.display = 'none';
             
             // Garantir que o modo noturno seja aplicado corretamente nos cards
-            if (document.body.classList.contains('night')) {
+            if (isNightMode) {
                 ticketTable.classList.add('night');
                 ticketTable.querySelectorAll('tr').forEach(tr => {
                     tr.classList.add('night');
@@ -704,7 +794,7 @@ foreach ($tickets as $ticket) {
             if (scrollHint && isMobile()) scrollHint.style.display = 'block';
             
             // Manter o modo noturno na tabela normal se estiver ativo
-            if (document.body.classList.contains('night')) {
+            if (isNightMode) {
                 ticketTable.classList.add('night');
                 ticketTable.querySelectorAll('tr').forEach(tr => tr.classList.add('night'));
                 ticketTable.querySelectorAll('th').forEach(th => th.classList.add('night'));
@@ -712,6 +802,11 @@ foreach ($tickets as $ticket) {
                 if (toggleViewBtn) toggleViewBtn.classList.add('night');
             }
         }
+        
+        // Adiciona ou remove classes night em elementos específicos de acordo com o modo
+        document.querySelectorAll('.mobile-view-toggle').forEach(e => e.classList.toggle('night', isNightMode));
+        document.querySelectorAll('.table-scroll-hint').forEach(e => e.classList.toggle('night', isNightMode));
+        document.querySelectorAll('.ticket-table-container').forEach(e => e.classList.toggle('night', isNightMode));
     }
     
     // Detectar se a tabela precisa de rolagem horizontal
@@ -734,13 +829,12 @@ foreach ($tickets as $ticket) {
             mobileViewActive = !mobileViewActive;
             localStorage.setItem('mobileViewActive', mobileViewActive ? '1' : '0');
             applyCurrentViewMode();
-          // Garantir que o modo noturno seja aplicado após a mudança de visualização
-            const isNightMode = document.body.classList.contains('night');            setTimeout(() => {
+          
+            // Garantir que o modo noturno seja aplicado após a mudança de visualização
+            const isNightMode = document.body.classList.contains('night');
+            
+            setTimeout(() => {
                 // Reaplica as classes night de acordo com o modo atual
-                // Isso garante consistência ao alternar visualizações
-                const isNightMode = document.body.classList.contains('night');
-                
-                // Aplica classe night ao botão de toggle
                 this.classList.toggle('night', isNightMode);
                 
                 // Aplica classe night à tabela
@@ -754,7 +848,11 @@ foreach ($tickets as $ticket) {
                 
                 // Aplica classe night aos cabeçalhos também
                 ticketTable.querySelectorAll('th').forEach(th => th.classList.toggle('night', isNightMode));
-                }
+                
+                // Aplica classe night a outros elementos relacionados
+                document.querySelectorAll('.mobile-view-toggle').forEach(e => e.classList.toggle('night', isNightMode));
+                document.querySelectorAll('.table-scroll-hint').forEach(e => e.classList.toggle('night', isNightMode));
+                document.querySelectorAll('.ticket-table-container').forEach(e => e.classList.toggle('night', isNightMode));
             }, 50); // Pequeno timeout para garantir que as classes sejam aplicadas após a mudança de visualização
         });
     }
