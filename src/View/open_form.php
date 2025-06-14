@@ -11,8 +11,19 @@
             max-width: 480px;
             margin: 60px auto 30px auto;
             padding: 38px 44px 34px 44px;
-            border-radius: 22px;
-            box-shadow: 0 8px 32px #0003, 0 1.5px 8px #1976d210;
+            border-radius: 22p    } else if (this.value === 'canais') {
+        // Mostrar campos de tópico e mensagem apenas para canais
+        obsDiv.textContent = 'Ao selecionar CANAIS, escolha uma das opções abaixo e forneça detalhes adicionais na mensagem.';
+        obsDiv.style.display = 'block';
+        canaisCampos.style.display = 'block';
+        
+        // Mostrar campos de tópico e mensagem para canais
+        subjectField.style.display = 'block';
+        subjectLabel.style.display = 'block';
+        messageField.style.display = 'block';
+        messageLabel.style.display = 'block';
+        subjectField.required = true;
+        messageField.required = true;            box-shadow: 0 8px 32px #0003, 0 1.5px 8px #1976d210;
             transition: background 0.3s, color 0.3s;
         }
         h2 {
@@ -287,32 +298,15 @@
                 <p style="margin: 0; font-size: 16px; font-weight: 500;">
                     <span style="font-weight: bold;">✅ Identificação automática:</span> Este chamado será aberto com as suas informações de usuário.
                 </p>
-            </div>
-            <label for="produto">📦 Produto/Serviço:</label>
+            </div>            <label for="produto">📦 Produto/Serviço:</label>
             <select id="produto" name="produto" required>
                 <option value="">Selecione um produto/serviço</option>
                 <option value="canais">Canais</option>
                 <option value="filmes">Filmes</option>
                 <option value="series">Séries</option>
                 <option value="outros">Outros</option>
-            </select>            <div id="produto-observacao" style="display:none; margin-top:8px; color:#1976d2; font-size:0.98em;"></div>
-            <div id="tmdb-observacao" style="display:none; margin-bottom:10px;color:#1976d2;font-size:0.98em;">
-                <b>Observação:</b> Para encontrar o código TMDB, acesse 
-                <a href="#" 
-                   style="color:#1976d2;text-decoration:underline;cursor:pointer;" 
-                   id="tmdb-link"
-                   data-link="https://www.themoviedb.org/?language=pt-BR"
-                   tabindex="0"
-                >https://www.themoviedb.org/?language=pt-BR</a> 
-                (o link será copiado ao clicar, mas não abrirá a página).
-            </div>
-            <script>
-            document.getElementById('tmdb-link').addEventListener('click', function(e) {
-                e.preventDefault();
-                const url = this.getAttribute('data-link');
-                navigator.clipboard.writeText(url);
-            });
-            </script>
+            </select>           
+             <div id="produto-observacao" style="display:none; margin-top:8px; color:#1976d2; font-size:0.98em;"></div>
             <!-- Padronização dos botões de opção para filmes -->
             <div id="filmes-campos" style="display:none; margin-bottom:10px;">
                 <label style="display:block; text-align:center; margin-bottom:8px;">🤔 Qual opção desejada?</label>
@@ -327,9 +321,18 @@
                     </label>
                 </div>
                 <label for="filme_nome">🍿 FILME:<span style="color:red">*</span></label>
-                <input type="text" id="filme_nome" name="filme_nome" autocomplete="off" placeholder="Digite o nome do filme Ex: Mufasa: O Rei Leão (2024)">
-                <label for="filme_tmdb">🌟 TMDB:<span style="color:red">*</span></label>
+                <input type="text" id="filme_nome" name="filme_nome" autocomplete="off" placeholder="Digite o nome do filme Ex: Mufasa: O Rei Leão (2024)">                <label for="filme_tmdb">🌟 TMDB:<span style="color:red">*</span></label>
                 <input type="text" id="filme_tmdb" name="filme_tmdb" autocomplete="off" placeholder="Ex: https://www.themoviedb.org/movie/123456-mufasa">
+                <div class="tmdb-observacao" style="margin-bottom:15px; margin-top:-5px; color:#1976d2; font-size:0.95em;">
+                    <b>Observação:</b> Para encontrar o código TMDB, acesse 
+                    <a href="#" 
+                       style="color:#1976d2;text-decoration:underline;cursor:pointer;" 
+                       class="tmdb-link"
+                       data-link="https://www.themoviedb.org/?language=pt-BR"
+                       tabindex="0"
+                    >https://www.themoviedb.org/?language=pt-BR</a> 
+                    (o link será copiado ao clicar, mas não abrirá a página).
+                </div>
                 <label for="filme_obs">⚠️OBSERVAÇÃO:</label>
                 <input type="text" id="filme_obs" name="filme_obs" autocomplete="off" placeholder="Ex: idioma, qualidade, etc.">
             </div>
@@ -347,25 +350,50 @@
                     </label>
                 </div>
                 <label for="serie_nome">📽️ SÉRIE:<span style="color:red">*</span></label>
-                <input type="text" id="serie_nome" name="serie_nome" autocomplete="off" placeholder="Digite o nome da série ex: Game of Thrones">
-                <label for="serie_tmdb">🌟 TMDB:<span style="color:red">*</span></label>
+                <input type="text" id="serie_nome" name="serie_nome" autocomplete="off" placeholder="Digite o nome da série ex: Game of Thrones">                <label for="serie_tmdb">🌟 TMDB:<span style="color:red">*</span></label>
                 <input type="text" id="serie_tmdb" name="serie_tmdb" autocomplete="off" placeholder="Ex: https://www.themoviedb.org/tv/121361-game-of-thrones">
+                <div class="tmdb-observacao" style="margin-bottom:15px; margin-top:-5px; color:#1976d2; font-size:0.95em;">
+                    <b>Observação:</b> Para encontrar o código TMDB, acesse 
+                    <a href="#" 
+                       style="color:#1976d2;text-decoration:underline;cursor:pointer;" 
+                       class="tmdb-link"
+                       data-link="https://www.themoviedb.org/?language=pt-BR"
+                       tabindex="0"
+                    >https://www.themoviedb.org/?language=pt-BR</a> 
+                    (o link será copiado ao clicar, mas não abrirá a página).
+                </div>
                 <label for="serie_obs">⚠️OBSERVAÇÃO:</label>
                 <input type="text" id="serie_obs" name="serie_obs" autocomplete="off" placeholder="Ex: temporada, idioma, etc.">
             </div>
+            <!-- Padronização dos botões de opção para canais -->
+            <div id="canais-campos" style="display:none; margin-bottom:10px;">
+                <label style="display:block; text-align:center; margin-bottom:8px;">🤔 Qual opção desejada?</label>
+                <div class="custom-radio-group">
+                    <label for="canais_adicao" class="custom-radio-label">
+                        <input type="radio" id="canais_adicao" name="canais_obse" value="Solicitar conteúdo">
+                        <span>🆕- Solicitar conteúdo</span>
+                    </label>
+                    <label for="canais_correcao" class="custom-radio-label">
+                        <input type="radio" id="canais_correcao" name="canais_obse" value="Corrigir conteúdo">
+                        <span>🛠️-Corrigir conteúdo</span>
+                    </label>
+                </div>
+            </div>
             
             <script>
-            document.getElementById('tmdb-link').addEventListener('click', function(e) {
-                e.preventDefault();
-                const url = this.getAttribute('data-link');
-                navigator.clipboard.writeText(url).then(() => {
-                    window.open(url, '_blank');
+            document.querySelectorAll('.tmdb-link').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const url = this.getAttribute('data-link');
+                    navigator.clipboard.writeText(url).then(() => {
+                        // Não abre a página, apenas copia para a área de transferência
+                    });
                 });
             });
             </script>
 
-            <label for="subject">🆘 Tópico de ajuda:</label>
-            <select id="subject" name="subject" required>
+            <label for="subject" style="display: none;">🆘 Tópico de ajuda:</label>
+            <select id="subject" name="subject" required style="display: none;">
                 <option value="">Selecione um erro</option>
                 <option value="tela_preta">Tela preta</option>
                 <option value="travamento_canais">Travamento de canais</option>
@@ -374,8 +402,8 @@
                 <option value="outro">Outros</option>
             </select>
 
-            <label for="message">💬 Mensagem:</label>
-            <textarea id="message" name="message" rows="5" required placeholder="Descreva detalhadamente o seu problema ou dúvida"></textarea>
+            <label for="message" style="display: none;">💬 Mensagem:</label>
+            <textarea id="message" name="message" rows="5" required placeholder="Descreva detalhadamente o seu problema ou dúvida" style="display: none;"></textarea>
 
             <label for="image">📷 Anexar imagem ou vídeo:</label>
             <input type="file" id="image" name="image" accept="image/*,video/*">
@@ -495,45 +523,59 @@
     if(localStorage.getItem('nightMode')) setMode(true);
     else setMode(false);
     // Remove botão antigo
-    var oldBtn = document.getElementById('nightToggle');
-    if(oldBtn) oldBtn.remove();
-
-    // Observação dinâmica e campos extras para filmes/séries
+    var oldBtn = document.getElementById('nightToggle');    if(oldBtn) oldBtn.remove();    // Observação dinâmica e campos extras para filmes/séries/canais
 const produtoSelect = document.getElementById('produto');
 const obsDiv = document.getElementById('produto-observacao');
-const tmdbObservacao = document.getElementById('tmdb-observacao');
 const filmesCampos = document.getElementById('filmes-campos');
 const seriesCampos = document.getElementById('series-campos');
+const canaisCampos = document.getElementById('canais-campos');
 const filmeNome = document.getElementById('filme_nome');
 const filmeTmdb = document.getElementById('filme_tmdb');
 const serieNome = document.getElementById('serie_nome');
 const serieTmdb = document.getElementById('serie_tmdb');
+// Campos de tópico de ajuda e mensagem
+const subjectField = document.getElementById('subject');
+const subjectLabel = document.querySelector('label[for="subject"]');
+const messageField = document.getElementById('message');
+const messageLabel = document.querySelector('label[for="message"]');
 
 produtoSelect.addEventListener('change', function() {
     // Reset all
     obsDiv.style.display = 'none';
-    tmdbObservacao.style.display = 'none';
     filmesCampos.style.display = 'none';
     seriesCampos.style.display = 'none';
+    canaisCampos.style.display = 'none';
     filmeNome.required = false;
     filmeTmdb.required = false;
     serieNome.required = false;
     serieTmdb.required = false;
     
-    if (this.value === 'filmes') {
+    // Ocultar campos de tópico e mensagem por padrão
+    subjectField.style.display = 'none';
+    subjectLabel.style.display = 'none';
+    messageField.style.display = 'none';
+    messageLabel.style.display = 'none';
+    subjectField.required = false;
+    messageField.required = false;
+      if (this.value === 'filmes') {
         obsDiv.textContent = 'Ao selecionar FILMES, informe o nome do filme e o código TMDB (obrigatórios), além de uma observação se desejar.';
         obsDiv.style.display = 'block';
-        tmdbObservacao.style.display = 'block';
         filmesCampos.style.display = 'block';
         filmeNome.required = true;
         filmeTmdb.required = true;
     } else if (this.value === 'series') {
         obsDiv.textContent = 'Ao selecionar SÉRIES, informe o nome da série e o código TMDB (obrigatórios), além de uma observação se desejar.';
         obsDiv.style.display = 'block';
-        tmdbObservacao.style.display = 'block';
         seriesCampos.style.display = 'block';
         serieNome.required = true;
         serieTmdb.required = true;
+    } else if (this.value === 'canais') {
+        obsDiv.textContent = 'Ao selecionar CANAIS, escolha uma das opções abaixo e forneça detalhes adicionais na mensagem, se necessário.';
+        obsDiv.style.display = 'block';
+        canaisCampos.style.display = 'block';
+    } else if (this.value === 'outros') {
+        obsDiv.textContent = 'Você selecionou OUTROS. Por favor, descreva sua solicitação na mensagem.';
+        obsDiv.style.display = 'block';
     }
 });
     </script>
