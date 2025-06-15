@@ -35,7 +35,7 @@ input, textarea {
     font-size: 1em;
 }
 button {
-    background: #0078d7;
+    background: #1976d2; /* Updated to match inline styles and mobile.css */
     color: #fff;
     border: none;
     padding: 10px 20px;
@@ -45,7 +45,7 @@ button {
     margin-top: 10px;
 }
 button:hover {
-    background: #005fa3;
+    background: #125ea7; /* Updated to match --primary-hover from mobile.css */
 }
 a {
     color: #000000;

@@ -66,8 +66,8 @@ if ((($email && filter_var($email, FILTER_VALIDATE_EMAIL)) || $telefone) && file
         tr:hover { background-color: #f5f5f5; }
         .btn { padding: 8px 16px; background-color: #0078d7; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; box-shadow:0 1px 4px #0001; transition: background 0.2s; }
         .btn:hover { background-color: #0056a3; }
-        .night-toggle { position:fixed; bottom:24px; left:24px; right:auto; top:auto; z-index:1000; background:linear-gradient(90deg,#ff6b6b,#b71c1c); color:#fff; border:1px solid #b71c1c; border-radius:20px; padding:8px 18px; cursor:pointer; font-weight:bold; box-shadow:0 2px 8px #0002; transition: background 0.3s, color 0.3s; }
-        .night-toggle.night { background:linear-gradient(90deg,#b71c1c,#ff6b6b); color:#fff; border-color:#fff; }
+        .night-toggle { position:fixed; bottom:24px; left:24px; right:auto; top:auto; z-index:1000; background:linear-gradient(90deg, #ff6b6b, #b71c1c); color:#fff; border:1px solid #b71c1c; border-radius:20px; padding:8px 18px; cursor:pointer; font-weight:bold; box-shadow:0 2px 8px  #0002; transition: background 0.3s, color 0.3s; }
+        .night-toggle.night { background:linear-gradient(90deg, #b71c1c, #ff6b6b); color: #fff; border-color:#fff; }
         body.night { background: #181c24; color: #e0e0e0; }
         .container.night { background: #232a36; color: #e0e0e0; }
         table.night { background: #232a36; color: #e0e0e0; }

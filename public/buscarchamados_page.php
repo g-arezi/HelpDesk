@@ -215,7 +215,8 @@ if (!isset($_SESSION['auth']) || $_SESSION['auth'] !== true) {
             .then(r=>r.json())
             .then(data=>{
                 let html = '';
-                if(data && Array.isArray(data.tickets) && data.tickets.length) {                    html += '<table><thead><tr><th>🆔 ID</th><th>📋 Status</th><th>📝 Assunto</th><th>� Produto</th><th>� Mensagem</th><th></th></tr></thead><tbody>';
+                if(data && Array.isArray(data.tickets) && data.tickets.length) {
+                    html += '<table><thead><tr><th>🆔 ID</th><th>📋 Status</th><th>📝 Assunto</th><th>📦 Produto</th><th>💬 Mensagem</th><th></th></tr></thead><tbody>';
                     data.tickets.forEach(row=>{
                         // Passa email e telefone na URL para o chat
                         html += `<tr><td>${row.id}</td><td>${row.status}</td><td>${row.subject}</td><td>${row.produto}</td><td>${row.message}</td><td><a href="chat_frontend.html?id=${row.id}&email=${encodeURIComponent(email)}&telefone=${encodeURIComponent(telefone)}" class="btn btn-chat" target="_blank">Chat</a></td></tr>`;
